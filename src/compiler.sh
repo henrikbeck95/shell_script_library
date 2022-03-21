@@ -8,19 +8,13 @@ AUX1=$1
 
 EDITOR="vim"
 
-SOFTWARE_NAME="Shell Script Library"
-
 LINK_GITHUB="https://github.com/henrikbeck95/shell_script_library.git"
 PATH_REPOSITORY_CLONE="/tmp/shell_script_library"
-
 PATH_FILE_LIBRARY_COMPILING="/tmp/shell-script-library.sh"
 PATH_FILE_LIBRARY_COMPILED="/usr/local/bin/shell-script-library"
 PATH_FILE_MODULES_COMPILING="$PATH_REPOSITORY_CLONE/src/modules"
 
-#PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
-#PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-#PATH_SCRIPT="${PATH_SCRIPT}/modules"
-#PATH_SCRIPT_MODULES="${PATH_SCRIPT}/modules"
+SOFTWARE_NAME="Shell Script Library"
 
 MESSAGE_HELP="
 \t\t\t\t\t\t\t${SOFTWARE_NAME}
@@ -29,7 +23,7 @@ MESSAGE_HELP="
 Author: Henrik Beck
 E-mail: henrikbeck95@gmail.com
 License: GPL3
-Version: v1.0.1
+Version: v1.0.2
 
 [Description]
 This is a dedicated compiler tool for ${SOFTWARE_NAME} project which can be used as a default installer.
@@ -85,15 +79,15 @@ shell_script_library_modules_uninstall(){
 }
 
 shell_script_library_modules_compile_from_local(){
+    #local PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     local PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
-    
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
     local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library.sh"
     
-    #Clean the file
+    #Clean up the file
     cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
     
-    #Compile all modules files into one single
+    #Compile all modules into one single file
     cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
     for i in $PATH_FILE_MODULES_COMPILING/*sh; do
@@ -104,18 +98,16 @@ shell_script_library_modules_compile_from_local(){
 
 #MUST BE TESTED
 shell_script_library_modules_compile_from_repository(){
-    #Clean the file
+    #Clean up the file
     cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
 
-    #Compile all modules files into one single
-#    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
+    #Compile all modules into one single file
+    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
-#    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
-#        #echo "$i"
-#        echo -e "\n"
-#        #echo -e "\n\n"
-#        cat $i >> $PATH_FILE_LIBRARY_COMPILING
-#    done
+    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
+        echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
+        cat $i >> $PATH_FILE_LIBRARY_COMPILING
+    done
 }
 
 shell_script_library_modules_download(){
