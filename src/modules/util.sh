@@ -18,6 +18,16 @@ util_check_if_file_exists(){
     fi
 }
 
+util_check_if_folder_exists(){
+    local VALUE_PATH_FOLDER="$1"
+
+    if [[ -d $VALUE_PATH_FOLDER ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
 util_check_if_firmware_supports_uefi(){
 	#if [ -z "$(ls -A /sys/firmware/efi/efivars)" ]; then
 	if [ -z "$(ls -A /sys/firmware/efi/efivars 2>&1 /dev/null)" ]; then

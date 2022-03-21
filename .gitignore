@@ -1,2 +1,3 @@
 .ignoring/
 src/shell-script-library.sh
+src/testing.sh
