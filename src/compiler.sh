@@ -29,7 +29,7 @@ MESSAGE_HELP="
 Author: Henrik Beck
 E-mail: henrikbeck95@gmail.com
 License: GPL3
-Version: v1.0.0
+Version: v1.0.1
 
 [Description]
 This is a dedicated compiler tool for ${SOFTWARE_NAME} project which can be used as a default installer.
@@ -84,35 +84,38 @@ shell_script_library_modules_uninstall(){
     rm -f $PATH_FILE_LIBRARY_COMPILED
 }
 
-#MUST BE TESTED
 shell_script_library_modules_compile_from_local(){
-    PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
+    local PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
     
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
     local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library.sh"
+    
+    #Clean the file
+    cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
     
     #Compile all modules files into one single
     cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
     for i in $PATH_FILE_MODULES_COMPILING/*sh; do
-        #echo "$i"
-        echo -e "\n"
-        #echo -e "\n\n"
+        echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
         cat $i >> $PATH_FILE_LIBRARY_COMPILING
     done
 }
 
 #MUST BE TESTED
 shell_script_library_modules_compile_from_repository(){
-    #Compile all modules files into one single
-    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
+    #Clean the file
+    cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
 
-    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
-        #echo "$i"
-        echo -e "\n"
-        #echo -e "\n\n"
-        cat $i >> $PATH_FILE_LIBRARY_COMPILING
-    done
+    #Compile all modules files into one single
+#    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
+
+#    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
+#        #echo "$i"
+#        echo -e "\n"
+#        #echo -e "\n\n"
+#        cat $i >> $PATH_FILE_LIBRARY_COMPILING
+#    done
 }
 
 shell_script_library_modules_download(){
