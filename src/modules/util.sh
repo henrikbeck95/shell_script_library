@@ -5,7 +5,7 @@
 util_browser_open_url(){
 	display_message_default "Opening $@ from $BROWSER browser software"
 
-	xdg-open $@
+	xdg-open $@ &
 }
 
 util_check_if_file_exists(){
@@ -145,6 +145,10 @@ util_edit_file(){
 	#nano $@
 	#vi -O $@
 	vim -O $@
+}
+
+util_export_desktop_environment(){
+	echo "$XDG_CURRENT_DESKTOP"
 }
 
 util_export_variables_bios(){
