@@ -1,26 +1,6 @@
 #############################
-#Dysplay dialog
+#Display dialog
 #############################
-
-check_if_variable_is_null(){
-    local VALUE_VARIABLE=$1
-
-    if [[ "$VALUE_VARIABLE" == "" ]]; then
-            echo "true"
-        else
-            echo "false"
-    fi
-}
-
-check_if_variable_is_number(){
-    local VALUE_VARIABLE=$1
-
-    if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
-            echo "true"
-        else
-            echo "false"
-    fi
-}
 
 display_dialog_ask_question_yes_or_no(){
     local VALUE_MESSAGE_QUESTION_HEADER=$1
@@ -31,14 +11,14 @@ display_dialog_ask_question_yes_or_no(){
 
         case $VALUE_MESSAGE_QUESTION_ANSWER in
             [Yy]*)
-                echo "true"
+                display_message_default_simple "true"
                 break
                 ;;
             [Nn]*)
-                echo "false"
+                display_message_default_simple "false"
                 break
                 ;;
-            *) echo "Incorrect Input. Please answer Y for yes or N for no."
+            *) display_message_error_simple "Incorrect Input. Please answer Y for yes or N for no."
         esac
     done
 }
@@ -50,18 +30,20 @@ display_dialog_ask_question_number(){
     while true; do
         read -p "$VALUE_MESSAGE_QUESTION_HEADER [Type a number value] " VALUE_MESSAGE_QUESTION_ANSWER
 
-        case $(check_if_variable_is_number "$VALUE_MESSAGE_QUESTION_ANSWER") in
-            "false") 
-                echo "Incorrect Input. Please answer a number value."
+        case $(utils_check_if_variable_is_number "$VALUE_MESSAGE_QUESTION_ANSWER") in
+            "false")
+                display_message_error_simple "Incorrect Input. Please answer a number value."
+				break
                 ;;
             "true")
-                echo "$VALUE_MESSAGE_QUESTION_ANSWER"
+                display_message_default_simple "$VALUE_MESSAGE_QUESTION_ANSWER"
                 break
                 ;;
         esac
     done
 }
 
+#label_must_be_tested
 display_dialog_ask_question_text(){
     local VALUE_MESSAGE_QUESTION_HEADER=$1
     local VALUE_MESSAGE_QUESTION_ANSWER
@@ -69,36 +51,44 @@ display_dialog_ask_question_text(){
     while true; do
         read -p "$VALUE_MESSAGE_QUESTION_HEADER [Y/n] " VALUE_MESSAGE_QUESTION_ANSWER
 
-        case $(check_if_variable_is_null "$VALUE_MESSAGE_QUESTION_ANSWER") in
+        case $(utils_check_if_variable_is_null "$VALUE_MESSAGE_QUESTION_ANSWER") in
             "false") 
-                echo "$VALUE_MESSAGE_QUESTION_ANSWER"
+                display_message_default_simple "$VALUE_MESSAGE_QUESTION_ANSWER"
                 break
                 ;;
             "true")
-                echo "Incorrect Input. Please answer the question."
+				display_message_error_simple "Incorrect Input. Please answer the question."
+                break
                 ;;
         esac
     done
 }
 
+#label_must_be_tested
+#label_must_be_fixed
 #It is working but not attributing the result to a variable when encapsuled
 display_dialog_ask_question_menu(){
-    echo -e "\nSelect a correspondent number of the description. Type '0' to exit!\n"
+	local MENU_OPTION
 
-    select option; do # in "$@" is the default
+    display_message_warning_complex "Select a correspondent number of the description. Type '0' to exit!"
+
+    select MENU_OPTION; do # in "$@" is the default
         if [ "$REPLY" -eq "0" ]; then
-            echo "Exiting..."
-            break;
+            display_message_default_simple "Exiting..."
+            break
         elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $(($#)) ]; then
-            case $(display_dialog_ask_question_yes_or_no "You have selected '$option' which is option '$REPLY'. Are you sure?") in
-                "false") : ;;
+            case $(display_dialog_ask_question_yes_or_no "You have selected '$MENU_OPTION' which is option '$REPLY'. Are you sure?") in
+                "false")
+					:
+					break
+					;;
                 "true")
-                    echo "$option"
+                    display_message_default_simple "$MENU_OPTION"
                     break
                     ;;
             esac
         else
-            echo "Incorrect Input. Please select a number between 1 and $#"
+            display_message_error_simple "Incorrect Input. Please select a number between 1 and $#"
         fi
     done
 }

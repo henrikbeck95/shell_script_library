@@ -3,13 +3,18 @@
 #############################
 
 container_distrobox_image_download(){
+	local DISTRO_NICKNAME="$1"
+	local DISTRO_NAME_OFFICIAL="$2"
+
 	#distrobox-create --name debian10-distrobox --image debian:10
-	distrobox-create --name $1 --image $2
+	distrobox-create --name $DISTRO_NICKNAME --image $DISTRO_NAME_OFFICIAL
 }
 
 container_distrobox_image_enter(){
+	local DISTRO_NICKNAME="$1"
+
 	#distrobox-enter --name debian10-distrobox
-	distrobox-enter --name $@
+	distrobox-enter --name $DISTRO_NICKNAME
 }
 
 container_manager_container_list_all(){
@@ -21,11 +26,11 @@ container_manager_container_list_running(){
 }
 
 container_manager_container_network_create(){
-    podman network create --driver bridge $@
+    $CONTAINER_MANAGER network create --driver bridge $@
 }
 
 container_manager_container_network_remove(){
-    podman network rm -f $@
+    $CONTAINER_MANAGER network rm -f $@
 }
 
 container_manager_container_remove(){
@@ -78,11 +83,11 @@ container_manager_pod_list_running(){
 }
 
 container_manager_pod_network_create(){
-    podman pod create --net $1 -n $2
+    $CONTAINER_MANAGER pod create --net $1 -n $2
 }
 
 container_manager_pod_network_remove(){
-	podman pod rm -f $@
+	$CONTAINER_MANAGER pod rm -f $@
 }
 
 container_manager_pod_pause(){
@@ -100,8 +105,7 @@ container_manager_pod_run(){
 	local ADDITIONAL_FLAGS=$3
 	local REPOSITORY_IMAGE=$4
 
-	echo -e "Connecting containers $2 into the pods $1..."
-	#echo -e "S1:\t$1\nS2:\t$2\nS3:\t$3\nS4:\t$4"
+	display_message_warning_complex "Connecting containers $2 into the pods $1..."
 
     case $# in
         3) 
@@ -117,18 +121,18 @@ container_manager_pod_run(){
                 $3 \
                 $4
             ;;
-        *) echo -e "ERROR!"
+        *) display_message_error_simple "Connection not established"
     esac
 }
 
+#label_must_be_improved
 container_manager_pod_run_temporarily(){
 	local NAME_POD=$1
 	local NAME_CONTAINER=$2
 	local ADDITIONAL_FLAGS=$3
 	local REPOSITORY_IMAGE=$4
 
-	echo -e "Connecting containers $2 into the pods $1..."
-	#echo -e "S1:\t$1\nS2:\t$2\nS3:\t$3\nS4:\t$4"
+	display_message_warning_complex "Connecting containers $2 into the pods $1..."
 
     case $# in
         3) 
@@ -146,7 +150,7 @@ container_manager_pod_run_temporarily(){
                 $4 \
 				/bin/bash
             ;;
-        *) echo -e "ERROR!"
+        *) display_message_error_simple "Connection not established"
     esac
 }
 
@@ -168,43 +172,26 @@ container_manager_pod_unpause(){
 }
 
 container_manager_software(){
-	#Check if Podman is installed
 	case $(util_check_if_software_is_installed "podman") in
 		"false")
-			#display_message_error "Podman is not installed!"
-
-	        #Check if Docker is installed
 			case $(util_check_if_software_is_installed "docker") in
 				"false")
-                    #display_message_error "Docker is not installed!"
-                    :
+                    display_message_default_simple "none"
+					break
                     ;;
 
 				"true")
-                    #display_message_success "Docker is installed!"
-                    echo "docker"
+                    display_message_default_simple "docker"
+					break
                     ;;
 			esac
+
+			break
 		;;
 
 		"true")
-            #display_message_success "Podman is installed!"
-            echo "podman"
-            ;;
-	esac
-
-	#Organize Math Health setup according to current desktop enviroment
-	case $(util_export_desktop_environment) in
-		"gnome") : ;;
-		"i3")
-			:
-			#Workspace 01: Visual Studio Code (Math Health - Backend)
-			#Workspace 02: Web browser
-			#Workspace 03: Visual Studio Code (Math Health - Frontend)
-			#Workspace 04: LF || Nautilus || Dolphin || Thunar
-			;;
-		"plasma") : ;;
-		"") : ;;
-		*) : ;;
+            display_message_default_simple "podman"
+			break
+		;;
 	esac
 }

@@ -8,17 +8,6 @@ Do you have any idea how much time have you ever been wasting trying to solve pr
 
 Do not waste your time coding that same function to every single script file. Focus your time developing what needs to be done by using the abstractions from this library. Because the source code workflow is more important than solving a lot of "little" problems whose are already solved by us.
 
-<!--
-- Requirements
-    1. AWK.
-    1. Echo.
-    1. GNU coreutils.
-    1. Sed.
-    1. 
-    1. 
-    1. 
--->
-
 - Advantages
     1. Easy installation setup.
     <!--1. All functions in one single file.-->
@@ -40,12 +29,44 @@ Do not waste your time coding that same function to every single script file. Fo
 <!-- 
 ## Installation setup
 
+- Requirements
+    1. [x] Shell interpreter (such as Sh, Bash or ZSH - you can use it from Git Bash on Windows).
+        1. [x] AWK.
+        1. [x] Cut.
+        1. [x] Echo.
+        1. [x] GNU CoreUtils.
+        1. [x] Print.
+        1. [x] Sed.
+        1. [ ] 
+        1. [ ] 
+        1. [ ] 
+
+    1. [ ] cURL or wGET.
+    1. [ ] Docker or Podman.
+    1. [ ] OpenRC or SystemD.
+    1. [ ] 
+    1. [ ] 
+    1. [ ] 
+
 - Stable version
     > $ `curl -L -O RELEASE`
 
+    > mv ./FILE_NAME /usr/local/bin/shell-script-library
+
 - Current version
     > $ `curl -sSL https://raw.githubusercontent.com/henrikbeck95/shell_script_library/main/src/compiler.sh`
+
+- Uninstall library
+    > $ `rm /usr/local/bin/shell-script-library`
 -->
+
+## Usage
+
+```bash
+#!/usr/bin/env sh
+
+source /usr/local/bin/shell-script-library
+```
 
 ## Contribute
 
