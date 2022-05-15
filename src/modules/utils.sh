@@ -95,7 +95,8 @@ utils_check_if_variable_is_null(){
 utils_check_if_variable_is_number(){
     local VALUE_VARIABLE=$1
 
-    if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
+    #if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
+    if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
 		display_message_default_simple "true"
 	else
 		display_message_default_simple "false"
@@ -325,6 +326,13 @@ utils_load_operating_system_properties(){
 	source /etc/os-*
 }
 
+utils_move_file(){
+	local PATH_ORIGIN=$1
+	local PATH_DESTINY=$2
+
+	mv $PATH_ORIGIN $PATH_DESTINY #|| mv -avr $PATH_ORIGIN $PATH_DESTINY
+}
+
 utils_path_directory_create(){
 	local PATH_FOLDER=$1
 
@@ -335,6 +343,12 @@ utils_path_directory_create(){
 	fi
 
 	display_message_success_complex "$PATH_FOLDER folder directory has been created"
+}
+
+utils_remove_file(){
+	local PATH_FILE=$1
+
+	rm $PATH_FILE || rm -f $PATH_FILE || rm -fr $PATH_FILE
 }
 
 utils_symbolic_link_create(){

@@ -37,14 +37,14 @@ Do not waste your time coding that same function to every single script file. Fo
         1. [x] GNU CoreUtils.
         1. [x] Print.
         1. [x] Sed.
-        1. [ ] 
+        1. [x] Sort.
         1. [ ] 
         1. [ ] 
 
+    1. [ ] Acpi.
     1. [ ] cURL or wGET.
     1. [ ] Docker or Podman.
     1. [ ] OpenRC or SystemD.
-    1. [ ] 
     1. [ ] 
     1. [ ] 
 
