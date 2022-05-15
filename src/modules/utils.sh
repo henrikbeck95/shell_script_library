@@ -286,6 +286,18 @@ utils_extract_file_zip(){
 	display_message_success_complex "File(s) $@ has/have been extracted"
 }
 
+utils_generate_link_file_version_latest_github(){
+    #Try: curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O
+	#Try: curl -fsSL github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE} -O
+	#Try: curl -fsSL $(utils_generate_link_file_version_latest_github "henrikbeck95" "shell_script_library" "shell-script-library") -O
+	local REPOSITORY_OWNER=$1
+	local REPOSITORY_NAME=$2
+	local REPOSITORY_FILE=$3
+
+
+	display_message_default "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
+}
+
 utils_git_repository_clone(){
 	local PATH_REPOSITORY_URL=$1
 

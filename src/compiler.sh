@@ -10,7 +10,7 @@ EDITOR="vim"
 
 LINK_GITHUB="https://github.com/henrikbeck95/shell_script_library.git"
 PATH_REPOSITORY_CLONE="/tmp/shell_script_library"
-PATH_FILE_LIBRARY_COMPILING="/tmp/shell-script-library.sh"
+PATH_FILE_LIBRARY_COMPILING="/tmp/shell-script-library"
 PATH_FILE_LIBRARY_COMPILED="/usr/local/bin/shell-script-library"
 PATH_FILE_MODULES_COMPILING="$PATH_REPOSITORY_CLONE/src/modules"
 
@@ -82,7 +82,7 @@ shell_script_library_modules_compile_from_local(){
     #local PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     local PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
-    local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library.sh"
+    local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library"
     
     #Clean up the file
     cat /dev/null > $PATH_FILE_LIBRARY_COMPILING

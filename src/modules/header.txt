@@ -2,6 +2,9 @@
 #Instructions
 #############################
 #
+#Warning
+#This is an auto generated file. DO NOT edit it.
+#
 #Labels
 #NO LABEL					= There is nothing to do for this function tag
 #label_must_be_chosen		= Must be created a selection menu
