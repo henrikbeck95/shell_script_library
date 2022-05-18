@@ -4,38 +4,12 @@
 
 #label_must_be_tested
 #label_must_be_improved
-system_pkg_check_package_manager(){
-    declare -A ARRAY_OPERATING_SYSTEM_FILE
-
-    #Verify if system file exists according to the operating system
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/debian_version]=apt
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=apk
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/gentoo-release]=emerge
-    #ARRAY_OPERATING_SYSTEM_FILE[/etc/paru.conf]=paru
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=pacman
-    #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=pacman
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackpkg
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/redhat-release]=yum
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=zypper
-
-    #Return all the installed package managers
-    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
-       if [[ -f $i ]]; then
-            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            break
-        fi
-    done
-}
-
-#label_must_be_tested
-#label_must_be_improved
 system_pkg_default_repository_add(){
     utils_check_if_user_has_root_previledges
 
     display_message_warning_complex "Adding package manager $@ repository"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "apt") display_message_empty_complex ;;
         "aur") display_message_empty_complex ;;
@@ -58,7 +32,7 @@ system_pkg_default_repository_remove(){
 
     display_message_warning_complex "Removing package manager $@ repository"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "apt") display_message_empty_complex ;;
         "aur") display_message_empty_complex ;;
@@ -81,7 +55,7 @@ system_pkg_default_repository_syncronize(){
 
 	display_message_warning_complex "Syncronizing package manager $@ repository"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk")
             case $DEBUG in
                 "false") apk update ;;
@@ -131,7 +105,7 @@ system_pkg_default_cache_clean(){
 
     display_message_warning_complex "Cleaning package manager $@ cache"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "apt") apt autoremove ;;
         "aur") display_message_empty_complex ;;
@@ -154,7 +128,7 @@ system_pkg_default_cache_make(){
 
 	display_message_warning_complex "Making package manager $@ cache"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "apt") display_message_empty_complex ;;
         "aur") display_message_empty_complex ;;
@@ -166,6 +140,8 @@ system_pkg_default_cache_make(){
         "zypper") display_message_empty_complex ;;
         *) display_message_error_complex "Package manager has not been found." ;;
     esac
+
+    system_pkg_default_repository_syncronize
 	
     display_message_success_complex "Package manager $@ cache has been made"
 }
@@ -177,7 +153,7 @@ system_pkg_default_software_install_group(){
 
     display_message_warning_complex "Installing package manager (group) $@ software(s)"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "apt") display_message_empty_complex ;;
         "aur") display_message_empty_complex ;;
@@ -205,7 +181,7 @@ system_pkg_default_software_install_single(){
     
 	display_message_warning_complex "Installing package manager $@ software"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk")
             case $DEBUG in
                 "false") apk add $@ ;;
@@ -256,7 +232,7 @@ system_pkg_default_software_install_single(){
 system_pkg_default_software_list(){
 	display_message_warning_complex "Listing package manager softwares"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") apl list ;;
         "apt") apt list ;; #apt list --upgradable
         "aur") pacman -Qm ;;
@@ -272,43 +248,12 @@ system_pkg_default_software_list(){
 
 #label_must_be_tested
 #label_must_be_improved
-system_pkg_default_software_setup(){
-    utils_check_if_user_has_root_previledges
-
-    display_message_warning_complex "Installing package manager setup"
-
-    case $(system_pkg_check_package_manager) in
-        "apk") display_message_empty_complex ;;
-        "apt") display_message_empty_complex ;;
-        "aur")
-            #Installing Paru
-            utils_path_directory_create "$HOME/compilation/"
-            git clone https://aur.archlinux.org/paru.git $HOME/compilation/paru
-
-            cd $HOME/compilation/paru/
-            makepkg -si
-            cd -
-            ;;
-        "dnf") display_message_empty_complex ;;
-        "emerge") display_message_empty_complex ;;
-        "pacman") display_message_empty_complex ;;
-        "slackpkg") display_message_empty_complex ;;
-        "yum") display_message_empty_complex ;;
-        "zypper") display_message_empty_complex ;;
-        *) display_message_error_complex "Package manager has not been found." ;;
-    esac
-
-	display_message_success_complex "Package manager setup has been installed"
-}
-
-#label_must_be_tested
-#label_must_be_improved
 system_pkg_default_software_uninstall_group(){
     utils_check_if_user_has_root_previledges
 
 	display_message_warning_complex "Uninstalling package manager $@ software"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk") display_message_empty_complex ;;
         "aur") display_message_empty_complex ;;
         "apt") display_message_empty_complex ;;
@@ -331,7 +276,7 @@ system_pkg_default_software_uninstall_single(){
 
 	display_message_warning_complex "Uninstalling package manager $@ software"
 
-    case $(system_pkg_check_package_manager) in
+    case $(utils_check_package_manager) in
         "apk")
             case $DEBUG in
                 "false") apk remove $@ ;;

@@ -24,8 +24,34 @@ Do not waste your time coding that same function to every single script file. Fo
     1. Smile!
 
 - Conclusion
-    > The commands from this library have not been made to be short. They have been developed to solve these "little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
+    > The commands from this library have not been made to be short. They have been developed to solve these "amount of little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
 
+## Features
+
+### Commentary for multiple lines
+
+- Original method
+```bash
+: << 'COMMENT'
+echo 'This is a text 01'
+echo 'This is a text 02'
+COMMENT
+
+echo 'This is a text 03'
+```
+
+- Shell Script Library way
+```bash
+%
+echo 'This is a text 01'
+echo 'This is a text 02'
+%%
+
+echo 'This is a text 03'
+```
+
+- Annotation
+    > In both case the only result whose is going to be displayed it **This is a text 03**.
 ## Installation setup
 
 ### Requirements

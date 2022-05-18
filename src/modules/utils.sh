@@ -8,6 +8,16 @@ utils_browser_open_url(){
 	xdg-open $@ &
 }
 
+#label_must_be_improved
+utils_check_architecture(){
+    #case $($ARCHITECTURE) in
+    case $(getconf LONG_BIT) in
+		"32") echo "32-bits" ;;
+		"64") echo "64-bits" ;;
+		*) display_message_error_complex "" ;;
+	esac
+}
+
 utils_check_if_file_exists(){
     local VALUE_PATH_FILE="$1"
 
@@ -35,6 +45,21 @@ utils_check_if_firmware_supports_uefi(){
 	else
 		display_message_default_simple "true"
 	fi
+}
+
+utils_check_if_function_exists(){
+    local FUNCTION_NAME=$1
+    
+    #declare -F "$1" > /dev/null;
+	
+	#declare -f -F "$1" > /dev/null
+    #return $?
+
+    if [[ $(declare -F "$FUNCTION_NAME") ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
 }
 
 utils_check_if_internet_connection_exists(){
@@ -92,19 +117,97 @@ utils_check_if_variable_is_null(){
     fi
 }
 
-utils_check_if_variable_is_number(){
+utils_check_if_variable_is_boolean(){
+	local VALUE_VARIABLE=$1
+
+    case $VALUE_VARIABLE in
+        "false" | "true") display_message_default_simple "true" ;;
+        *) display_message_default_simple "false" ;;
+    esac
+}
+
+utils_check_if_variable_is_char(){
+	local VALUE_VARIABLE=$1
+    
+    case ${#VALUE_VARIABLE} in
+        1) display_message_default_simple "true" ;;
+        *) display_message_default_simple "false" ;;
+    esac
+}
+
+utils_check_if_variable_is_float(){
+    local VALUE_VARIABLE=$1
+
+    #if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
+	if [[ $(echo "$VALUE_VARIABLE" | grep "^[0-9]*[.][0-9]*$" && val=`echo $?`) ]] || [[ $(echo "$VALUE_VARIABLE" | grep "^-[0-9]*[.][0-9]*$" && val=`echo $?`) ]]; then
+	#if [[ $(($VALUE_VARIABLE+0.5)) -eq $(($VALUE_VARIABLE+0.5)) ]]; then
+	#if [[ $(awk "BEGIN{ print $VALUE_VARIABLE + 0.5 }") -eq $(awk "BEGIN{ print $VALUE_VARIABLE + 0.5 }") ]]; then
+		display_message_default_simple "true"
+	else
+		display_message_default_simple "false"
+	fi
+}
+
+utils_check_if_variable_is_integer(){
     local VALUE_VARIABLE=$1
 
     #if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
-    if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
+    #if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
+    #if [[ $VALUE_VARIABLE =~ ^[[:digit:]]+$ ]]; then
+    if [[ $VALUE_VARIABLE =~ ^[[:digit:]]+$ ]] || [[ $VALUE_VARIABLE =~ ^-[[:digit:]]+$ ]]; then
 		display_message_default_simple "true"
 	else
 		display_message_default_simple "false"
     fi
 }
 
-#label_must_be_created
-#utils_check_if_variable_is_string(){}
+utils_check_if_variable_is_number(){
+    local VALUE_VARIABLE=$1
+
+    case $(utils_check_if_variable_is_integer $VALUE_VARIABLE) in
+        "false")
+            case $(utils_check_if_variable_is_float $VALUE_VARIABLE) in
+                "false") display_message_default_simple "false" ;;
+                "true") display_message_default_simple "true" ;;
+            esac
+            ;;
+        "true") display_message_default_simple "true" ;;
+    esac
+}
+
+utils_check_if_variable_is_string(){
+	local VALUE_VARIABLE=$1
+
+	case $(utils_check_if_variable_is_null $VALUE_VARIABLE) in
+        "false")
+			case $(utils_check_if_variable_is_number $VALUE_VARIABLE) in
+				"false") display_message_default_simple "true" ;;
+				"true") display_message_default_simple "false" ;;
+			esac
+			;;
+        "true") display_message_default_simple "false" ;;
+    esac
+}
+
+utils_check_if_variable_number_is_even(){
+    local VALUE_NUMBER=$1
+
+    if [[ $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
+        display_message_default_simple "true"
+    else
+        display_message_default_simple "false"
+    fi
+}
+
+utils_check_if_variable_number_is_odd(){
+    local VALUE_NUMBER=$1
+
+    if [[ ! $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
+        display_message_default_simple "true"
+    else
+        display_message_default_simple "false"
+    fi
+}
 
 utils_check_if_virtualization_is_enabled(){
 	#if [[ $(egrep '^flags.*(vmx|svm)' /proc/cpuinfo) ]]; then
@@ -115,6 +218,11 @@ utils_check_if_virtualization_is_enabled(){
 	else
 		display_message_default_simple "false"
 	fi
+}
+
+utils_check_operating_system_birthday(){
+	#Display the info about when the operating was installed on the machine
+	stat -c %w /
 }
 
 utils_check_processor_family(){
@@ -345,6 +453,32 @@ utils_move_file(){
 	mv $PATH_ORIGIN $PATH_DESTINY #|| mv -avr $PATH_ORIGIN $PATH_DESTINY
 }
 
+#label_must_be_tested
+#label_must_be_improved
+utils_check_package_manager(){
+    declare -A ARRAY_OPERATING_SYSTEM_FILE
+
+    #Verify if system file exists according to the operating system
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/debian_version]=apt
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=apk
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/gentoo-release]=emerge
+    #ARRAY_OPERATING_SYSTEM_FILE[/etc/paru.conf]=paru
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=pacman
+    #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=pacman
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackpkg
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/redhat-release]=yum
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=zypper
+
+    #Return all the installed package managers
+    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
+       if [[ -f $i ]]; then
+            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            break
+        fi
+    done
+}
+
 utils_path_directory_create(){
 	local PATH_FOLDER=$1
 
@@ -362,6 +496,14 @@ utils_remove_file(){
 
 	rm $PATH_FILE || rm -f $PATH_FILE || rm -fr $PATH_FILE
 }
+
+utils_screen_size_count_limit_maximum_characters_horizontal(){
+    local CHARACTERS_UNITS=$(tput cols)
+
+    display_message_default_simple "$CHARACTERS_UNITS"
+}
+
+#utils_screen_size_count_limit_maximum_characters_vertical(){}
 
 utils_symbolic_link_create(){
 	local PATH_ORIGIN=$1

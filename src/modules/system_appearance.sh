@@ -39,6 +39,13 @@ system_appearance_desktop_environment_gnome(){
 }
 
 #label_must_be_improved
+system_appearance_theme_gedit_dracula(){
+	utils_download_file "https://raw.githubusercontent.com/dracula/gedit/master/dracula.xml"
+
+	display_message_warning_complex "Must open Gedit application and set load this file manually"
+}
+
+#label_must_be_improved
 system_appearance_theme_gtk_adwaita(){
     utils_path_directory_create "$HOME/.themes/"
     cd $HOME/.themes/
@@ -62,7 +69,15 @@ system_appearance_theme_gtk_dracula(){
 	gsettings set org.gnome.desktop.wm.preferences theme "Dracula"
 }
 
-#label_must_be_choosen
+#label_must_be_improved
+system_appearance_theme_libreoffice_dracula(){
+	git clone "https://github.com/dracula/libreoffice.git" "$HOME/Documents/libroffice"
+	system_permission_set_executable "$HOME/Documents/dracula/libroffice/add_dracula_application_colors.sh"
+	utils_edit_file "$HOME/Documents/dracula/libroffice/add_dracula_application_colors.sh"
+	#$HOME/Documents/dracula/libroffice/add_dracula_application_colors.sh
+}
+
+#label_must_be_chosen
 #label_must_be_improved
 system_appearance_theme_shell_starship(){
 	sh -c "$(curl -L https://starship.rs/install.sh)"
