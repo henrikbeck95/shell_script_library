@@ -4,10 +4,15 @@
 
 system_pkg_any_flatpak_repository_add(){
 	display_message_success_complex "Adding Flatpak $@ repository"
+
+	local FLATPAK_AREA_WIDE=$1 #For system wide try: --system || For per-user try: --user
+	local FLATPAK_REPOSITORY_NAME=$2
+	local FLATPAK_REPOSITORY_LINK=$3
 	
 	#flatpak remote-add --if-not-exists $@
 	#flatpak remote-add --user --if-not-exists $@
-	flatpak remote-add --system --if-not-exists $@
+	#flatpak remote-add --system --if-not-exists $@
+	flatpak remote-add "$FLATPAK_AREA_WIDE" --if-not-exists "$FLATPAK_REPOSITORY_NAME" "$FLATPAK_REPOSITORY_LINK"
 	
 	display_message_success_complex "Flatpak $@ repository has been added"
 }

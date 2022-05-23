@@ -2,6 +2,13 @@
 #Display dialog
 #############################
 
+display_dialog_ask_press_a_key() {
+	local DISPLAY_TEXT="Press any key to continue..."
+
+    display_message_default_simple "\n${COLOR_TEXT_REVERSE}${COLOR_TEXT_BOLD_AND_ITALIC}${DISPLAY_TEXT}${COLOR_TEXT_END}"
+    read -n1
+}
+
 display_dialog_ask_question_yes_or_no(){
     local VALUE_MESSAGE_QUESTION_HEADER=$1
     local VALUE_MESSAGE_QUESTION_ANSWER

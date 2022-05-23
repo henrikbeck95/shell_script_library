@@ -83,16 +83,30 @@ shell_script_library_modules_compile_from_local(){
     local PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
     local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library"
+    local FILENAME_AUX
     
     #Clean up the file
     cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
-    
+
     #Compile all modules into one single file
     cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
+    #filename=$(basename -- "$fullfile")
+    #extension="${filename##*.}"
+    #filename="${filename%.*}"
+
     for i in $PATH_FILE_MODULES_COMPILING/*sh; do
-        echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
-        cat $i >> $PATH_FILE_LIBRARY_COMPILING
+        # i="${i%.*}"
+        # i="${i##*.}"
+
+        #Get filename without full path
+        FILENAME_AUX="${i##*/}"
+
+        #Check if file name does not start with _ character
+        if [[ ! $FILENAME_AUX =~ ^_ ]]; then
+            echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
+            cat $i >> $PATH_FILE_LIBRARY_COMPILING
+        fi
     done
 }
 

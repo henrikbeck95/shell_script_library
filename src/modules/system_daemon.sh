@@ -3,8 +3,13 @@
 #############################
 
 #label_must_be_created
+#Insert OpenRC
 system_daemon_check_init_system(){
-    display_message_default_complex "Testing..."
+	case `cat /proc/1/comm` in
+		"init") display_message_default_simple "init" ;;
+		"systemd") display_message_default_simple "systemd" ;;
+		*) display_message_error_simple "unknown: '`cat /proc/1/comm`'" ;;
+	esac
 }
 
 system_daemon_disable_later(){

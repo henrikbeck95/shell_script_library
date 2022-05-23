@@ -18,6 +18,15 @@ utils_check_architecture(){
 	esac
 }
 
+#label_must_be_created
+#utils_check_if_device_is_desktop(){}
+
+#label_must_be_created
+#utils_check_if_device_is_mobile(){}
+
+#label_must_be_created
+#utils_check_if_device_is_laptop(){}
+
 utils_check_if_file_exists(){
     local VALUE_PATH_FILE="$1"
 
@@ -72,6 +81,49 @@ utils_check_if_internet_connection_exists(){
     fi
 }
 
+utils_check_if_path_is_inside_git_project_anywhere(){
+    local PATH_FOLDER=$1
+
+    cd $PATH_FOLDER
+
+    local RESULT="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+    
+    if [ "$RESULT" == "true" ]; then
+        display_message_default_simple "true"
+    else
+        display_message_default_simple "false"
+    fi
+
+    cd -
+}
+
+utils_check_if_path_is_inside_git_project_root(){
+    #utils_check_if_path_is_inside_git_project_root "/etc/"
+    #utils_check_if_path_is_inside_git_project_root "$HOME/"
+    #utils_check_if_path_is_inside_git_project_root "$HOME/.asdf/"
+    #utils_check_if_path_is_inside_git_project_root "$HOME/.asdf/downloads/java/"
+
+    local PATH_FOLDER=$1
+
+    cd $PATH_FOLDER
+
+    #Remove last / character if user has set it
+    if [[ $(string_get_content_character_last "$PATH_FOLDER") == "/" ]]; then
+        PATH_FOLDER=$(string_get_content_character_from_begin "$PATH_FOLDER" "-1")
+    fi
+
+    local PATH_ROOT=$(utils_get_path_git_project_root "$PATH_FOLDER")
+
+    #Display the result value
+    if [[ "$PATH_FOLDER" == "$PATH_ROOT" ]]; then
+        display_message_default_simple "true"
+    else
+        display_message_default_simple "false"
+    fi
+
+    cd -
+}
+
 utils_check_if_software_is_installed(){
 	if command -v $1 >/dev/null; then
         display_message_default_simple "true"
@@ -121,7 +173,7 @@ utils_check_if_variable_is_boolean(){
 	local VALUE_VARIABLE=$1
 
     case $VALUE_VARIABLE in
-        "false" | "true") display_message_default_simple "true" ;;
+        0 | 1 | "false" | "true") display_message_default_simple "true" ;;
         *) display_message_default_simple "false" ;;
     esac
 }
@@ -192,21 +244,31 @@ utils_check_if_variable_is_string(){
 utils_check_if_variable_number_is_even(){
     local VALUE_NUMBER=$1
 
-    if [[ $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
-        display_message_default_simple "true"
-    else
-        display_message_default_simple "false"
-    fi
+	case $(utils_check_if_variable_is_integer $VALUE_NUMBER) in
+		"false") display_message_default_simple "false" ;;
+		"true")
+			if [[ $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
+				display_message_default_simple "true"
+			else
+				display_message_default_simple "false"
+			fi
+			;;
+	esac
 }
 
 utils_check_if_variable_number_is_odd(){
-    local VALUE_NUMBER=$1
+	local VALUE_NUMBER=$1
 
-    if [[ ! $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
-        display_message_default_simple "true"
-    else
-        display_message_default_simple "false"
-    fi
+	case $(utils_check_if_variable_is_integer $VALUE_NUMBER) in
+		"false") display_message_default_simple "false" ;;
+		"true")
+    		if [[ ! $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
+				display_message_default_simple "true"
+			else
+				display_message_default_simple "false"
+			fi
+			;;
+	esac
 }
 
 utils_check_if_virtualization_is_enabled(){
@@ -223,6 +285,102 @@ utils_check_if_virtualization_is_enabled(){
 utils_check_operating_system_birthday(){
 	#Display the info about when the operating was installed on the machine
 	stat -c %w /
+}
+
+utils_check_operating_system_kernel(){
+    case $(uname -s) in
+        "Darwin") display_message_default_simple "darwin" ;;
+        "Linux") display_message_default_simple "linux" ;;
+        CYGWIN* | MINGW32* | MYMS* |MINGGW* ) display_message_default_simple "nt" ;;
+        *) display_message_error_simple "Other operating system" ;;
+    esac
+}
+
+#label_must_be_improved
+utils_check_operating_system_linux_distro(){
+	declare -A ARRAY_OPERATING_SYSTEM_FILE
+
+    #Verify if system file exists according to the operating system
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=alpine
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=archlinux
+    #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=archlinux
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/debian_version]=debian
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/gentoo-release]=gentoo
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/redhat-release]=redhat
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackware
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=opensuse
+
+    #Return all the installed package managers
+    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
+       if [[ -f $i ]]; then
+            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            break
+        fi
+    done
+}
+
+#label_must_be_improved
+utils_check_operating_system_name(){
+	if [[ $(utils_check_operating_system_kernel) == "darwin" ]]; then
+		display_message_default_simple "MacOS X"
+	elif [[ $(utils_check_operating_system_kernel) == "linux" ]]; then
+		display_message_default_simple $(utils_check_operating_system_linux_distro)
+	elif [[ $(utils_check_operating_system_kernel) == "nt" ]]; then
+		display_message_default_simple "Windows"
+	else
+		display_message_default_simple "null"
+	fi
+}
+
+#label_must_be_improved
+utils_check_operating_system_platform(){
+    if [[ "$(uname)" == "Darwin" ]]; then
+        display_message_default_simple "apple_macos_x"
+    elif [[ $(expr substr $(uname -s) 1 5) == "Linux" ]]; then
+        display_message_default_simple "linux"
+    elif [[ $(expr substr $(uname -s) 1 10) == "MINGW32_NT" ]]; then
+        display_message_default_simple "microsoft_windows_nt_32_bits"
+    elif [[ $(expr substr $(uname -s) 1 10) == "MINGW64_NT" ]]; then
+        display_message_default_simple "microsoft_windows_nt_64_bits"
+    else
+        display_message_error_simple ""
+    fi
+}
+
+utils_check_operating_system_memory_real_time(){
+    #utils_check_operating_system_memory_real_time "2"
+    
+    local TIME_DELAY_SECONDS=$1
+
+    #Monitor memory without top or htop
+    watch -n $TIME_DELAY_SECONDS -d '/bin/free -m'
+}
+
+#label_must_be_tested
+#label_must_be_improved
+utils_check_package_manager(){
+    declare -A ARRAY_OPERATING_SYSTEM_FILE
+
+    #Verify if system file exists according to the operating system
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/debian_version]=apt
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=apk
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/gentoo-release]=emerge
+    #ARRAY_OPERATING_SYSTEM_FILE[/etc/paru.conf]=paru
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=pacman
+    #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=pacman
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackpkg
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/redhat-release]=yum
+    ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=zypper
+
+    #Return all the installed package managers
+    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
+       if [[ -f $i ]]; then
+            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            break
+        fi
+    done
 }
 
 utils_check_processor_family(){
@@ -288,6 +446,26 @@ utils_convert_pdf_color(){
 	magick convert -density 300 $FILE_INPUT -fill $COLOR_DESTINY -opaque $COLOR_ORIGIN $FILE_OUTPUT
 }
 
+utils_chronometer_countdown(){
+	#utils_chronometer_countdown "00:00:02" #2 seconds
+	#utils_chronometer_countdown "00:01:10" #1 minute and 10 seconds
+    
+	local timeHours=${1:0:2}
+    local timeMinutes=${1:3:2}
+    local timeSeconds=${1:6:2}
+
+    local timeDisplay=$(($timeHours * 3600 + $timeMinutes * 60 + $timeSeconds))
+
+    while [[ $timeDisplay -gt 0 ]]; do
+        sleep 1 &
+        printf "\r%02d:%02d:%02d" $((timeDisplay / 3600)) $(((timeDisplay / 60) % 60))  $((timeDisplay % 60))
+        timeDisplay=$(($timeDisplay - 1))
+        wait
+    done
+
+    display_message_default_complex ""
+}
+
 utils_download_file(){
 	local PATH_URL=$1
 	local PATH_DESTINY=$2
@@ -321,11 +499,41 @@ utils_download_file(){
 	esac
 }
 
+utils_download_file_latest_version(){
+	#utils_download_file_latest_version "henrikbeck95" "shell_script_library" "shell-script-library"
+	
+	local REPOSITORY_OWNER=$1
+	local REPOSITORY_NAME=$2
+	local REPOSITORY_FILE=$3
+    local RESULT=$(utils_generate_link_file_version_latest_github "$REPOSITORY_OWNER" "$REPOSITORY_NAME" "$REPOSITORY_FILE")
+
+    #display_message_default_complex "Downloading $RESULT file..."
+    utils_download_file "$RESULT"
+}
+
+utils_download_website(){
+    local URL_LINK=$1
+
+    wget -r -erobots=off $URL_LINK
+    #wget -r -p -U Mozilla --wait=10 --limit-rate=35K $URL_LINK
+}
+
 utils_edit_file(){
 	#gedit $@
 	#nano $@
 	#vi -O $@
 	vim -O $@
+}
+
+utils_effects_spinner(){
+    local CHARACTERS_AVALIABLE='/-\|'
+
+    printf ' '
+
+    while true; do
+        printf '\b%.1s' "$CHARACTERS_AVALIABLE"
+        CHARACTERS_AVALIABLE=${CHARACTERS_AVALIABLE#?}${CHARACTERS_AVALIABLE%???}
+    done
 }
 
 utils_export_desktop_environment(){
@@ -373,25 +581,220 @@ utils_export_variables_virtualization(){
 	fi
 }
 
-##label_must_be_improved
-utils_extract_file_tar(){
-	display_message_warning_complex "Extracting $@ file(s)"
+utils_extract_file_detect_any() {
+	#alias x=utils_extract_file_detect_any
+    
+	setopt localoptions noautopushd
 
-	tar -zxvf $@ || tar -xzf $@ || tar -xf $@
-	
-	display_message_success_complex "File(s) $@ has/have been extracted"
+    if (( $# == 0 )); then
+		echo -e "Usage: extract [-option] [file ...]\nOptions:\n-r, --remove    Remove archive after unpacking."
+    fi
+
+    local remove_archive=1
+
+    if [[ "$1" == "-r" ]] || [[ "$1" == "--remove" ]]; then
+        remove_archive=0
+        shift
+    fi
+
+    local pwd="$PWD"
+
+    while (( $# > 0 )); do
+        if [[ ! -f "$1" ]]; then
+            echo "extract: '$1' is not a valid file" >&2
+            shift
+            continue
+        fi
+
+        local success=0
+        local extract_dir="${1:t:r}"
+        local file="$1" full_path="${1:A}"
+
+        case "${file:l}" in
+			(*.7z) utils_extract_file_method_7zip "$file" ;;
+			(*.bz2) utils_extract_file_method_bz2 "$file" ;;
+			(*.cab) utils_extract_file_method_zip "$extract_dir" "$file" ;;
+			(*.cpio) utils_extract_file_method_cpio "$file" ;;
+			(*.lz4) utils_extract_file_method_lz4 "$file" ;;
+			(*.lzma) utils_extract_file_method_lzma "$file" ;;
+			(*.rar) utils_extract_file_method_rar "$file" ;;
+			(*.tar) utils_extract_file_method_tar "$file" ;;
+			(*.tar.bz2|*.tbz|*.tbz2) utils_extract_file_method_tar_bz2 "$file" ;;
+			(*.tar.lz4) utils_extract_file_method_tar_lz4 "$file" ;;
+			(*.tar.xz|*.txz) utils_extract_file_method_tar_xz "$file" ;;
+			(*.tar.zma|*.tlz) utils_extract_file_method_tar_zma "$file" ;;
+			(*.tar.zst|*.tzst) utils_extract_file_method_tar_zst  "$file" ;;
+			(*.xz) utils_extract_file_method_xz "$file" ;;
+			(*.z) utils_extract_file_method_z "$file" ;;
+			(*.zip|*.war|*.jar|*.ear|*.sublime-package|*.ipa|*.ipsw|*.xpi|*.apk|*.aar|*.whl) utils_extract_file_method_zip "$file" "$extract_dir" ;;
+			(*.zst) utils_extract_file_method_zst "$file" ;;
+            
+			(*.gz) (( $+commands[pigz] )) && pigz -dk "$file" || gunzip -k "$file" ;;
+			(*.lrz) (( $+commands[lrunzip] )) && lrunzip "$file" ;;
+            #(*.tar.gz|*.tgz) (( $+commands[pigz] )) && { pigz -dc "$file" | tar xv } || tar zxvf "$file" ;;
+            (*.tar.gz|*.tgz) (( $+commands[pigz] )) && pigz -dc "$file" | tar xv || tar zxvf "$file" ;;
+            (*.tar.lz) (( $+commands[lzip] )) && tar xvf "$file" ;;
+            (*.tar.lrz) (( $+commands[lrzuntar] )) && lrzuntar "$file" ;;
+
+            (*.rpm)
+                command mkdir -p "$extract_dir" && builtin cd -q "$extract_dir" \
+                && rpm2cpio "$full_path" | cpio --quiet -id ;;
+
+            (*.deb)
+                command mkdir -p "$extract_dir/control" "$extract_dir/data"
+                    builtin cd -q "$extract_dir"; ar vx "$full_path" > /dev/null
+                    builtin cd -q control; extract ../control.tar.*
+                    builtin cd -q ../data; extract ../data.tar.*
+                    builtin cd -q ..; command rm *.tar.* debian-binary ;;
+
+            (*)
+                echo "extract: '$file' cannot be extracted" >&2
+                success=1 ;;
+        esac
+
+        (( success = success > 0 ? success : $? ))
+        (( success == 0 && remove_archive == 0 )) && rm "$full_path"
+        shift
+
+        #Go back to original working directory in case we ran cd previously
+        builtin cd -q "$pwd"
+    done
 }
 
-utils_extract_file_zip(){
+utils_extract_file_method_7zip(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
-	
-	display_message_warning_complex "Extracting $@ file(s)"
+
+	7za x $FILE_ORIGIN
+
+    #Individually 7zip all files in current directory
+    #for i in *.*; do
+    #    7z a "$i".7z "$i"
+    #done
+}
+
+utils_extract_file_method_bz2(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	bunzip2 $FILE_ORIGIN
+}
+
+utils_extract_file_method_cab(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	mkdir -p $FILE_DESTINY/
+	cabextract -d $FILE_ORIGIN $FILE_DESTINY
+}
+
+utils_extract_file_method_cpio(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	cpio -idmvF $FILE_ORIGIN
+}
+
+utils_extract_file_method_lz4(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	lz4 -d $FILE_ORIGIN
+}
+
+utils_extract_file_method_lzma(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	unlzma $FILE_ORIGIN
+}
+
+utils_extract_file_method_rar(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	unrar x -ad "$FILE_ORIGIN"
+
+	#unrar -e ./Aula\ 03\ -\ Program$'\342'$'\225'$'\236'o\ de\ Computadores.rar
+	#unrar -e ./Aula\ 03\ -\ Program$'\342'$'\225'$'\236'o\ de\ Computadores.rar .
+}
+
+utils_extract_file_method_tar(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	#tar -zxvf $FILE_ORIGIN || tar -xzf $FILE_ORIGIN || tar -xf $FILE_ORIGIN
+	tar xvf $FILE_ORIGIN
+}
+
+utils_extract_file_method_tar_bz2(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	tar xvjf $FILE_ORIGIN
+}
+
+utils_extract_file_method_tar_lz4(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	lz4 -c -d "$FILE_ORIGIN" | tar xvf -
+}
+
+utils_extract_file_method_tar_zst(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	tar --zstd --help &> /dev/null \
+        && tar --zstd -xvf "$FILE_ORIGIN" \
+        || zstdcat "$FILE_ORIGIN" | tar xvf -
+}
+
+utils_extract_file_method_tar_zma(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	tar --lzma --help &> /dev/null \
+		&& tar --lzma -xvf "$FILE_ORIGIN" \
+		|| lzcat "$FILE_ORIGIN" | tar xvf -
+}
+
+utils_extract_file_method_tar_xz(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	tar --xz --help &> /dev/null \
+        && tar --xz -xvf "$FILE_ORIGIN" \
+        || xzcat "$FILE_ORIGIN" | tar xvf -
+}
+
+utils_extract_file_method_xz(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	unxz $FILE_ORIGIN
+}
+
+utils_extract_file_method_z(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	uncompress "$FILE_ORIGIN"
+}
+
+utils_extract_file_method_zip(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
 
 	mkdir -p $FILE_DESTINY/
 	unzip $FILE_ORIGIN -d $FILE_DESTINY
-	
-	display_message_success_complex "File(s) $@ has/have been extracted"
+}
+
+utils_extract_file_method_zst(){
+	local FILE_ORIGIN="$1"
+	local FILE_DESTINY="$2"
+
+	unzstd $FILE_ORIGIN
 }
 
 utils_generate_link_file_version_latest_github(){
@@ -403,7 +806,52 @@ utils_generate_link_file_version_latest_github(){
 	local REPOSITORY_FILE=$3
 
 
-	display_message_default "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
+	display_message_default_simple "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
+}
+
+utils_generate_number_random_from_interval_set(){
+    local RANDOM_INTERVAL_BEGIN
+    local RANDOM_INTERVAL_FINISH
+    local RESULT
+
+    #Check if the arguments values are valid
+    if [[ $# -ne 2 ]]; then
+        display_message_error_simple "To generate random number must have two arguments (begin, start) values"
+        exit 127
+    elif [[ $1 -lt $2 ]]; then
+        RANDOM_INTERVAL_BEGIN=$1
+        RANDOM_INTERVAL_FINISH=$(($2 + 1))
+    else
+        RANDOM_INTERVAL_BEGIN=$(($2 + 1))
+        RANDOM_INTERVAL_FINISH=$1
+    fi
+
+    #Generate the random number
+    if [[ $1 -eq $2 ]]; then
+        RESULT="$1"
+    else
+        RESULT="$(( ($RANDOM % ($RANDOM_INTERVAL_FINISH - $RANDOM_INTERVAL_BEGIN)) + $RANDOM_INTERVAL_BEGIN ))"
+    fi
+
+    display_message_number_simple "$RESULT"
+}
+
+utils_get_path_git_project_root(){
+    local PATH_FOLDER=$1
+
+	cd $PATH_FOLDER
+
+    case $(utils_check_if_path_is_inside_git_project_anywhere "$PATH_FOLDER") in
+        "false")
+            display_message_error_simple "The current path is not part of a Git project"
+            ;;
+        "true")
+            local RESULT="$(git rev-parse --show-toplevel 2>/dev/null)"
+            display_message_default_simple "$RESULT"
+            ;;
+    esac
+
+	cd -
 }
 
 utils_git_repository_clone(){
@@ -453,32 +901,6 @@ utils_move_file(){
 	mv $PATH_ORIGIN $PATH_DESTINY #|| mv -avr $PATH_ORIGIN $PATH_DESTINY
 }
 
-#label_must_be_tested
-#label_must_be_improved
-utils_check_package_manager(){
-    declare -A ARRAY_OPERATING_SYSTEM_FILE
-
-    #Verify if system file exists according to the operating system
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/debian_version]=apt
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=apk
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/gentoo-release]=emerge
-    #ARRAY_OPERATING_SYSTEM_FILE[/etc/paru.conf]=paru
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=pacman
-    #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=pacman
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackpkg
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/redhat-release]=yum
-    ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=zypper
-
-    #Return all the installed package managers
-    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
-       if [[ -f $i ]]; then
-            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            break
-        fi
-    done
-}
-
 utils_path_directory_create(){
 	local PATH_FOLDER=$1
 
@@ -497,13 +919,46 @@ utils_remove_file(){
 	rm $PATH_FILE || rm -f $PATH_FILE || rm -fr $PATH_FILE
 }
 
+utils_screen_size_count_limit_half_characters_horizontal(){
+    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM=$1
+	local DISPLAY_TEXT_LENGTH=$2
+    local RESULT=$((($SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM-$DISPLAY_TEXT_LENGTH)/2))
+
+    display_message_default_simple "$RESULT"
+}
+
 utils_screen_size_count_limit_maximum_characters_horizontal(){
     local CHARACTERS_UNITS=$(tput cols)
 
     display_message_default_simple "$CHARACTERS_UNITS"
 }
 
+#label_must_be_created
 #utils_screen_size_count_limit_maximum_characters_vertical(){}
+
+#CREATE CASE VARIABLE COLOR DOES NOT EXIST, SET DEFAULT VALUE
+utils_screen_size_fill_limit_half_characters_horizontal(){
+	local CHARACTER_REPETITION=$1
+    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$2
+    local COLOR_VALUE=$3
+    local i=0
+
+    while [ $i -lt $SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF ]; do
+        #display_message_default_simple "${CHARACTER_REPETITION}"
+        #i=$(($i+1))
+
+	    display_message_default_simple "${COLOR_VALUE}${CHARACTER_REPETITION}${COLOR_END}"
+        i=$(($i+1))
+    done
+}
+
+utils_simulate_typing(){
+    #utils_simulate_typing "Welcome to Shell Script Library!"
+    
+    local DISPLAY_TEXT=$1
+
+    display_message_default_complex "$DISPLAY_TEXT" | pv -qL 10
+}
 
 utils_symbolic_link_create(){
 	local PATH_ORIGIN=$1

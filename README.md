@@ -1,6 +1,6 @@
 # Shell Script Library solution
 
-Shell script library for abstracting development process on all UNIX like shells.
+Shell script library for abstracting development process on all UNIX like shells and speed up the development performance.
 
 ## Description
 
