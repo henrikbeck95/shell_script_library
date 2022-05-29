@@ -828,13 +828,13 @@ system_pkg_default_software_install_platform_openssh(){
 
     utils_edit_file "/etc/ssh/sshd_config" #Uncomment the port 22
 
-    #display_message_default "Change Root password"
+    #display_message_value_status_warning_complex "Change Root password"
 	#passwd root
 	
-	#display_message_default "Get the ip address"
+	#display_message_value_status_warning_complex "Get the ip address"
 	#ip addr
 	
-	display_message_default "Auxiliar machine\n	
+	display_message_value_status_warning_complex "Auxiliar machine\n	
 	For rightly configuring the another PC with Linux, follow the steps below:
 	
 	$ sudo apt install openssh-client

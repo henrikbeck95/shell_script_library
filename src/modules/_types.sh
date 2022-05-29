@@ -85,13 +85,13 @@ function syntactic_analyzer_generate_command(){
 
     #echo -e "\nTrying... ${VARIABLE_LABEL}\n"
 
-    #display_message_default_simple "eval declare -i $VARIABLE_LABEL"
+    #display_message_value_text_default_simple "eval declare -i $VARIABLE_LABEL"
     
-    # display_message_default_simple "local $VARIABLE_LABEL"
-    # display_message_default_simple "declare -i $VARIABLE_LABEL"
-    # display_message_default_simple "declare $VARIABLE_LABEL"
+    # display_message_value_text_default_simple "local $VARIABLE_LABEL"
+    # display_message_value_text_default_simple "declare -i $VARIABLE_LABEL"
+    # display_message_value_text_default_simple "declare $VARIABLE_LABEL"
     echo "declare $VARIABLE_LABEL"
-    # display_message_default_simple "$VARIABLE_LABEL"
+    # display_message_value_text_default_simple "$VARIABLE_LABEL"
     
     #eval declare -i "$VARIABLE_LABEL"
     # eval declare -ig "$VARIABLE_LABEL"

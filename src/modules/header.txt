@@ -50,4 +50,8 @@
 #Import this library on your source code by typing
 #$ source /usr/local/bin/shell-script-library
 #
+#Import this file using relative path
+#PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
+#source "$PATH_SCRIPT"/shell-script-library
+#
 #############################

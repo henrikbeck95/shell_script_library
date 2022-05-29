@@ -8,10 +8,14 @@ AUX1=$1
 
 EDITOR="vim"
 
+#Use path /run/host/ #For Flatpak applications
+PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
+
 LINK_GITHUB="https://github.com/henrikbeck95/shell_script_library.git"
 PATH_REPOSITORY_CLONE="/tmp/shell_script_library"
 PATH_FILE_LIBRARY_COMPILING="/tmp/shell-script-library"
 PATH_FILE_LIBRARY_COMPILED="/usr/local/bin/shell-script-library"
+PATH_FILE_LIBRARY_GENERATED="$PATH_SCRIPT/shell-script-library"
 PATH_FILE_MODULES_COMPILING="$PATH_REPOSITORY_CLONE/src/modules"
 
 SOFTWARE_NAME="Shell Script Library"
@@ -37,6 +41,7 @@ It merges all the source code modules into one single file. It is able to instal
 -cl\t--compile-local\t\t\tCompile the ${SOFTWARE_NAME} modules from local machine while developing this tool
 -cr\t--compile-repository\t\tCompile the ${SOFTWARE_NAME} modules from cloned repository from /tmp/ directory
 -r\t--remove\t\t\tRemove the ${SOFTWARE_NAME} modules files by removing the cloned repository from /tmp/ directory
+-crun\t--compile-local-run\t\t\tCompile the ${SOFTWARE_NAME} modules, copy it into ${PATH_FILE_LIBRARY_COMPILED} path and import it.
 -i\t--install\t\t\tInstall the ${SOFTWARE_NAME} by moving the compiled file to /usr/local/bin/ directory
 -u\t--uninstall\t\t\tUninstall the ${SOFTWARE_NAME} by removing the file from /usr/local/bin/ directory
 "
@@ -60,7 +65,7 @@ util_check_if_file_exists(){
 util_check_if_folder_exists(){
     local VALUE_PATH_FOLDER="$1"
 
-    if [[ -d $VALUE_PATH_FOLDER ]]; then
+    if [[ -d "$VALUE_PATH_FOLDER" ]]; then
         echo "true"
     else
         echo "false"
@@ -72,13 +77,12 @@ util_check_if_folder_exists(){
 ##############################
 
 shell_script_library_modules_remove_files_used_for_compilation(){
-    rm -fr $PATH_REPOSITORY_CLONE
+    rm -fr "$PATH_REPOSITORY_CLONE"
 }
 
 shell_script_library_modules_uninstall(){
-    rm -f $PATH_FILE_LIBRARY_COMPILED
+    rm -f "$PATH_FILE_LIBRARY_COMPILED"
 }
-
 
 shell_script_library_modules_clear_from_local(){
     local PATH_SCRIPT
@@ -107,7 +111,7 @@ shell_script_library_modules_clear_from_local(){
         FILENAME_AUX="${i##*/}"
 
         #Check if file name does not start with _ character
-        if [[ ! $FILENAME_AUX =~ ^_ ]]; then
+        if [[ ! "$FILENAME_AUX" =~ ^_ ]]; then
             #echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
             #cat $i >> $PATH_FILE_LIBRARY_COMPILING
             
@@ -145,7 +149,7 @@ shell_script_library_modules_compile_from_local(){
         FILENAME_AUX="${i##*/}"
 
         #Check if file name does not start with _ character
-        if [[ ! $FILENAME_AUX =~ ^_ ]]; then
+        if [[ ! "$FILENAME_AUX" =~ ^_ ]]; then
             echo -e "\n" >> "$PATH_FILE_LIBRARY_COMPILING"
             cat "$i" >> "$PATH_FILE_LIBRARY_COMPILING"
         fi
@@ -164,6 +168,22 @@ shell_script_library_modules_compile_from_repository(){
         echo -e "\n" >> "$PATH_FILE_LIBRARY_COMPILING"
         cat "$i" >> "$PATH_FILE_LIBRARY_COMPILING"
     done
+}
+
+shell_script_library_compilation_and_running(){
+    shell_script_library_modules_compile_from_local
+    chmod +x "$PATH_FILE_LIBRARY_GENERATED"
+    sudo cp -f "$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
+    #sudo mv $"$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
+
+    #Importing Shell Script Library
+    if [[ -f "$PATH_FILE_LIBRARY_COMPILED" ]]; then
+        source "$PATH_FILE_LIBRARY_COMPILED"
+
+        display_message_value_status_success_complex "Shell Script Library has been compiled, installed and loaded."
+    else
+        echo -e "Shell Script Library has not been found."
+    fi
 }
 
 shell_script_library_modules_download(){
@@ -197,6 +217,7 @@ case $AUX1 in
     "-cls" | "--clear-local") shell_script_library_modules_clear_from_local ;;
     "-cl" | "--compile-local") shell_script_library_modules_compile_from_local ;;
     "-cr" | "--compile-repository") shell_script_library_modules_compile_from_repository ;;
+    "-crun" | "--compile-local-run") shell_script_library_compilation_and_running ;;
     "-i" | "--install") shell_script_library_modules_install "$PATH_FILE_LIBRARY_COMPILING" ;;
     "-r" | "--remove") shell_script_library_modules_remove_files_used_for_compilation ;;
     "-u" | "--uninstall") shell_script_library_modules_uninstall ;;

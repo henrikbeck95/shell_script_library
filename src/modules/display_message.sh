@@ -195,8 +195,8 @@ display_message_value_text_default_complex(){
 	local DISPLAY_TEXT="$1"
 
 	#echo -e "$DISPLAY_TEXT"
-	#printf "$DISPLAY_TEXT\n"
-	printf "%s\n" "$DISPLAY_TEXT"
+	printf "$DISPLAY_TEXT\n"
+	#printf "%s\n" "$DISPLAY_TEXT"
 }
 
 display_message_value_text_default_simple(){

@@ -17,7 +17,7 @@ function_name(){
 function Deprecated(){
     local FUNCTION_NAME=$1
 
-    display_message_warning_complex "The $FUNCNAME function is going to be Deprecated soon"
+    display_message_value_text_default_complex "The $FUNCNAME function is going to be Deprecated soon"
     
     eval $FUNCTION_NAME
 }
