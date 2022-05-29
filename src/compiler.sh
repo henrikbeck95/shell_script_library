@@ -33,6 +33,7 @@ It merges all the source code modules into one single file. It is able to instal
 -h\t--help\t-?\t\t\tDisplay this message help
 -e\t--edit\t\t\t\tEdit this script file
 -d\t--download\t\t\tDownload the ${SOFTWARE_NAME} modules by cloning the repository to /tmp/ directory
+-cls\t--clear-local\t\t\tClear all the source modules from ${SOFTWARE_NAME}.
 -cl\t--compile-local\t\t\tCompile the ${SOFTWARE_NAME} modules from local machine while developing this tool
 -cr\t--compile-repository\t\tCompile the ${SOFTWARE_NAME} modules from cloned repository from /tmp/ directory
 -r\t--remove\t\t\tRemove the ${SOFTWARE_NAME} modules files by removing the cloned repository from /tmp/ directory
@@ -78,24 +79,27 @@ shell_script_library_modules_uninstall(){
     rm -f $PATH_FILE_LIBRARY_COMPILED
 }
 
-shell_script_library_modules_compile_from_local(){
-    #local PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-    local PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
+
+shell_script_library_modules_clear_from_local(){
+    local PATH_SCRIPT
+    
+    #PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+    PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
     local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library"
     local FILENAME_AUX
     
     #Clean up the file
-    cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
+    #cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
 
     #Compile all modules into one single file
-    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
+    #cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
     #filename=$(basename -- "$fullfile")
     #extension="${filename##*.}"
     #filename="${filename%.*}"
 
-    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
+    for i in "$PATH_FILE_MODULES_COMPILING"/*sh; do
         # i="${i%.*}"
         # i="${i##*.}"
 
@@ -104,8 +108,46 @@ shell_script_library_modules_compile_from_local(){
 
         #Check if file name does not start with _ character
         if [[ ! $FILENAME_AUX =~ ^_ ]]; then
-            echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
-            cat $i >> $PATH_FILE_LIBRARY_COMPILING
+            #echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
+            #cat $i >> $PATH_FILE_LIBRARY_COMPILING
+            
+            echo "Clearing the $i file content..."
+            #echo $i # >> $PATH_FILE_LIBRARY_COMPILING
+            cat /dev/null > "$i"
+        fi
+    done
+}
+
+shell_script_library_modules_compile_from_local(){
+    local PATH_SCRIPT
+    
+    #PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+    PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
+    local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
+    local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library"
+    local FILENAME_AUX
+    
+    #Clean up the file
+    cat /dev/null > "$PATH_FILE_LIBRARY_COMPILING"
+
+    #Compile all modules into one single file
+    cat "$PATH_FILE_MODULES_COMPILING"/header.txt > "$PATH_FILE_LIBRARY_COMPILING"
+
+    #filename=$(basename -- "$fullfile")
+    #extension="${filename##*.}"
+    #filename="${filename%.*}"
+
+    for i in "$PATH_FILE_MODULES_COMPILING"/*sh; do
+        # i="${i%.*}"
+        # i="${i##*.}"
+
+        #Get filename without full path
+        FILENAME_AUX="${i##*/}"
+
+        #Check if file name does not start with _ character
+        if [[ ! $FILENAME_AUX =~ ^_ ]]; then
+            echo -e "\n" >> "$PATH_FILE_LIBRARY_COMPILING"
+            cat "$i" >> "$PATH_FILE_LIBRARY_COMPILING"
         fi
     done
 }
@@ -113,19 +155,19 @@ shell_script_library_modules_compile_from_local(){
 #MUST BE TESTED
 shell_script_library_modules_compile_from_repository(){
     #Clean up the file
-    cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
+    cat /dev/null > "$PATH_FILE_LIBRARY_COMPILING"
 
     #Compile all modules into one single file
-    cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
+    cat "$PATH_FILE_MODULES_COMPILING"/header.txt > "$PATH_FILE_LIBRARY_COMPILING"
 
-    for i in $PATH_FILE_MODULES_COMPILING/*sh; do
-        echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
-        cat $i >> $PATH_FILE_LIBRARY_COMPILING
+    for i in "$PATH_FILE_MODULES_COMPILING"/*sh; do
+        echo -e "\n" >> "$PATH_FILE_LIBRARY_COMPILING"
+        cat "$i" >> "$PATH_FILE_LIBRARY_COMPILING"
     done
 }
 
 shell_script_library_modules_download(){
-    case $(util_check_if_folder_exists) in
+    case $(util_check_if_folder_exists "$1") in
         "false") : ;;
         "true") shell_script_library_modules_remove_files_used_for_compilation ;;
     esac
@@ -134,12 +176,12 @@ shell_script_library_modules_download(){
 }
 
 shell_script_library_modules_install(){
-    case $(util_check_if_file_exists) in
+    case $(util_check_if_file_exists "$1") in
         "false") : ;;
         "true") shell_script_library_modules_uninstall ;;
     esac
 
-    mv $PATH_FILE_LIBRARY_COMPILING $PATH_FILE_LIBRARY_COMPILED
+    mv "$PATH_FILE_LIBRARY_COMPILING" "$PATH_FILE_LIBRARY_COMPILED"
 }
 
 ##############################
@@ -150,11 +192,12 @@ clear
 
 case $AUX1 in
     "" | "-h" | "--help" | "-?") echo -e "$MESSAGE_HELP" ;;
-    "-e" | "--edit") $EDITOR $0 ;;
-    "-d" | "--download") shell_script_library_modules_download ;;
+    "-e" | "--edit") $EDITOR "$0" ;;
+    "-d" | "--download") shell_script_library_modules_download "$PATH_FILE_LIBRARY_COMPILED" ;;
+    "-cls" | "--clear-local") shell_script_library_modules_clear_from_local ;;
     "-cl" | "--compile-local") shell_script_library_modules_compile_from_local ;;
     "-cr" | "--compile-repository") shell_script_library_modules_compile_from_repository ;;
-    "-i" | "--install") shell_script_library_modules_install ;;
+    "-i" | "--install") shell_script_library_modules_install "$PATH_FILE_LIBRARY_COMPILING" ;;
     "-r" | "--remove") shell_script_library_modules_remove_files_used_for_compilation ;;
     "-u" | "--uninstall") shell_script_library_modules_uninstall ;;
     *) echo -e "$MESSAGE_ERROR" ;;
