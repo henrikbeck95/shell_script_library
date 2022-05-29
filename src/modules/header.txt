@@ -1,13 +1,20 @@
+#!/usr/bin/env sh
+
+#███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗    ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
+#██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝    ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+#███████╗███████║█████╗  ██║     ██║         ███████╗██║     ██████╔╝██║██████╔╝   ██║       ██║     ██║██████╔╝██████╔╝███████║██████╔╝ ╚████╔╝ 
+#╚════██║██╔══██║██╔══╝  ██║     ██║         ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║       ██║     ██║██╔══██╗██╔══██╗██╔══██║██╔══██╗  ╚██╔╝  
+#███████║██║  ██║███████╗███████╗███████╗    ███████║╚██████╗██║  ██║██║██║        ██║       ███████╗██║██████╔╝██║  ██║██║  ██║██║  ██║   ██║   
+#╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝       ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+
 #############################
-#Shell Script Library
-#############################
-#
 #Credits
+#############################
 #
 #Author: Henrik Beck
 #E-mail: henrikbeck95@gmail.com
 #License: BSD 3-Clause License
-#Version: 0.0.2
+#Version: 0.0.3
 #
 #############################
 
@@ -19,15 +26,22 @@
 #This is an auto generated file. DO NOT edit it.
 #
 #Labels
-#NO LABEL					= There is nothing to do for this function tag
-#label_must_be_chosen		= Must be created a selection menu
-#label_must_be_created		= There is no content inside this function tag
-#label_must_be_deprecated   = Must be replaced by another method soon
-#label_must_be_edited		= Create a display message for this function tag
-#label_must_be_fixed		= There is a detected bug for this function tag
-#label_must_be_improved		= Must be organized this function tag
-#label_must_be_override     = This function overrides the original function
-#label_must_be_tested		= Must debug this function tag
+#NO LABEL                       = There is nothing to do for this function tag
+#@annotation_must_be_chosen		= Must be created a selection menu
+#@annotation_must_be_created	= There is no content inside this function tag
+#@annotation_must_be_deprecated = Must be replaced by another method soon
+#@annotation_must_be_edited		= Create a display message for this function tag
+#@annotation_must_be_fixed		= There is a detected bug for this function tag
+#@annotation_must_be_improved	= Must be organized this function tag
+#@annotation_must_be_override   = This function overrides the original function
+#@annotation_must_be_tested		= Must debug this function tag
+#@annotation_must_be_updated    = Must be updated according to ShellCheck analyzer tool or replacing math calculate structure
+#
+#Validate with ShellCheck linter
+#https://www.shellcheck.net/
+#
+#ShellCheck ignore tag
+# shellcheck source=/dev/null
 #
 #Installation setup
 #Move this generated file to /usr/local/bin/shell-script-library for installing this library correctly

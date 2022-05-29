@@ -3,18 +3,18 @@
 #############################
 
 time_operation_convert_from_timestamp_to_date(){
-    local VALUE_TIME_TIMESTAMP=$1
+    local VALUE_TIME_TIMESTAMP="$1"
 
-    date +"%Y-%m-%d %H:%M:%S" -d @${VALUE_TIME_TIMESTAMP} -u
+    date +"%Y-%m-%d %H:%M:%S" -d @"${VALUE_TIME_TIMESTAMP}" -u
     #date -d @${VALUE_TIME_TIMESTAMP} -u
     #date +"%Y-%m-%d %H:%M:%S" -d @1646942739
     #date -d @1547092066 -u #qui, 10 de jan de 2019 03:47:46
 }
 
 time_operation_convert_from_utc_to_timestamp(){
-    local VALUE_TIME_TIMESTAMP=$1
+    local VALUE_TIME_TIMESTAMP="$1"
 
-    date +"%s" -d ${VALUE_TIME_TIMESTAMP}
+    date +"%s" -d "${VALUE_TIME_TIMESTAMP}"
     #date +"%s" -d "2022-03-10 21:05:39"
 }
 
@@ -46,8 +46,8 @@ time_operation_convert_from_utc_to_timestamp(){
 #'Feb 12 UTC' +"%F %T"
 #'Feb 13 UTC' +"%F %T"
 time_operation_compare_(){
-    local VALUE_TIME_DATE_FIRST=$1
-    local VALUE_TIME_DATE_SECOND=$2
+    local VALUE_TIME_DATE_FIRST="$1"
+    local VALUE_TIME_DATE_SECOND="$2"
 
     if [[ $(date -d "$VALUE_TIME_DATE_FIRST") < $(date -d "$VALUE_TIME_DATE_SECOND") ]]; then
         echo "Second Date is more recent than first Date"
@@ -61,32 +61,35 @@ time_operation_compare_(){
 }
 
 #time_operation_compare_(){
-#    local VALUE_TIME_DATE_FIRST=$1
-#    local VALUE_TIME_DATE_SECOND=$2
+#    local VALUE_TIME_DATE_FIRST="$1"
+#    local VALUE_TIME_DATE_SECOND="$2"
 #}
 
 #time_operation_compare_(){
-#    local VALUE_TIME_DATE_FIRST=$1
-#    local VALUE_TIME_DATE_SECOND=$2
+#    local VALUE_TIME_DATE_FIRST="$1"
+#    local VALUE_TIME_DATE_SECOND="$2"
 #}
 
 #"2020-09-01"
+#@annotation_must_be_fixed
 time_operation_list_sequence_generate(){
-    local VALUE_TIME_DATE_BEGIN=$1
+    local VALUE_TIME_DATE_BEGIN="$1"
 
-    date_seq=($(for i in {1..7}; do echo `date +"%Y/%m/%d" -d "${VALUE_TIME_DATE_BEGIN} +${i} day"`; done))
+    date_seq=($(for i in {1..7}; do echo $(date +"%Y/%m/%d" -d "${VALUE_TIME_DATE_BEGIN} +${i} day"); done))
     
-    printf "%s\n" ${date_seq[@]}
+    printf "%s\n" "${date_seq[@]}"
 }
 
 #'Feb 12 2020 UTC' +%s
 #'Feb 13 2020 UTC' +%s
 time_operation_calculate_diff(){
-    local VALUE_TIME_DATE_FIRST=$1
-    local VALUE_TIME_DATE_SECOND=$2
-
-    #Diff in hours
-    $((($VALUE_TIME_DATE_SECOND - $VALUE_TIME_DATE_FIRST) / 3600))
+    local VALUE_TIME_DATE_FIRST="$1"
+    local VALUE_TIME_DATE_SECOND="$2"
+    local RESULT #Diff in hours
+    
+    RESULT=$(( (VALUE_TIME_DATE_SECOND - VALUE_TIME_DATE_FIRST) / 3600))
+    
+    display_message_value_number_simple "$RESULT"
 }
 
 #[me@linux ~]$ date -d "2020-01-01 $secondDate sec - $firstDate sec" +"%j days %H hours %M minutes and %S seconds"

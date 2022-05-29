@@ -3,37 +3,37 @@
 #############################
 
 utils_browser_open_url(){
-	display_message_warning_complex "Opening $@ from $BROWSER browser software"
+	display_message_value_status_warning_complex "Opening $* from $BROWSER browser software"
 
-	xdg-open $@ &
+	xdg-open "$@" &
 }
 
-#label_must_be_improved
+#@annotation_must_be_improved
 utils_check_architecture(){
     #case $($ARCHITECTURE) in
     case $(getconf LONG_BIT) in
 		"32") echo "32-bits" ;;
 		"64") echo "64-bits" ;;
-		*) display_message_error_complex "" ;;
+		*) display_message_value_status_error_complex "" ;;
 	esac
 }
 
-#label_must_be_created
+#@annotation_must_be_created
 #utils_check_if_device_is_desktop(){}
 
-#label_must_be_created
+#@annotation_must_be_created
 #utils_check_if_device_is_mobile(){}
 
-#label_must_be_created
+#@annotation_must_be_created
 #utils_check_if_device_is_laptop(){}
 
 utils_check_if_file_exists(){
     local VALUE_PATH_FILE="$1"
 
     if [[ -f $VALUE_PATH_FILE ]]; then
-        display_message_default_simple "true"
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 }
 
@@ -41,23 +41,24 @@ utils_check_if_folder_exists(){
     local VALUE_PATH_FOLDER="$1"
 
     if [[ -d $VALUE_PATH_FOLDER ]]; then
-        display_message_default_simple "true"
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 }
 
+#@annotation_must_be_updated
 utils_check_if_firmware_supports_uefi(){
 	#if [ -z "$(ls -A /sys/firmware/efi/efivars)" ]; then
 	if [ -z "$(ls -A /sys/firmware/efi/efivars 2>&1 /dev/null)" ]; then
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
 	else
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	fi
 }
 
 utils_check_if_function_exists(){
-    local FUNCTION_NAME=$1
+    local FUNCTION_NAME="$1"
     
     #declare -F "$1" > /dev/null;
 	
@@ -72,29 +73,30 @@ utils_check_if_function_exists(){
 }
 
 utils_check_if_internet_connection_exists(){
-    display_message_warning_complex "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
+    display_message_value_status_warning_complex "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 
     if [ $? -eq 0 ]; then
-        display_message_default_simple "true"
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 }
 
 utils_check_if_path_is_inside_git_project_anywhere(){
-    local PATH_FOLDER=$1
+    local PATH_FOLDER="$1"
+    local RESULT
 
-    cd $PATH_FOLDER
+    cd "$PATH_FOLDER" || exit
 
-    local RESULT="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+    RESULT="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
     
     if [ "$RESULT" == "true" ]; then
-        display_message_default_simple "true"
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 
-    cd -
+    cd - || exit
 }
 
 utils_check_if_path_is_inside_git_project_root(){
@@ -103,169 +105,172 @@ utils_check_if_path_is_inside_git_project_root(){
     #utils_check_if_path_is_inside_git_project_root "$HOME/.asdf/"
     #utils_check_if_path_is_inside_git_project_root "$HOME/.asdf/downloads/java/"
 
-    local PATH_FOLDER=$1
+    local PATH_FOLDER="$1"
+    local PATH_ROOT
 
-    cd $PATH_FOLDER
+    cd "$PATH_FOLDER" || exit
 
     #Remove last / character if user has set it
     if [[ $(string_get_content_character_last "$PATH_FOLDER") == "/" ]]; then
         PATH_FOLDER=$(string_get_content_character_from_begin "$PATH_FOLDER" "-1")
     fi
 
-    local PATH_ROOT=$(utils_get_path_git_project_root "$PATH_FOLDER")
+    PATH_ROOT=$(utils_get_path_git_project_root "$PATH_FOLDER")
 
     #Display the result value
     if [[ "$PATH_FOLDER" == "$PATH_ROOT" ]]; then
-        display_message_default_simple "true"
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 
-    cd -
+    cd - || exit
 }
 
 utils_check_if_software_is_installed(){
-	if command -v $1 >/dev/null; then
-        display_message_default_simple "true"
+    local SOFTWARE_NAME="$1"
+
+    if command -v "$SOFTWARE_NAME" >/dev/null; then
+        display_message_value_text_default_simple "true"
     else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
     fi
 }
 
 utils_check_if_user_exists(){
-    local SEARCH_USERNAME=$1
+    local SEARCH_USERNAME="$1"
 
-	if [[ $(grep ^$SEARCH_USERNAME: /etc/passwd) != "" ]]; then
-        display_message_default_simple "true"
+	if [[ $(grep ^"$SEARCH_USERNAME": /etc/passwd) != "" ]]; then
+        display_message_value_text_default_simple "true"
 	else
-        display_message_default_simple "false"
+        display_message_value_text_default_simple "false"
 	fi
 }
 
 utils_check_if_user_has_root_previledges(){
 	if [[ $UID != 0 ]]; then
-		display_message_error_simple "You must be root for preduring this step."
+		display_message_value_status_error_simple "You must be root for preduring this step."
 		exit 127;
 	fi
 }
 
 utils_check_if_variable_exists(){
-	local VALUE_VARIABLE=$1
+	local VALUE_VARIABLE="$1"
 
 	if [[ -n "$VALUE_VARIABLE" ]]; then
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	else
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
 	fi
 }
 
 utils_check_if_variable_is_null(){
-    local VALUE_VARIABLE=$1
+    local VALUE_VARIABLE="$1"
 
     if [[ "$VALUE_VARIABLE" == "" ]]; then
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	else
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
     fi
 }
 
 utils_check_if_variable_is_boolean(){
-	local VALUE_VARIABLE=$1
+	local VALUE_VARIABLE="$1"
 
     case $VALUE_VARIABLE in
-        0 | 1 | "false" | "true") display_message_default_simple "true" ;;
-        *) display_message_default_simple "false" ;;
+        0 | 1 | "false" | "true") display_message_value_text_default_simple "true" ;;
+        *) display_message_value_text_default_simple "false" ;;
     esac
 }
 
 utils_check_if_variable_is_char(){
-	local VALUE_VARIABLE=$1
+	local VALUE_VARIABLE="$1"
     
     case ${#VALUE_VARIABLE} in
-        1) display_message_default_simple "true" ;;
-        *) display_message_default_simple "false" ;;
+        1) display_message_value_text_default_simple "true" ;;
+        *) display_message_value_text_default_simple "false" ;;
     esac
 }
 
 utils_check_if_variable_is_float(){
-    local VALUE_VARIABLE=$1
+    local VALUE_VARIABLE="$1"
 
     #if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
-	if [[ $(echo "$VALUE_VARIABLE" | grep "^[0-9]*[.][0-9]*$" && val=`echo $?`) ]] || [[ $(echo "$VALUE_VARIABLE" | grep "^-[0-9]*[.][0-9]*$" && val=`echo $?`) ]]; then
+	if [[ $(echo "$VALUE_VARIABLE" | grep "^[0-9]*[.][0-9]*$" && val=$(echo $?)) ]] || [[ $(echo "$VALUE_VARIABLE" | grep "^-[0-9]*[.][0-9]*$" && val=$(echo $?)) ]]; then
 	#if [[ $(($VALUE_VARIABLE+0.5)) -eq $(($VALUE_VARIABLE+0.5)) ]]; then
 	#if [[ $(awk "BEGIN{ print $VALUE_VARIABLE + 0.5 }") -eq $(awk "BEGIN{ print $VALUE_VARIABLE + 0.5 }") ]]; then
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	else
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
 	fi
 }
 
 utils_check_if_variable_is_integer(){
-    local VALUE_VARIABLE=$1
+    local VALUE_VARIABLE="$1"
 
     #if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
     #if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
     #if [[ $VALUE_VARIABLE =~ ^[[:digit:]]+$ ]]; then
     if [[ $VALUE_VARIABLE =~ ^[[:digit:]]+$ ]] || [[ $VALUE_VARIABLE =~ ^-[[:digit:]]+$ ]]; then
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	else
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
     fi
 }
 
 utils_check_if_variable_is_number(){
-    local VALUE_VARIABLE=$1
+    local VALUE_VARIABLE="$1"
 
-    case $(utils_check_if_variable_is_integer $VALUE_VARIABLE) in
+    case $(utils_check_if_variable_is_integer "$VALUE_VARIABLE") in
         "false")
-            case $(utils_check_if_variable_is_float $VALUE_VARIABLE) in
-                "false") display_message_default_simple "false" ;;
-                "true") display_message_default_simple "true" ;;
+            case $(utils_check_if_variable_is_float "$VALUE_VARIABLE") in
+                "false") display_message_value_text_default_simple "false" ;;
+                "true") display_message_value_text_default_simple "true" ;;
             esac
             ;;
-        "true") display_message_default_simple "true" ;;
+        "true") display_message_value_text_default_simple "true" ;;
     esac
 }
 
 utils_check_if_variable_is_string(){
-	local VALUE_VARIABLE=$1
+	local VALUE_VARIABLE="$1"
 
-	case $(utils_check_if_variable_is_null $VALUE_VARIABLE) in
+	case $(utils_check_if_variable_is_null "$VALUE_VARIABLE") in
         "false")
-			case $(utils_check_if_variable_is_number $VALUE_VARIABLE) in
-				"false") display_message_default_simple "true" ;;
-				"true") display_message_default_simple "false" ;;
+			case $(utils_check_if_variable_is_number "$VALUE_VARIABLE") in
+				"false") display_message_value_text_default_simple "true" ;;
+				"true") display_message_value_text_default_simple "false" ;;
 			esac
 			;;
-        "true") display_message_default_simple "false" ;;
+        "true") display_message_value_text_default_simple "false" ;;
     esac
 }
 
 utils_check_if_variable_number_is_even(){
-    local VALUE_NUMBER=$1
+    local VALUE_NUMBER="$1"
 
-	case $(utils_check_if_variable_is_integer $VALUE_NUMBER) in
-		"false") display_message_default_simple "false" ;;
+	case $(utils_check_if_variable_is_integer "$VALUE_NUMBER") in
+		"false") display_message_value_text_default_simple "false" ;;
 		"true")
-			if [[ $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
-				display_message_default_simple "true"
+			if [[ $((VALUE_NUMBER % 2)) -eq 0 ]]; then
+				display_message_value_text_default_simple "true"
 			else
-				display_message_default_simple "false"
+				display_message_value_text_default_simple "false"
 			fi
 			;;
 	esac
 }
 
 utils_check_if_variable_number_is_odd(){
-	local VALUE_NUMBER=$1
+	local VALUE_NUMBER="$1"
 
-	case $(utils_check_if_variable_is_integer $VALUE_NUMBER) in
-		"false") display_message_default_simple "false" ;;
+	case $(utils_check_if_variable_is_integer "$VALUE_NUMBER") in
+		"false") display_message_value_text_default_simple "false" ;;
 		"true")
-    		if [[ ! $(($VALUE_NUMBER % 2)) -eq 0 ]]; then
-				display_message_default_simple "true"
+    		if [[ ! $((VALUE_NUMBER % 2)) -eq 0 ]]; then
+				display_message_value_text_default_simple "true"
 			else
-				display_message_default_simple "false"
+				display_message_value_text_default_simple "false"
 			fi
 			;;
 	esac
@@ -276,9 +281,9 @@ utils_check_if_virtualization_is_enabled(){
 
 	if [[ $(hostnamectl | grep "Virtualization" | awk '{print $2}') ]]; then
 	#if [[ $(LC_ALL=C lscpu | grep Virtualization) ]]; then
-		display_message_default_simple "true"
+		display_message_value_text_default_simple "true"
 	else
-		display_message_default_simple "false"
+		display_message_value_text_default_simple "false"
 	fi
 }
 
@@ -287,20 +292,30 @@ utils_check_operating_system_birthday(){
 	stat -c %w /
 }
 
-utils_check_operating_system_kernel(){
+utils_check_operating_system_kernel_name(){
     case $(uname -s) in
-        "Darwin") display_message_default_simple "darwin" ;;
-        "Linux") display_message_default_simple "linux" ;;
-        CYGWIN* | MINGW32* | MYMS* |MINGGW* ) display_message_default_simple "nt" ;;
-        *) display_message_error_simple "Other operating system" ;;
+        "Darwin") display_message_value_text_default_simple "darwin" ;; #In fact it is XNU
+        "Linux") display_message_value_text_default_simple "linux" ;;
+        CYGWIN* | MINGW32* | MYMS* |MINGGW* ) display_message_value_text_default_simple "nt" ;;
+        *) display_message_value_status_error_simple "Other operating system" ;;
     esac
 }
 
-#label_must_be_improved
+utils_check_operating_system_kernel_version(){
+    case $(utils_check_operating_system_kernel_name) in
+        "darwin") uname -r ;;
+        "linux") uname -r ;;
+        "nt") display_message_value_status_empty_simple ;;
+        *) display_message_value_status_error_simple "Other operating system" ;;
+    esac
+}
+
+#@annotation_must_be_improved
 utils_check_operating_system_linux_distro(){
 	declare -A ARRAY_OPERATING_SYSTEM_FILE
 
     #Verify if system file exists according to the operating system
+	#ARRAY_VARIABLE[TITLE]=VALUE
     ARRAY_OPERATING_SYSTEM_FILE[/etc/alpine-release]=alpine
     ARRAY_OPERATING_SYSTEM_FILE[/etc/arch-release]=archlinux
     #ARRAY_OPERATING_SYSTEM_FILE[/etc/pacman.conf]=archlinux
@@ -310,55 +325,67 @@ utils_check_operating_system_linux_distro(){
     ARRAY_OPERATING_SYSTEM_FILE[/etc/slackpkg/slackpkg.conf]=slackware
     ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=opensuse
 
-    #Return all the installed package managers
-    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
-       if [[ -f $i ]]; then
-            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+    #Return all the installed package managers (only the array title)
+    for i in "${!ARRAY_OPERATING_SYSTEM_FILE[@]}"; do
+       if [[ -f "$i" ]]; then
+            display_message_value_text_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            #display_message_value_text_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
             break
         fi
     done
 }
 
-#label_must_be_improved
+#@annotation_must_be_improved
 utils_check_operating_system_name(){
-	if [[ $(utils_check_operating_system_kernel) == "darwin" ]]; then
-		display_message_default_simple "MacOS X"
-	elif [[ $(utils_check_operating_system_kernel) == "linux" ]]; then
-		display_message_default_simple $(utils_check_operating_system_linux_distro)
-	elif [[ $(utils_check_operating_system_kernel) == "nt" ]]; then
-		display_message_default_simple "Windows"
+	if [[ $(utils_check_operating_system_kernel_name) == "darwin" ]]; then
+		display_message_value_text_default_simple "MacOS X"
+	elif [[ $(utils_check_operating_system_kernel_name) == "linux" ]]; then
+		display_message_value_text_default_simple "$(utils_check_operating_system_linux_distro)"
+	elif [[ $(utils_check_operating_system_kernel_name) == "nt" ]]; then
+		display_message_value_text_default_simple "Windows"
 	else
-		display_message_default_simple "null"
+		display_message_value_text_default_simple "null"
 	fi
 }
 
-#label_must_be_improved
+#@annotation_must_be_improved
 utils_check_operating_system_platform(){
-    if [[ "$(uname)" == "Darwin" ]]; then
-        display_message_default_simple "apple_macos_x"
-    elif [[ $(expr substr $(uname -s) 1 5) == "Linux" ]]; then
-        display_message_default_simple "linux"
-    elif [[ $(expr substr $(uname -s) 1 10) == "MINGW32_NT" ]]; then
-        display_message_default_simple "microsoft_windows_nt_32_bits"
-    elif [[ $(expr substr $(uname -s) 1 10) == "MINGW64_NT" ]]; then
-        display_message_default_simple "microsoft_windows_nt_64_bits"
+    local SYSTEM_KERNEL_NAME
+    
+    SYSTEM_KERNEL_NAME=$(utils_check_operating_system_kernel_name)
+
+    if [[ $(uname) == "Darwin" ]]; then
+        display_message_value_text_default_simple "apple_macos_x"
+    elif [[ ${SYSTEM_KERNEL_NAME:0:5} == "Linux" ]]; then
+        display_message_value_text_default_simple "linux"
+    elif [[ ${SYSTEM_KERNEL_NAME:0:10} == "Linux" ]]; then
+        display_message_value_text_default_simple "microsoft_windows_nt_32_bits"
+    elif [[ ${SYSTEM_KERNEL_NAME:0:10} == "Linux" ]]; then
+        display_message_value_text_default_simple "microsoft_windows_nt_64_bits"
     else
-        display_message_error_simple ""
+        display_message_value_status_error_simple ""
     fi
 }
 
-utils_check_operating_system_memory_real_time(){
-    #utils_check_operating_system_memory_real_time "2"
+utils_check_operating_system_memory_dynamic_time(){
+    #utils_check_operating_system_memory_dynamic_time "2"
     
-    local TIME_DELAY_SECONDS=$1
+    local TIME_DELAY_SECONDS="$1"
 
     #Monitor memory without top or htop
-    watch -n $TIME_DELAY_SECONDS -d '/bin/free -m'
+    watch -n "$TIME_DELAY_SECONDS" -d '/bin/free -m'
 }
 
-#label_must_be_tested
-#label_must_be_improved
+utils_check_operating_system_memory_static_ram_gigabyte(){
+	local SYSTEM_MEMORY_RAM_GB
+	
+	SYSTEM_MEMORY_RAM_GB="$(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
+
+	display_message_value_text_default_simple "$SYSTEM_MEMORY_RAM_GB RAM "
+}
+
+#@annotation_must_be_tested
+#@annotation_must_be_improved
 utils_check_package_manager(){
     declare -A ARRAY_OPERATING_SYSTEM_FILE
 
@@ -374,48 +401,54 @@ utils_check_package_manager(){
     ARRAY_OPERATING_SYSTEM_FILE[/etc/SuSE-release]=zypper
 
     #Return all the installed package managers
-    for i in ${!ARRAY_OPERATING_SYSTEM_FILE[@]}; do
-       if [[ -f $i ]]; then
-            display_message_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
-            #display_message_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+    for i in "${!ARRAY_OPERATING_SYSTEM_FILE[@]}"; do
+       if [[ -f "$i" ]]; then
+            display_message_value_text_default_complex "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
+            #display_message_value_text_default_simple "${ARRAY_OPERATING_SYSTEM_FILE[$i]}"
             break
         fi
     done
 }
 
 utils_check_processor_family(){
-	PROCESSOR=$(cat /proc/cpuinfo | grep vendor_id | head -1 | awk '{print $3}')
-	#PROCESSOR=$(cat /sys/devices/virtual/dmi/id/board_{vendor,name,version})
+	local PROCESSOR
 
-	display_message_default_simple "$PROCESSOR"
+    case $(utils_check_if_file_exists "") in
+        "false") display_message_value_status_error_simple "Unknown" ;;
+        "true") 
+            PROCESSOR=$(cat /proc/cpuinfo | grep vendor_id | head -1 | awk '{print $3}')
+            #PROCESSOR=$(cat /sys/devices/virtual/dmi/id/board_{vendor,name,version})
+	        
+            display_message_value_text_default_simple "$PROCESSOR"
+            ;;
+    esac
+
 }
 
-#label_must_be_tested
+#@annotation_must_be_tested
 utils_clear_file(){
-	local PATH_FILE=$1
+	local PATH_FILE="$1"
 
-	display_message_warning_complex "Clearing terminal history"
+	display_message_value_status_warning_complex "Clearing terminal history"
 
 	case $(utils_check_if_file_exists "$PATH_FILE") in
 		"false") 
-			display_message_error_complex "File $PATH_FILE does not exists"
-			break
+			display_message_value_status_error_complex "File $PATH_FILE does not exists"
 			;;
 		"true")
-			cat /dev/null > $PATH_FILE
-			break
+			cat /dev/null > "$PATH_FILE"
 			;;
 	esac
 }
 
-#label_must_be_tested
+#@annotation_must_be_tested
 utils_clear_history(){
 	local QUESTION_TERMINAL_HISTORY
 
-	display_message_warning_complex "Clearing terminal history"
+	display_message_value_status_warning_complex "Clearing terminal history"
 
 	while true; do
-		read -p "Inform what you want: [ash | bash | zsh | skip] " QUESTION_TERMINAL_HISTORY
+		read -rp "Inform what you want: [ash | bash | zsh | skip] " QUESTION_TERMINAL_HISTORY
 
 		case $QUESTION_TERMINAL_HISTORY in
 			"ash")
@@ -431,19 +464,19 @@ utils_clear_history(){
 				break
 				;;
 			"skip") break ;;
-			*) display_message_error_simple "Please answer file or partition." ;;
+			*) display_message_value_status_error_simple "Please answer file or partition." ;;
 		esac
 	done
 }
 
-#label_must_be_tested
+#@annotation_must_be_tested
 utils_convert_pdf_color(){
 	local FILE_INPUT="$1"		#./input.pdf
 	local FILE_OUTPUT="$2"		#./output.pdf
 	local COLOR_ORIGIN="$3"		#black
 	local COLOR_DESTINY="$4"	#blue
 
-	magick convert -density 300 $FILE_INPUT -fill $COLOR_DESTINY -opaque $COLOR_ORIGIN $FILE_OUTPUT
+	magick convert -density 300 "$FILE_INPUT" -fill "$COLOR_DESTINY" -opaque "$COLOR_ORIGIN" "$FILE_OUTPUT"
 }
 
 utils_chronometer_countdown(){
@@ -454,47 +487,44 @@ utils_chronometer_countdown(){
     local timeMinutes=${1:3:2}
     local timeSeconds=${1:6:2}
 
-    local timeDisplay=$(($timeHours * 3600 + $timeMinutes * 60 + $timeSeconds))
+    local timeDisplay=$((timeHours * 3600 + timeMinutes * 60 + timeSeconds))
 
     while [[ $timeDisplay -gt 0 ]]; do
         sleep 1 &
         printf "\r%02d:%02d:%02d" $((timeDisplay / 3600)) $(((timeDisplay / 60) % 60))  $((timeDisplay % 60))
-        timeDisplay=$(($timeDisplay - 1))
+        timeDisplay=$((timeDisplay - 1))
         wait
     done
 
-    display_message_default_complex ""
+    display_message_value_text_default_complex ""
 }
 
 utils_download_file(){
-	local PATH_URL=$1
-	local PATH_DESTINY=$2
+	local PATH_URL="$1"
+	local PATH_DESTINY="$2"
 
 	case $# in
 		1)
-			display_message_warning_complex "Downloading $PATH_URL file"
-			curl -L -O $PATH_URL
+			display_message_value_status_warning_complex "Downloading $PATH_URL file"
+			curl -L -O "$PATH_URL"
 			#wget -c $PATH_URL
-			display_message_success_complex "$PATH_URL file has been downloaded"
-			break
+			display_message_value_status_success_complex "$PATH_URL file has been downloaded"
 			;;
 		2) 
-			display_message_warning_complex "Downloading $PATH_URL file to $PATH_DESTINY"
+			display_message_value_status_warning_complex "Downloading $PATH_URL file to $PATH_DESTINY"
 
-			mkdir -p $PATH_DESTINY/
+			mkdir -p "$PATH_DESTINY/"
 
-			cd $PATH_DESTINY/
+			cd "$PATH_DESTINY/" || exit
 			pwd
-			curl -L -O $PATH_URL
-			#wget -c $PATH_URL -O $PATH_DESTINY
-			cd -
+			curl -L -O "$PATH_URL"
+			#wget -c "$PATH_URL" -O "$PATH_DESTINY"
+			cd - || exit
 
-			display_message_success_complex "$PATH_URL file has been downloaded to $PATH_DESTINY"
-			break
+			display_message_value_status_success_complex "$PATH_URL file has been downloaded to $PATH_DESTINY"
 			;;
 		*)
-			display_message_error_complex "Invalid parameters have been set"
-			break
+			display_message_value_status_error_complex "Invalid parameters have been set"
 		;;
 	esac
 }
@@ -502,27 +532,29 @@ utils_download_file(){
 utils_download_file_latest_version(){
 	#utils_download_file_latest_version "henrikbeck95" "shell_script_library" "shell-script-library"
 	
-	local REPOSITORY_OWNER=$1
-	local REPOSITORY_NAME=$2
+	local REPOSITORY_OWNER="$1"
+	local REPOSITORY_NAME="$2"
 	local REPOSITORY_FILE=$3
-    local RESULT=$(utils_generate_link_file_version_latest_github "$REPOSITORY_OWNER" "$REPOSITORY_NAME" "$REPOSITORY_FILE")
+	local RESULT
+    
+    RESULT=$(utils_generate_link_file_version_latest_github "$REPOSITORY_OWNER" "$REPOSITORY_NAME" "$REPOSITORY_FILE")
 
-    #display_message_default_complex "Downloading $RESULT file..."
+    #display_message_value_text_default_complex "Downloading $RESULT file..."
     utils_download_file "$RESULT"
 }
 
 utils_download_website(){
-    local URL_LINK=$1
+    local URL_LINK="$1"
 
-    wget -r -erobots=off $URL_LINK
+    wget -r -erobots=off "$URL_LINK"
     #wget -r -p -U Mozilla --wait=10 --limit-rate=35K $URL_LINK
 }
 
 utils_edit_file(){
-	#gedit $@
-	#nano $@
-	#vi -O $@
-	vim -O $@
+	#gedit "$@"
+	#nano "$@"
+	#vi -O "$@"
+	vim -O "$@"
 }
 
 utils_effects_spinner(){
@@ -537,32 +569,32 @@ utils_effects_spinner(){
 }
 
 utils_export_desktop_environment(){
-	display_message_default_simple "$XDG_CURRENT_DESKTOP"
+	display_message_value_text_default_simple "$XDG_CURRENT_DESKTOP"
 }
 
 utils_export_variables_bios(){
-	display_message_warning_complex "Exporting/loading BIOS variables"
+	display_message_value_status_warning_complex "Exporting/loading BIOS variables"
 
 	case $(utils_check_if_firmware_supports_uefi) in
 		"false")
-			display_message_warning_complex "Consider enabling the UEFI before keep running this setup installtion. There may be some errors"
+			display_message_value_status_warning_complex "Consider enabling the UEFI before keep running this setup installtion. There may be some errors"
 			export IS_BIOS_UEFI="legacy"
-			break
 			;;
 		"true")
 			export IS_BIOS_UEFI="uefi"
-			break
 			;;
 	esac
 
-	display_message_warning_complex "Your device BIOS is $IS_BIOS_UEFI"
+	display_message_value_status_warning_complex "Your device BIOS is $IS_BIOS_UEFI"
 }
 
 utils_export_variables_virtualization(){
-	local IS_VIRTUALIATION=$(utils_check_if_virtualization_is_enabled)
+	local IS_VIRTUALIATION
+	
+	IS_VIRTUALIATION=$(utils_check_if_virtualization_is_enabled)
 
 	if [[ $IS_VIRTUALIATION == "true" ]]; then
-		display_message_warning_complex "I know you are using a virtual machine!"
+		display_message_value_status_warning_complex "I know you are using a virtual machine!"
 
 		export PARTITION_PATH="/dev/vda"
 		export PARTITION_BOOT="/dev/vda1"
@@ -571,7 +603,7 @@ utils_export_variables_virtualization(){
 		export PARTITION_SWAP="/dev/vda4"
 
 	else
-		display_message_warning_complex "Great! You are installing on your host machine!"
+		display_message_value_status_warning_complex "Great! You are installing on your host machine!"
 
 		export PARTITION_PATH="/dev/sda"
 		export PARTITION_BOOT="/dev/sda1"
@@ -642,10 +674,10 @@ utils_extract_file_detect_any() {
 
             (*.deb)
                 command mkdir -p "$extract_dir/control" "$extract_dir/data"
-                    builtin cd -q "$extract_dir"; ar vx "$full_path" > /dev/null
-                    builtin cd -q control; extract ../control.tar.*
-                    builtin cd -q ../data; extract ../data.tar.*
-                    builtin cd -q ..; command rm *.tar.* debian-binary ;;
+                    builtin cd -q "$extract_dir" || exit; ar vx "$full_path" > /dev/null
+                    builtin cd -q control || exit; extract ../control.tar.*
+                    builtin cd -q ../data || exit; extract ../data.tar.*
+                    builtin cd -q .. || exit; command rm ./*.tar.* debian-binary ;;
 
             (*)
                 echo "extract: '$file' cannot be extracted" >&2
@@ -657,7 +689,7 @@ utils_extract_file_detect_any() {
         shift
 
         #Go back to original working directory in case we ran cd previously
-        builtin cd -q "$pwd"
+        builtin cd -q "$pwd" || exit
     done
 }
 
@@ -665,7 +697,7 @@ utils_extract_file_method_7zip(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	7za x $FILE_ORIGIN
+	7za x "$FILE_ORIGIN"
 
     #Individually 7zip all files in current directory
     #for i in *.*; do
@@ -677,36 +709,36 @@ utils_extract_file_method_bz2(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	bunzip2 $FILE_ORIGIN
+	bunzip2 "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_cab(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	mkdir -p $FILE_DESTINY/
-	cabextract -d $FILE_ORIGIN $FILE_DESTINY
+	mkdir -p "$FILE_DESTINY"
+	cabextract -d "$FILE_ORIGIN" "$FILE_DESTINY"
 }
 
 utils_extract_file_method_cpio(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	cpio -idmvF $FILE_ORIGIN
+	cpio -idmvF "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_lz4(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	lz4 -d $FILE_ORIGIN
+	lz4 -d "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_lzma(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	unlzma $FILE_ORIGIN
+	unlzma "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_rar(){
@@ -724,14 +756,14 @@ utils_extract_file_method_tar(){
 	local FILE_DESTINY="$2"
 
 	#tar -zxvf $FILE_ORIGIN || tar -xzf $FILE_ORIGIN || tar -xf $FILE_ORIGIN
-	tar xvf $FILE_ORIGIN
+	tar xvf "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_tar_bz2(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	tar xvjf $FILE_ORIGIN
+	tar xvjf "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_tar_lz4(){
@@ -745,34 +777,31 @@ utils_extract_file_method_tar_zst(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	tar --zstd --help &> /dev/null \
-        && tar --zstd -xvf "$FILE_ORIGIN" \
-        || zstdcat "$FILE_ORIGIN" | tar xvf -
+	#tar --zstd --help &> /dev/null \
+	tar --zstd -xvf "$FILE_ORIGIN" || zstdcat "$FILE_ORIGIN" | tar xvf -
 }
 
 utils_extract_file_method_tar_zma(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	tar --lzma --help &> /dev/null \
-		&& tar --lzma -xvf "$FILE_ORIGIN" \
-		|| lzcat "$FILE_ORIGIN" | tar xvf -
+	#tar --lzma --help &> /dev/null \
+	tar --lzma -xvf "$FILE_ORIGIN" || lzcat "$FILE_ORIGIN" | tar xvf -
 }
 
 utils_extract_file_method_tar_xz(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	tar --xz --help &> /dev/null \
-        && tar --xz -xvf "$FILE_ORIGIN" \
-        || xzcat "$FILE_ORIGIN" | tar xvf -
+	#tar --xz --help &> /dev/null \
+	tar --xz -xvf "$FILE_ORIGIN" || xzcat "$FILE_ORIGIN" | tar xvf -
 }
 
 utils_extract_file_method_xz(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	unxz $FILE_ORIGIN
+	unxz "$FILE_ORIGIN"
 }
 
 utils_extract_file_method_z(){
@@ -786,27 +815,27 @@ utils_extract_file_method_zip(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	mkdir -p $FILE_DESTINY/
-	unzip $FILE_ORIGIN -d $FILE_DESTINY
+	mkdir -p "$FILE_DESTINY"
+	unzip "$FILE_ORIGIN" -d "$FILE_DESTINY"
 }
 
 utils_extract_file_method_zst(){
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
-	unzstd $FILE_ORIGIN
+	unzstd "$FILE_ORIGIN"
 }
 
 utils_generate_link_file_version_latest_github(){
     #Try: curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O
 	#Try: curl -fsSL github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE} -O
 	#Try: curl -fsSL $(utils_generate_link_file_version_latest_github "henrikbeck95" "shell_script_library" "shell-script-library") -O
-	local REPOSITORY_OWNER=$1
-	local REPOSITORY_NAME=$2
+	local REPOSITORY_OWNER="$1"
+	local REPOSITORY_NAME="$2"
 	local REPOSITORY_FILE=$3
 
 
-	display_message_default_simple "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
+	display_message_value_text_default_simple "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
 }
 
 utils_generate_number_random_from_interval_set(){
@@ -816,64 +845,77 @@ utils_generate_number_random_from_interval_set(){
 
     #Check if the arguments values are valid
     if [[ $# -ne 2 ]]; then
-        display_message_error_simple "To generate random number must have two arguments (begin, start) values"
+        display_message_value_status_error_simple "To generate random number must have two arguments (begin, start) values"
         exit 127
     elif [[ $1 -lt $2 ]]; then
-        RANDOM_INTERVAL_BEGIN=$1
+        RANDOM_INTERVAL_BEGIN="$1"
         RANDOM_INTERVAL_FINISH=$(($2 + 1))
     else
         RANDOM_INTERVAL_BEGIN=$(($2 + 1))
-        RANDOM_INTERVAL_FINISH=$1
+        RANDOM_INTERVAL_FINISH="$1"
     fi
 
     #Generate the random number
     if [[ $1 -eq $2 ]]; then
         RESULT="$1"
     else
-        RESULT="$(( ($RANDOM % ($RANDOM_INTERVAL_FINISH - $RANDOM_INTERVAL_BEGIN)) + $RANDOM_INTERVAL_BEGIN ))"
+		#RESULT=$[($RANDOM % ($RANDOM_INTERVAL_FINISH - $RANDOM_INTERVAL_BEGIN)) + $RANDOM_INTERVAL_BEGIN]
+        RESULT="$(( (RANDOM % (RANDOM_INTERVAL_FINISH - RANDOM_INTERVAL_BEGIN)) + RANDOM_INTERVAL_BEGIN ))"
     fi
 
-    display_message_number_simple "$RESULT"
+    display_message_value_number_simple "$RESULT"
 }
 
 utils_get_path_git_project_root(){
-    local PATH_FOLDER=$1
+    local PATH_FOLDER="$1"
 
-	cd $PATH_FOLDER
+	cd "$PATH_FOLDER" || exit
 
     case $(utils_check_if_path_is_inside_git_project_anywhere "$PATH_FOLDER") in
         "false")
-            display_message_error_simple "The current path is not part of a Git project"
+            display_message_value_status_error_simple "The current path is not part of a Git project"
             ;;
         "true")
-            local RESULT="$(git rev-parse --show-toplevel 2>/dev/null)"
-            display_message_default_simple "$RESULT"
+                local RESULT
+            RESULT="$(git rev-parse --show-toplevel 2>/dev/null)"
+            display_message_value_text_default_simple "$RESULT"
             ;;
     esac
 
-	cd -
+	cd - || exit
 }
 
 utils_git_repository_clone(){
-	local PATH_REPOSITORY_URL=$1
+	local PATH_REPOSITORY_URL="$1"
+	local PATH_DIRECTORY_LOCAL="$2"
 
-	display_message_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
+	display_message_value_status_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
 
-	utils_path_directory_create "$HOME/eclipse-workspace"
-	
-	cd $HOME/eclipse-workspace/
-	git clone $PATH_REPOSITORY_URL
-	cd -
-	
-	display_message_success_complex "$PATH_REPOSITORY_URL Git repository has been cloned"
+	case $# in
+		1) 
+			utils_path_directory_create "$HOME/eclipse-workspace"
+			
+			cd "$HOME/eclipse-workspace/" || exit
+			git clone "$PATH_REPOSITORY_URL"
+			cd - || exit
+			;;		
+		2) 
+			utils_path_directory_create "$PATH_DIRECTORY_LOCAL"
+			
+			git clone "$PATH_REPOSITORY_URL" "$PATH_DIRECTORY_LOCAL"
+			;;
+		*) 
+	esac
+
+	display_message_value_status_success_complex "$PATH_REPOSITORY_URL Git repository has been cloned"
 }
 
-#label_must_be_improved
+#@annotation_must_be_improved
 utils_git_setup_credentials(){
-	local USER_EMAIL=$1
-	local USER_NAME=$2
+	local USER_EMAIL="$1"
+	local USER_NAME="$2"
 
-	display_message_warning_complex "Setting up Git credentials to $USER_EMAIL - $USER_NAME"
+	display_message_value_status_warning_complex "Setting up Git credentials to $USER_EMAIL - $USER_NAME"
 
 	#Set Git e-mail credential
 	git config --global user.email "$USER_EMAIL" #Try: "henrikbeck95@gmail.com"
@@ -887,94 +929,99 @@ utils_git_setup_credentials(){
 	#git pull
 	#cat $HOME/.git-credentials | less
 
-	display_message_success_complex "Git setup credentials has been set to $USER_EMAIL - $USER_NAME"
+	display_message_value_status_success_complex "Git setup credentials has been set to $USER_EMAIL - $USER_NAME"
 }
 
 utils_load_operating_system_properties(){
-	source /etc/os-*
+        local OPERATING_SYSTEM_FILES="/etc/os-*"
+        
+        # shellcheck source=/dev/null
+        source "${OPERATING_SYSTEM_FILES}"
 }
 
 utils_move_file(){
-	local PATH_ORIGIN=$1
-	local PATH_DESTINY=$2
+	local PATH_ORIGIN="$1"
+	local PATH_DESTINY="$2"
 
-	mv $PATH_ORIGIN $PATH_DESTINY #|| mv -avr $PATH_ORIGIN $PATH_DESTINY
+	mv "$PATH_ORIGIN" "$PATH_DESTINY" #|| mv -avr "$PATH_ORIGIN $PATH_DESTINY"
 }
 
 utils_path_directory_create(){
-	local PATH_FOLDER=$1
+	local PATH_FOLDER="$1"
 
-	display_message_warning_complex "Creating $PATH_FOLDER folder directory"
+	display_message_value_status_warning_complex "Creating $PATH_FOLDER folder directory"
 	
-	if [[ ! -d $PATH_FOLDER/ ]]; then
-		mkdir -p $PATH_FOLDER/
+	if [[ ! -d "$PATH_FOLDER" ]]; then
+		mkdir -p "$PATH_FOLDER"
 	fi
 
-	display_message_success_complex "$PATH_FOLDER folder directory has been created"
+	display_message_value_status_success_complex "$PATH_FOLDER folder directory has been created"
 }
 
 utils_remove_file(){
-	local PATH_FILE=$1
+	local PATH_FILE="$1"
 
-	rm $PATH_FILE || rm -f $PATH_FILE || rm -fr $PATH_FILE
+	rm "$PATH_FILE" || rm -f "$PATH_FILE" || rm -fr "$PATH_FILE"
 }
 
 utils_screen_size_count_limit_half_characters_horizontal(){
-    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM=$1
-	local DISPLAY_TEXT_LENGTH=$2
-    local RESULT=$((($SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM-$DISPLAY_TEXT_LENGTH)/2))
+    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM="$1"
+	local DISPLAY_TEXT_LENGTH="$2"
+    local RESULT=$(((SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM-DISPLAY_TEXT_LENGTH)/2))
 
-    display_message_default_simple "$RESULT"
+    display_message_value_text_default_simple "$RESULT"
 }
 
 utils_screen_size_count_limit_maximum_characters_horizontal(){
-    local CHARACTERS_UNITS=$(tput cols)
+    local CHARACTERS_UNITS
+    
+    CHARACTERS_UNITS=$(tput cols)
 
-    display_message_default_simple "$CHARACTERS_UNITS"
+    display_message_value_text_default_simple "$CHARACTERS_UNITS"
 }
 
-#label_must_be_created
+#@annotation_must_be_created
 #utils_screen_size_count_limit_maximum_characters_vertical(){}
 
 #CREATE CASE VARIABLE COLOR DOES NOT EXIST, SET DEFAULT VALUE
 utils_screen_size_fill_limit_half_characters_horizontal(){
-	local CHARACTER_REPETITION=$1
-    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$2
-    local COLOR_VALUE=$3
+	local CHARACTER_REPETITION="$1"
+    local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF="$2"
+    local COLOR_VALUE="$3"
     local i=0
 
-    while [ $i -lt $SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF ]; do
-        #display_message_default_simple "${CHARACTER_REPETITION}"
+    while [ "$i" -lt "$SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF" ]; do
+        #display_message_value_text_default_simple "${CHARACTER_REPETITION}"
         #i=$(($i+1))
 
-	    display_message_default_simple "${COLOR_VALUE}${CHARACTER_REPETITION}${COLOR_END}"
-        i=$(($i+1))
+	    display_message_value_text_default_simple "${COLOR_VALUE}${CHARACTER_REPETITION}${COLOR_END}"
+        i=$((i+1))
     done
 }
 
 utils_simulate_typing(){
     #utils_simulate_typing "Welcome to Shell Script Library!"
     
-    local DISPLAY_TEXT=$1
+    local DISPLAY_TEXT="$1"
 
-    display_message_default_complex "$DISPLAY_TEXT" | pv -qL 10
+    display_message_value_text_default_complex "$DISPLAY_TEXT" | pv -qL 10
 }
 
 utils_symbolic_link_create(){
-	local PATH_ORIGIN=$1
-	local PATH_DESTINY=$2
+	local PATH_ORIGIN="$1"
+	local PATH_DESTINY="$2"
 
-	display_message_warning_complex "Creating symbolic link to $PATH_ORIGIN to $PATH_DESTINY"
+	display_message_value_status_warning_complex "Creating symbolic link to $PATH_ORIGIN to $PATH_DESTINY"
 	
-	ln -sf $PATH_ORIGIN $PATH_DESTINY
+	ln -sf "$PATH_ORIGIN" "$PATH_DESTINY"
 
-	display_message_success_complex "Symbolic link from $PATH_ORIGIN to $PATH_DESTINY has been created"
+	display_message_value_status_success_complex "Symbolic link from $PATH_ORIGIN to $PATH_DESTINY has been created"
 }
 
 utils_update_fonts_cache(){
-	display_message_warning_complex "Update cache from $HOME/.fonts/, /usr/share/fonts/ and /usr/local/share/fonts/ fonts pathes"
+	display_message_value_status_warning_complex "Update cache from $HOME/.fonts/, /usr/share/fonts/ and /usr/local/share/fonts/ fonts pathes"
 	
 	fc-cache update || fc-cache -f -v
 
-	display_message_success_complex "Font cache pathes from $HOME/.fonts/, /usr/share/fonts/ and /usr/local/share/fonts/ have been updated"
+	display_message_value_status_success_complex "Font cache pathes from $HOME/.fonts/, /usr/share/fonts/ and /usr/local/share/fonts/ have been updated"
 }

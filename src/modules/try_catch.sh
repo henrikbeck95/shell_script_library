@@ -3,13 +3,13 @@
 #############################
 
 try(){
-    if [ -z $exception_has_been_thrown ]; then
+    if [ -z "$exception_has_been_thrown" ]; then
         "$@" || exception_has_been_thrown=1
     fi
 }
 
 catch(){
-    if [ ! -z $exception_has_been_thrown ]; then
+    if [ -n "$exception_has_been_thrown" ]; then
         "$@"
         false   # If "sh -ex" then exit at this point
         unset exception_has_been_thrown
