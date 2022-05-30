@@ -14,7 +14,7 @@
 #Author: Henrik Beck
 #E-mail: henrikbeck95@gmail.com
 #License: BSD 3-Clause License
-#Version: 0.0.3
+#Version: 0.0.4
 #
 #############################
 
