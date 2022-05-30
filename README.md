@@ -1,23 +1,12 @@
 # Shell Script Library solution
 
-Shell script library for abstracting development process on all UNIX like shells.
+Shell script functions collection for abstracting development process, and speed up the productivity and clear the source code.
 
 ## Description
 
 Do you have any idea how much time have you ever been wasting trying to solve problems such as replacing text from a specific file?
 
 Do not waste your time coding that same function to every single script file. Focus your time developing what needs to be done by using the abstractions from this library. Because the source code workflow is more important than solving a lot of "little" problems whose are already solved by us.
-
-<!--
-- Requirements
-    1. AWK.
-    1. Echo.
-    1. GNU coreutils.
-    1. Sed.
-    1. 
-    1. 
-    1. 
--->
 
 - Advantages
     1. Easy installation setup.
@@ -35,20 +24,130 @@ Do not waste your time coding that same function to every single script file. Fo
     1. Smile!
 
 - Conclusion
-    > The commands from this library have not been made to be short. They have been developed to solve these "little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
+    > The commands from this library have not been made to be short. They have been developed to solve these "amount of little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
 
-<!-- 
 ## Installation setup
 
-- Stable version
-    > $ `curl -L -O RELEASE`
+### Requirements
 
-- Current version
-    > $ `curl -sSL https://raw.githubusercontent.com/henrikbeck95/shell_script_library/main/src/compiler.sh`
+<!--
+- Essentials
+    1. [x] Shell interpreter (such as Sh, Bash or ZSH - you can use it from Git Bash on Windows).
+    1. [x] AWK.
+    1. [x] Cd.
+    1. [x] Clear.
+    
+    1. [x] GNU CoreUtils.
+        <!--1. [x] Arch-\->
+        1. [x] Cat.
+        1. [x] Chmod.
+        <!--1. [x] ChRoot-\->
+        1. [x] Cp.
+        1. [x] Cut.
+        1. [x] Date.
+        1. [x] DD.
+        1. [x] Echo.
+        1. [x] Head.
+        1. [x] ln.
+        1. [x] ls.
+        1. [x] Mkdir.
+        1. [x] Mv.
+        1. [x] Printf.
+        1. [x] Pwd.
+        1. [x] Rm.
+        1. [x] Sort.
+        1. [x] Tail.
+        <!--1. [x] Tr-\->
+        <!--1. [x] Wc-\->
+
+    1. [x] Grep.
+    1. [x] Lsblk.
+    1. [x] Mkfs.
+    1. [x] Mkswap.
+    1. [x] Mount.
+    1. [x] Print.
+    1. [x] Sed.
+    1. [x] Swap.
 -->
+
+<!-- 
+- Extra softwares
+    1. [ ] Acpi.
+    1. [x] CFDisk.
+    1. [ ] cURL or wGET.
+    1. [ ] Docker or Podman.
+    1. [ ] OpenRC or SystemD.
+    1. [ ] Distrobox.
+    1. [ ] //notify-send
+    1. [ ] Gnome settings
+    1. [ ] //BTRFS-progs.
+    1. [ ] //BTRFS-utils.
+    
+    1. [ ] Fc-cache.
+    1. [ ] Git.
+    1. [ ] ImageMagick.
+    1. [ ] Vim.
+    
+    1. [ ] APK, APT, DNF, Emerge, Pacman, Paru, SlackPKG, YUM or Zypper.
+    
+    1. [ ] ASDF.
+    1. [ ] Node.
+    1. [ ] Python - Anaconda.
+    1. [ ] Python - Pip.
+    1. [ ] Flatpak.
+    1. [ ] Snap.
+    1. [ ] Rust.
+    
+    1. [ ] //XDG.
+    1. [ ] //XDG-screensaver.
+    1. [ ] //XDG-open.
+    
+    1. [ ] i3.
+    1. [ ] i3wm.
+    
+    1. [ ] //Gz.
+    1. [ ] Tar.
+    1. [ ] Xz.
+    1. [ ] Zip.
+    
+    1. [ ] BTRFK.
+    1. [ ] Timeshift.
+    1. [ ] Snapper.
+-->
+
+### Installing
+
+- Download release latest version
+    > $ `curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O`
+
+    > $ `mv ./shell-script-library /usr/local/bin/shell-script-library`
+
+- Uninstall library
+    > $ `rm /usr/local/bin/shell-script-library`
+
+### Using
+
+```bash
+#!/usr/bin/env sh
+
+source /usr/local/bin/shell-script-library
+
+#Insert your code here...
+```
+
+### Development
+
+1. Clone the repository on latest version
+    > $ `git clone --branch development https://github.com/henrikbeck95/shell_script_library`
+
+1. Give executable permission to the script
+    > $ `chmod +x./shell_script_library/src/compiler.sh -crun`
+    
+1. Compile the modiles and install it on your system for all users
+    > $ `./shell_script_library/src/compiler.sh -crun`
 
 ## Contribute
 
-If you are a shell script developer consider to contribute by improving the library methods or creating even more solutions.
+If you are a shell script developer consider to contribute by improving the library methods already set or creating even more solutions.
 
-I know there are a lot of work to be done, but with your help this distance is going to be shorter.
+We have a lot of work to be done. Maybe with your help this distance might be a little shorter.
