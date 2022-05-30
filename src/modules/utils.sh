@@ -8,6 +8,40 @@ utils_browser_open_url(){
 	xdg-open "$@" &
 }
 
+utils_calculate_area_triangule() {
+	#utils_calculate_area_triangule "3" "4" "5"
+
+	local SIDE_A=$1
+	local SIDE_B=$2
+	local SIDE_C=$3
+	local RESULT_AUX
+	local RESULT_FINAL
+
+	RESULT_AUX=$(math_calculate "($SIDE_A + $SIDE_B + $SIDE_C) / 2")
+	RESULT_FINAL=$(math_sqrt "($RESULT_AUX * ($RESULT_AUX - $SIDE_A) * ($RESULT_AUX - $SIDE_B) * ($RESULT_AUX - $SIDE_C))" "2")
+
+	display_message_value_number_simple "$RESULT_FINAL"
+}
+
+utils_calculate_area_square() {
+	#utils_calculate_area_square "6"
+
+	local SIDE_LENGTH=$1
+	local RESULT=$((SIDE_LENGTH * SIDE_LENGTH))
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_calculate_area_rectangle() {
+	#utils_calculate_area_rectangle "3" "5"
+
+	local SIDE_LENGTH=$1
+	local SIDE_WIDTH=$2
+	local RESULT=$((SIDE_LENGTH * SIDE_WIDTH))
+
+	display_message_value_number_simple "$RESULT"
+}
+
 #@annotation_must_be_improved
 utils_check_architecture(){
     #case $($ARCHITECTURE) in
@@ -165,9 +199,13 @@ utils_check_if_variable_exists(){
 }
 
 utils_check_if_variable_is_null(){
-    local VALUE_VARIABLE="$1"
+	#utils_check_if_variable_is_null ""
+	#utils_check_if_variable_is_null "testing"
+    
+	local VALUE_VARIABLE="$1"
 
-    if [[ "$VALUE_VARIABLE" == "" ]]; then
+    #if [[ "$VALUE_VARIABLE" == "" ]]; then
+    if [[ -z "$VALUE_VARIABLE" ]]; then
 		display_message_value_text_default_simple "true"
 	else
 		display_message_value_text_default_simple "false"
@@ -274,6 +312,22 @@ utils_check_if_variable_number_is_odd(){
 			fi
 			;;
 	esac
+}
+
+utils_check_if_variable_number_is_prime() {
+	#utils_check_if_variable_number_is_prime "27"
+	#utils_check_if_variable_number_is_prime "29"
+
+	local VARIABLE_VALUE=$1
+
+	for ((i = 2; i <= VARIABLE_VALUE / 2; i++)); do
+		if [[ $((VARIABLE_VALUE % i)) -eq 0 ]]; then
+			display_message_value_text_default_simple "false"
+			return 0 #Exit from the function without existing from the script file
+		fi
+	done
+
+	display_message_value_text_default_simple "true"
 }
 
 utils_check_if_virtualization_is_enabled(){
@@ -425,6 +479,26 @@ utils_check_processor_family(){
 
 }
 
+utils_chronometer_countdown(){
+	#utils_chronometer_countdown "00:00:02" #2 seconds
+	#utils_chronometer_countdown "00:01:10" #1 minute and 10 seconds
+    
+	local timeHours=${1:0:2}
+    local timeMinutes=${1:3:2}
+    local timeSeconds=${1:6:2}
+
+    local timeDisplay=$((timeHours * 3600 + timeMinutes * 60 + timeSeconds))
+
+    while [[ $timeDisplay -gt 0 ]]; do
+        sleep 1 &
+        printf "\r%02d:%02d:%02d" $((timeDisplay / 3600)) $(((timeDisplay / 60) % 60))  $((timeDisplay % 60))
+        timeDisplay=$((timeDisplay - 1))
+        wait
+    done
+
+    display_message_value_text_default_complex ""
+}
+
 #@annotation_must_be_tested
 utils_clear_file(){
 	local PATH_FILE="$1"
@@ -469,6 +543,105 @@ utils_clear_history(){
 	done
 }
 
+utils_convert_numeric_base_calculator() {
+	local MATH_EXPRESSION="$1"
+	local FLOAT_POINT_VALUE="0"
+	local RESULT
+
+	#echo "$MATH_EXPRESSION" | bc -l
+	#printf "%0.${FLOAT_POINT_VALUE}f\n" $(bc -l <<< scale=${FLOAT_POINT_VALUE}\;${MATH_EXPRESSION})
+	#printf "%0.${FLOAT_POINT_VALUE}f\n" $(bc -q <<< scale=${FLOAT_POINT_VALUE}\;${MATH_EXPRESSION})
+	#display_message_value_number_simple $(bc -l <<< scale=${FLOAT_POINT_VALUE}\;${MATH_EXPRESSION})
+
+	RESULT=$(bc -l <<<scale=${FLOAT_POINT_VALUE}\;"$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_binary_to_decimal() {
+	#utils_convert_numeric_base_from_binary_to_decimal "1001"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="2"
+	local NUMERIC_BASE_OUTPUT="1111"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_binary_to_octal() {
+	#utils_convert_numeric_base_from_binary_to_octal "111"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="2"
+	local NUMERIC_BASE_OUTPUT="8"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_decimal_to_binary() {
+	#utils_convert_numeric_base_from_decimal_to_binary "9"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="10"
+	local NUMERIC_BASE_OUTPUT="2"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_decimal_to_octal() {
+	#utils_convert_numeric_base_from_decimal_to_octal "12"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="10"
+	local NUMERIC_BASE_OUTPUT="8"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_octal_to_binary() {
+	#utils_convert_numeric_base_from_octal_to_binary "12"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="8"
+	local NUMERIC_BASE_OUTPUT="2"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_octal_to_decimal() {
+	#utils_convert_numeric_base_from_octal_to_decimal "14"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="8"
+	local NUMERIC_BASE_OUTPUT="1111"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
 #@annotation_must_be_tested
 utils_convert_pdf_color(){
 	local FILE_INPUT="$1"		#./input.pdf
@@ -479,24 +652,20 @@ utils_convert_pdf_color(){
 	magick convert -density 300 "$FILE_INPUT" -fill "$COLOR_DESTINY" -opaque "$COLOR_ORIGIN" "$FILE_OUTPUT"
 }
 
-utils_chronometer_countdown(){
-	#utils_chronometer_countdown "00:00:02" #2 seconds
-	#utils_chronometer_countdown "00:01:10" #1 minute and 10 seconds
-    
-	local timeHours=${1:0:2}
-    local timeMinutes=${1:3:2}
-    local timeSeconds=${1:6:2}
+utils_convert_temperature_celsius_to_fahrenheit() {
+	#utils_convert_temperature_celsius_to_fahrenheit "100"
 
-    local timeDisplay=$((timeHours * 3600 + timeMinutes * 60 + timeSeconds))
+	local TEMPERATURE_CELSIUS=$1
 
-    while [[ $timeDisplay -gt 0 ]]; do
-        sleep 1 &
-        printf "\r%02d:%02d:%02d" $((timeDisplay / 3600)) $(((timeDisplay / 60) % 60))  $((timeDisplay % 60))
-        timeDisplay=$((timeDisplay - 1))
-        wait
-    done
+	math_calculate "$TEMPERATURE_CELSIUS * 1.8 + 32" "2"
+}
 
-    display_message_value_text_default_complex ""
+utils_convert_temperature_fahrenheit_to_celsius() {
+	#utils_convert_temperature_fahrenheit_to_celsius "212"
+
+	local TEMPERATURE_FAHRENHEIT=$1
+
+	math_calculate "($TEMPERATURE_FAHRENHEIT - 32) / 1.8" "2"
 }
 
 utils_download_file(){
@@ -864,6 +1033,22 @@ utils_generate_number_random_from_interval_set(){
     fi
 
     display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_improved
+utils_get_all_groups() {
+	#How to get a list of all groups in Linux
+	#/etc/group file stores the details of groups that are present on the system.
+
+	awk -F: '{print $1}' /etc/group || cut -d ":" -f 1 /etc/group
+}
+
+#@annotation_must_be_improved
+utils_get_all_users() {
+	#How to get a list of all users in Linux
+	#/etc/passwd stores the details of users that are present on the system.
+
+	awk -F: '{print $1}' /etc/passwd || cut -d ":" -f 1 /etc/passwd
 }
 
 utils_get_path_git_project_root(){

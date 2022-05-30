@@ -1,6 +1,6 @@
 # Shell Script Library solution
 
-Shell script library for abstracting development process on all UNIX like shells and speed up the development performance.
+Shell script functions collection for abstracting development process, and speed up the productivity and clear the source code.
 
 ## Description
 
@@ -26,36 +26,11 @@ Do not waste your time coding that same function to every single script file. Fo
 - Conclusion
     > The commands from this library have not been made to be short. They have been developed to solve these "amount of little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
 
-## Features
-
-### Commentary for multiple lines
-
-- Original method
-```bash
-: << 'COMMENT'
-echo 'This is a text 01'
-echo 'This is a text 02'
-COMMENT
-
-echo 'This is a text 03'
-```
-
-- Shell Script Library way
-```bash
-%
-echo 'This is a text 01'
-echo 'This is a text 02'
-%%
-
-echo 'This is a text 03'
-```
-
-- Annotation
-    > In both case the only result whose is going to be displayed it **This is a text 03**.
 ## Installation setup
 
 ### Requirements
 
+<!--
 - Essentials
     1. [x] Shell interpreter (such as Sh, Bash or ZSH - you can use it from Git Bash on Windows).
     1. [x] AWK.
@@ -63,10 +38,10 @@ echo 'This is a text 03'
     1. [x] Clear.
     
     1. [x] GNU CoreUtils.
-        <!--1. [x] Arch-->
+        <!--1. [x] Arch-\->
         1. [x] Cat.
         1. [x] Chmod.
-        <!--1. [x] ChRoot-->
+        <!--1. [x] ChRoot-\->
         1. [x] Cp.
         1. [x] Cut.
         1. [x] Date.
@@ -82,8 +57,8 @@ echo 'This is a text 03'
         1. [x] Rm.
         1. [x] Sort.
         1. [x] Tail.
-        <!--1. [x] Tr-->
-        <!--1. [x] Wc-->
+        <!--1. [x] Tr-\->
+        <!--1. [x] Wc-\->
 
     1. [x] Grep.
     1. [x] Lsblk.
@@ -93,6 +68,7 @@ echo 'This is a text 03'
     1. [x] Print.
     1. [x] Sed.
     1. [x] Swap.
+-->
 
 <!-- 
 - Extra softwares
@@ -156,8 +132,19 @@ echo 'This is a text 03'
 
 source /usr/local/bin/shell-script-library
 
-#Insert your code here
+#Insert your code here...
 ```
+
+### Development
+
+1. Clone the repository on latest version
+    > $ `git clone --branch development https://github.com/henrikbeck95/shell_script_library`
+
+1. Give executable permission to the script
+    > $ `chmod +x./shell_script_library/src/compiler.sh -crun`
+    
+1. Compile the modiles and install it on your system for all users
+    > $ `./shell_script_library/src/compiler.sh -crun`
 
 ## Contribute
 

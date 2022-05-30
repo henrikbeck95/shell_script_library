@@ -23,7 +23,7 @@
 #############################
 #
 #Warning!
-#This is an auto generated file. DO NOT edit it.
+#This is an auto generated file. DO NOT EDIT IT FROM HERE.
 #
 #Labels
 #NO LABEL                       = There is nothing to do for this function tag
@@ -44,7 +44,7 @@
 # shellcheck source=/dev/null
 #
 #Installation setup
-#Move this generated file to /usr/local/bin/shell-script-library for installing this library correctly
+#Move this auto generated file to /usr/local/bin/shell-script-library for installing this library correctly
 #
 #Usage
 #Import this library on your source code by typing

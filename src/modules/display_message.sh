@@ -53,8 +53,8 @@ display_message_position_align_center_simple(){
 
     #Displaying after text
     case $(utils_check_if_variable_number_is_even "$DISPLAY_TEXT_LENGTH") in
-        "false") SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$(($SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF+1)) ;;
-        #"true") SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$(($SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF+0)) ;;
+        "false") SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$((SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF+1)) ;;
+        #"true") SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$((SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF+0)) ;;
     esac
 
     utils_screen_size_fill_limit_half_characters_horizontal "$CHARACTER_REPETITION" "$SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF" "${COLOR_STATUS_SUCCESS}"
@@ -63,7 +63,6 @@ display_message_position_align_center_simple(){
 display_message_separator_complex(){
 	local CHARACTER_REPETITION="#"
     local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF
-    local i=0
     
 	SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF=$(utils_screen_size_count_limit_maximum_characters_horizontal)
 
@@ -82,8 +81,9 @@ display_message_separator_simple(){
 	display_message_value_text_default_simple "${COLOR_STATUS_DEFAULT}${CHARACTER_REPETITION}${COLOR_END}"
 }
 
-#display_message_tabular_number_complex
-#display_message_tabular_number_number
+#display_message_tabular_number_complex(){}
+
+#display_message_tabular_number_number(){}
 
 display_message_tabular_text_complex(){
     #display_message_tabular_text_complex "Henrik:Beck:henrikbeck95@gmail.com\nSomebody:Surname:some_email_address@something.com"
@@ -108,16 +108,27 @@ display_message_tabular_text_simple(){
 display_message_value_number_complex(){
 	local DISPLAY_TEXT="$1"
 
-	printf "%s\n" "$DISPLAY_TEXT"
+	#printf "%s\n" "$DISPLAY_TEXT"
+	printf "%s\n" "$DISPLAY_TEXT" 2> /dev/null
 	#printf '%.2f\n' "$DISPLAY_TEXT"
 }
 
 display_message_value_number_simple(){
 	local DISPLAY_TEXT="$1"
 
+	#printf "%s" "$DISPLAY_TEXT"
 	printf "%s" "$DISPLAY_TEXT" 2> /dev/null
+	#printf "%s\n" "$DISPLAY_TEXT" 2> /dev/null
 	#printf "%s" "$DISPLAY_TEXT" 2>&1 /dev/null
+
+	#echo -e "parentPid:\t\t$(top_level_parent_pid)"
+	#echo -e "$TOP_LEVEL_PARENT_PID"
+
+	#echo -e "isReturn:\t\t$(utils_check_if_output_is_return)"
+	#echo -e "isStdout:\t\t$(utils_check_if_output_is_stdout)"
 }
+
+#display_message_value_status_empty_center(){}
 
 display_message_value_status_empty_complex(){
 	local DISPLAY_TEXT="This is an empty function. Please fill it with some instructions"
@@ -137,6 +148,8 @@ display_message_value_status_empty_simple(){
 	display_message_value_text_default_simple "${COLOR_STATUS_EMPTY}${DISPLAY_TEXT}${COLOR_END}"
 }
 
+#display_message_value_status_error_center(){}
+
 display_message_value_status_error_complex(){
 	local DISPLAY_TEXT="¯\_(ツ)_/¯ ERROR! ${1}"
 	local CHARACTERS_UNITS
@@ -155,6 +168,8 @@ display_message_value_status_error_simple(){
 	display_message_value_text_default_simple "${COLOR_STATUS_ERROR}${DISPLAY_TEXT}${COLOR_END}"
 }
 
+#display_message_value_status_success_center(){}
+
 display_message_value_status_success_complex(){
 	local DISPLAY_TEXT="***${1}***"
 	local CHARACTERS_UNITS
@@ -172,6 +187,8 @@ display_message_value_status_success_simple(){
 	#display_message_value_text_default_simple "${DISPLAY_TEXT}"
 	display_message_value_text_default_simple "${COLOR_STATUS_SUCCESS}${DISPLAY_TEXT}${COLOR_END}"
 }
+
+#display_message_value_status_warning_center(){}
 
 display_message_value_status_warning_complex(){
 	local DISPLAY_TEXT="$1"
@@ -203,6 +220,6 @@ display_message_value_text_default_simple(){
 	local DISPLAY_TEXT="$1"
 
 	#echo -n "$DISPLAY_TEXT"
-	#printf "$DISPLAY_TEXT"
-	printf "%s" "$DISPLAY_TEXT"
+	printf "$DISPLAY_TEXT"
+	#printf "%s" "$DISPLAY_TEXT"
 }
