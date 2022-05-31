@@ -2,7 +2,7 @@
 #Display notification
 #############################
 
-display_notification_low(){
+display_notification_low() {
     local VALUE_MESSAGE="$1"
     local VALUE_ICONS="$2"
 
@@ -13,7 +13,7 @@ display_notification_low(){
     fi
 }
 
-display_notification_normal(){
+display_notification_normal() {
     local VALUE_MESSAGE="$1"
     local VALUE_ICONS="$2"
 
@@ -24,7 +24,7 @@ display_notification_normal(){
     fi
 }
 
-display_notification_warning(){
+display_notification_warning() {
     local VALUE_MESSAGE="$1"
     local VALUE_ICONS="$2"
 

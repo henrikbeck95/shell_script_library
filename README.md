@@ -1,4 +1,4 @@
-# Shell Script Library solution
+# Shell Script Library
 
 Shell script functions collection for abstracting development process, and speed up the productivity and clear the source code.
 
@@ -17,7 +17,7 @@ Do not waste your time coding that same function to every single script file. Fo
     1. If have developed your source code using this library and for some reason the newest update breaks your code, you can specify what library version release is going to be installed.
     1. Compatibility between `BSD`, `Linux`, `MacOS`, `Unix` and `WSL` operating system. Furthermore it is able to be run on Windows by using `Git Bash` prompt.
 
-- Happiness steps
+- Step by step to the happiness
     1. Install this library.
     1. Import this library.
     1. Code less by using this library.
@@ -101,6 +101,7 @@ Do not waste your time coding that same function to every single script file. Fo
     1. [ ] //XDG.
     1. [ ] //XDG-screensaver.
     1. [ ] //XDG-open.
+    1. [ ] //XDG-utils.
     
     1. [ ] i3.
     1. [ ] i3wm.

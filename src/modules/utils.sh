@@ -58,8 +58,13 @@ utils_check_architecture(){
 #@annotation_must_be_created
 #utils_check_if_device_is_mobile(){}
 
-#@annotation_must_be_created
-#utils_check_if_device_is_laptop(){}
+utils_check_if_device_is_laptop(){
+	if [ -d "/proc/acpi/button/lid" ]; then
+        display_message_value_text_default_simple "true" #LAPTOP
+	else
+        display_message_value_text_default_simple "false" #DESKTOP
+	fi
+}
 
 utils_check_if_file_exists(){
     local VALUE_PATH_FILE="$1"
@@ -643,6 +648,7 @@ utils_convert_numeric_base_from_octal_to_decimal() {
 }
 
 #@annotation_must_be_tested
+#util_converter_pdf_color_from_black_to_blue
 utils_convert_pdf_color(){
 	local FILE_INPUT="$1"		#./input.pdf
 	local FILE_OUTPUT="$2"		#./output.pdf
@@ -1072,25 +1078,27 @@ utils_get_path_git_project_root(){
 
 utils_git_repository_clone(){
 	local PATH_REPOSITORY_URL="$1"
-	local PATH_DIRECTORY_LOCAL="$2"
-
-	display_message_value_status_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
+	local PATH_DIRECTORY_LOCAL
 
 	case $# in
 		1) 
+			PATH_DIRECTORY_LOCAL="$HOME/eclipse-workspace"
+			
 			utils_path_directory_create "$HOME/eclipse-workspace"
 			
-			cd "$HOME/eclipse-workspace/" || exit
-			git clone "$PATH_REPOSITORY_URL"
-			cd - || exit
-			;;		
+			#cd "$HOME/eclipse-workspace/" || exit
+			#git clone "$PATH_REPOSITORY_URL"
+			#cd - || exit
+			;;
 		2) 
-			utils_path_directory_create "$PATH_DIRECTORY_LOCAL"
-			
-			git clone "$PATH_REPOSITORY_URL" "$PATH_DIRECTORY_LOCAL"
+			PATH_DIRECTORY_LOCAL="$2"
 			;;
 		*) 
 	esac
+	
+	display_message_value_status_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
+
+	git clone "$PATH_REPOSITORY_URL" "$PATH_DIRECTORY_LOCAL"
 
 	display_message_value_status_success_complex "$PATH_REPOSITORY_URL Git repository has been cloned"
 }
