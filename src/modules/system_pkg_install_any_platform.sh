@@ -275,3 +275,68 @@ system_pkg_any_software_install_platform_yarn() {
 
     display_message_value_status_success_complex "Node Yarn platform has been installed"
 }
+
+#@annotation_must_be_improved
+#@annotation_must_be_tested
+system_pkg_any_software_install_platform_ytfzf() {
+    utils_check_if_user_has_root_previledges
+
+    display_message_value_status_warning_complex "Installing YtFZF software setup"
+
+    local pkgdir=""
+    local pkgname="ytfzf"
+
+    #Check the following GitHub repositories pages
+    #utils_browser_open_url "https://github.com/pystardust/ytfzf"
+    #utils_browser_open_url "https://github.com/seebye/ueberzug"
+    #utils_browser_open_url "https://github.com/ytdl-org/youtube-dl"
+
+    #Installing YouTube-DL
+    curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+    chmod a+rx /usr/local/bin/youtube-dl
+
+    #Installing others dependencies
+    case $(system_pkg_check_package_manager) in
+    "apk") display_message_value_status_empty_complex ;;
+    "apt")
+        system_pkg_default_software_install_single "curl git jq mpv fzf libxext-dev"
+        utils_git_repository_clone "https://github.com/pystardust/ytfzf" "$HOME/.ytfzf"
+        cd "$HOME/.ytfzf/" || exit
+        sudo make install doc
+        ;;
+    "aur") display_message_value_status_empty_complex ;;
+    "dnf") display_message_value_status_empty_complex ;;
+    "emerge") display_message_value_status_empty_complex ;;
+    "pacman") system_pkg_default_software_install_single "curl git jq mpv fzf ueberzug" ;;
+    "slackpkg") display_message_value_status_empty_complex ;;
+    "yum") display_message_value_status_empty_complex ;;
+    "zypper") display_message_value_status_empty_complex ;;
+    *) display_message_value_status_error_complex "Package manager has not been found." ;;
+    esac
+
+    #Installing YtFZF software setup
+    #Original installation setup: sudo pacman -S fzf ueberzug && paru -S ytfzf
+    #curl -L "https://raw.githubusercontent.com/pystardust/ytfzf/master/ytfzf" -o "/usr/bin/ytfzf"
+    utils_download_file "https://raw.githubusercontent.com/pystardust/ytfzf/master/${pkgname}" "/usr/bin/${pkgname}"
+    system_permission_set_executable "/usr/bin/${pkgname}"
+
+    #Installing YtFZF documentation
+    utils_download_file "https://raw.githubusercontent.com/pystardust/ytfzf/master/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    utils_download_file "https://raw.githubusercontent.com/pystardust/ytfzf/master/docs/man/ytfzf.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1.gz"
+    utils_download_file "https://raw.githubusercontent.com/pystardust/ytfzf/master/docs/man/ytfzf.5" "${pkgdir}/usr/share/man/man1/${pkgname}.5.gz"
+    utils_download_file "https://raw.githubusercontent.com/pystardust/ytfzf/master/docs/conf.sh" "${pkgdir}/usr/share/doc/${pkgname}"
+
+    #Creating alias for BASH
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_audio_download"="ytfzf -d -l --pages=10 -m -t $*"' "$HOME/.bashrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_audio_play"="ytfzf -l --pages=10 -m -t $*"' "$HOME/.bashrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_video_download"="ytfzf -d -l --pages=10 -t $*"' "$HOME/.bashrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_video_play"="ytfzf -l --pages=10 -t $*"' "$HOME/.bashrc"
+
+    #Creating alias for ZSH
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_audio_download"="ytfzf -d -l --pages=10 -m -t $*"' "$HOME/.zshrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_audio_play"="ytfzf -l --pages=10 -m -t $*"' "$HOME/.zshrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_video_download"="ytfzf -d -l --pages=10 -t $*"' "$HOME/.zshrc"
+    tools_string_write_exclusive_line_on_a_file 'alias "youtube_video_play"="ytfzf -l --pages=10 -t $*"' "$HOME/.zshrc"
+
+    display_message_value_status_success_complex "YtFZF setup has been installed"
+}

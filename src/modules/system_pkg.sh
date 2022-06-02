@@ -66,10 +66,10 @@ system_pkg_default_repository_syncronize() {
         ;;
     "aur")
         case "$DEBUG" in
-        #"false") yay -Syyuu ;;
-        #"true") yay -Syyuu --noconfirm ;;
-        "false") paru -Syyuu ;;
-        "true") paru -Syyuu --noconfirm ;;
+        #"false") yay -Syu ;;
+        #"true") yay -Syu --noconfirm ;;
+        "false") paru -Syu ;;
+        "true") paru -Syu --noconfirm ;;
         esac
         ;;
     "apt")
@@ -87,12 +87,17 @@ system_pkg_default_repository_syncronize() {
     "emerge") display_message_value_status_empty_complex ;;
     "pacman")
         case "$DEBUG" in
-        "false") pacman -Syyuu ;;
-        "true") pacman -Syyuu --noconfirm ;;
+        "false") pacman -Syu ;;
+        "true") pacman -Syu --noconfirm ;;
         esac
         ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum update ;;
+        "true") yum update -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -110,12 +115,27 @@ system_pkg_default_cache_clean() {
     case $(utils_check_package_manager) in
     "apk") display_message_value_status_empty_complex ;;
     "apt") apt autoremove ;;
-    "aur") display_message_value_status_empty_complex ;;
+    "aur")
+        case "$DEBUG" in
+        "false") paru -Sc ;;
+        "true") paru -Sc -y ;;
+        esac
+        ;;
     "dnf") display_message_value_status_empty_complex ;;
     "emerge") display_message_value_status_empty_complex ;;
-    "pacman") display_message_value_status_empty_complex ;;
+    "pacman")
+        case "$DEBUG" in
+        "false") pacman -Sc ;;
+        "true") pacman -Sc -y ;;
+        esac
+        ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum clean all ;;
+        "true") yum clean all -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -138,7 +158,12 @@ system_pkg_default_cache_make() {
     "emerge") display_message_value_status_empty_complex ;;
     "pacman") display_message_value_status_empty_complex ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum make cache ;;
+        "true") yum make cache -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -157,8 +182,18 @@ system_pkg_default_software_install_group() {
 
     case $(utils_check_package_manager) in
     "apk") display_message_value_status_empty_complex ;;
-    "apt") display_message_value_status_empty_complex ;;
-    "aur") display_message_value_status_empty_complex ;;
+    "apt")
+        case $DEBUG in
+        "false") apt install --install-suggests "$@" ;;
+        "true") apt install -y --install-suggests "$@" ;;
+        esac
+        ;;
+    "aur")
+        case "$DEBUG" in
+        "false") paru -S --asdeps "$@" ;;
+        "true") paru -S --asdeps -y "$@" ;;
+        esac
+        ;;
     "dnf")
         case $DEBUG in
         "false") dnf group install --with-optional "$@" ;;
@@ -166,9 +201,19 @@ system_pkg_default_software_install_group() {
         esac
         ;;
     "emerge") display_message_value_status_empty_complex ;;
-    "pacman") display_message_value_status_empty_complex ;;
+    "pacman")
+        case "$DEBUG" in
+        "false") pacman -S --asdeps "$@" ;;
+        "true") pacman -S --asdeps -y "$@" ;;
+        esac
+        ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum groupinstall ;;
+        "true") yum groupinstall -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -221,7 +266,12 @@ system_pkg_default_software_install_single() {
         esac
         ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum install ;;
+        "true") yum install -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -235,14 +285,14 @@ system_pkg_default_software_list() {
     display_message_value_status_warning_complex "Listing package manager softwares"
 
     case $(utils_check_package_manager) in
-    "apk") apl list ;;
+    "apk") apk list ;;
     "apt") apt list || dpkg -l ;; #apt list --upgradable
     "aur") pacman -Qm ;;
     "dnf") rpm -q || rpm -q "$@" ;;
     "emerge") display_message_value_status_empty_complex ;;
     "pacman") pacman -Qn ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum") yum list ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -257,13 +307,38 @@ system_pkg_default_software_uninstall_group() {
 
     case $(utils_check_package_manager) in
     "apk") display_message_value_status_empty_complex ;;
-    "aur") display_message_value_status_empty_complex ;;
+    "aur")
+        case $DEBUG in
+        #"false") yay -Rns "$@" ;;
+        #"true") yay -Rns "$@" --noconfirm ;;
+        "false") paru -Rns "$@" ;;
+        "true") paru -Rns "$@" --noconfirm ;;
+        esac
+        ;;
     "apt") display_message_value_status_empty_complex ;;
+
+    #"apt")
+        #case $DEBUG in
+        #"false") apt install --install-suggests "$@" ;;
+        #"true") apt install -y --install-suggests "$@" ;;
+        #esac
+        #;;
+
     "dnf") display_message_value_status_empty_complex ;;
     "emerge") display_message_value_status_empty_complex ;;
-    "pacman") display_message_value_status_empty_complex ;;
+    "pacman")
+        case "$DEBUG" in
+        "false") pacman -Rns "$@" ;;
+        "true") pacman -Rns -y "$@" ;;
+        esac
+        ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum groupremove ;;
+        "true") yum groupremove -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac
@@ -287,10 +362,10 @@ system_pkg_default_software_uninstall_single() {
         ;;
     "aur")
         case $DEBUG in
-        #"false") yay -Rns "$@" ;;
-        #"true") yay -Rns "$@" --noconfirm ;;
-        "false") paru -Rns "$@" ;;
-        "true") paru -Rns "$@" --noconfirm ;;
+        #"false") yay -R "$@" ;;
+        #"true") yay -R "$@" --noconfirm ;;
+        "false") paru -R "$@" ;;
+        "true") paru -R "$@" --noconfirm ;;
         esac
         ;;
     "apt")
@@ -308,13 +383,18 @@ system_pkg_default_software_uninstall_single() {
     "emerge") display_message_value_status_empty_complex ;;
     "pacman")
         case $DEBUG in
-        "false") pacman -Rns "$@" ;;
-        "true") pacman -Rns --noconfirm "$@" ;;
-            #"true") pacman -Rns --noconfirm --needed "$@" ;;
+        "false") pacman -R "$@" ;;
+        "true") pacman -R --noconfirm "$@" ;;
+            #"true") pacman -R --noconfirm --needed "$@" ;;
         esac
         ;;
     "slackpkg") display_message_value_status_empty_complex ;;
-    "yum") display_message_value_status_empty_complex ;;
+    "yum")
+        case "$DEBUG" in
+        "false") yum remove ;;
+        "true") yum remove -y ;;
+        esac
+        ;;
     "zypper") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "Package manager has not been found." ;;
     esac

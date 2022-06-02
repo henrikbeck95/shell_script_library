@@ -196,6 +196,7 @@ utils_check_if_user_has_root_previledges(){
 utils_check_if_variable_exists(){
 	local VALUE_VARIABLE="$1"
 
+	#if [[ -v "$VALUE_VARIABLE" ]]; then
 	if [[ -n "$VALUE_VARIABLE" ]]; then
 		display_message_value_text_default_simple "true"
 	else
