@@ -75,11 +75,11 @@ utils_check_if_folder_exists() {
 utils_clear_file() {
     local PATH_FILE="$1"
 
-    display_message_value_status_warning_complex "Clearing terminal history"
+    echo -e "Clearing terminal history"
 
     case $(utils_check_if_file_exists "$PATH_FILE") in
     "false")
-        display_message_value_status_error_complex "File $PATH_FILE does not exists"
+        echo -e "File $PATH_FILE does not exists"
         ;;
     "true")
         cat /dev/null >"$PATH_FILE"
@@ -176,13 +176,13 @@ shell_script_library_modules_action_clear_main() {
 
     case $MODULE_ACTION_PLACE in
     "library")
-        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/.sh; do
+        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
             FILENAME_WITH_FULL_PATH="${i}"
             shell_script_library_modules_action_clear_original "$FILENAME_WITH_FULL_PATH"
         done
         ;;
     "tester")
-        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/.sh; do
+        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
             FILENAME_WITH_FULL_PATH="${i}"
             shell_script_library_modules_action_clear_tester "$FILENAME_WITH_FULL_PATH"
         done
@@ -202,7 +202,7 @@ shell_script_library_modules_action_compile_main() {
         #Compile all modules into one single file
         cat "$PATH_LIBRARY_MODULES_FILES_COMPILING"/header.txt >"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
 
-        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/.sh; do
+        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
             FILENAME_WITH_FULL_PATH="${i}"
             shell_script_library_modules_action_compile_original "$FILENAME_WITH_FULL_PATH"
         done
@@ -214,7 +214,7 @@ shell_script_library_modules_action_compile_main() {
         #Compile all modules into one single file
         cat "$PATH_LIBRARY_MODULES_FILES_COMPILING"/header.txt >"$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER"
 
-        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/.sh; do
+        for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
             FILENAME_WITH_FULL_PATH="${i}"
             shell_script_library_modules_action_compile_tester "$FILENAME_WITH_FULL_PATH"
         done
@@ -266,8 +266,8 @@ while [ -n "$1" ]; do
         #"-c-library" | "--clear-library") shell_script_library_modules_action_clear_main "library" ;;
         #"-c-tester" | "--clear-tester") shell_script_library_modules_action_clear_main "tester" ;;
         #"-i" | "--install") shell_script_library_install ;;
-        #"-m-library" | "--merge-library") shell_script_library_modules_action_compile_main "library" ;;
-        #"-m-tester" | "--merge-tester") shell_script_library_modules_action_compile_main "tester" ;;
+    "-m-library" | "--merge-library") shell_script_library_modules_action_compile_main "library" ;;
+    "-m-tester" | "--merge-tester") shell_script_library_modules_action_compile_main "tester" ;;
     "-r-library" | "--run-library") shell_script_library_run_main "library" ;;
     "-r-tester" | "--run-tester") shell_script_library_run_main "tester" ;;
         #"-u" | "--uninstall") shell_script_library_uninstall ;;
