@@ -37,6 +37,16 @@ system_appearance_desktop_environment_gnome() {
 	gsettings set org.gnome.shell.extensions.desktop-icons show-trash false
 }
 
+system_appearance_theme_alacritty_midnightcity() {
+	utils_path_directory_create "$HOME/.config/alacritty/"
+	
+	cd "$HOME/.config/alacritty/"
+	
+	utils_download_file "https://raw.githubusercontent.com/henrikbeck95/dotfiles/development/current/alacritty.yml"
+	
+	cd -
+}
+
 #@annotation_must_be_improved
 system_appearance_theme_gedit_dracula() {
 	utils_download_file "https://raw.githubusercontent.com/dracula/gedit/master/dracula.xml"
@@ -69,6 +79,16 @@ system_appearance_theme_gtk_adwaita() {
 system_appearance_theme_gtk_dracula() {
 	gsettings set org.gnome.desktop.interface gtk-theme "Dracula"
 	gsettings set org.gnome.desktop.wm.preferences theme "Dracula"
+}
+
+system_appearance_theme_lf_dracula() {
+	utils_path_directory_create "$HOME/.config/lf/"
+
+	cd "$HOME/.config/lf/" || exit
+
+	utils_download_file "https://raw.githubusercontent.com/henrikbeck95/dotfiles/development/current/lfrc"
+
+	cd - || exit
 }
 
 #@annotation_must_be_improved

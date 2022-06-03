@@ -380,9 +380,6 @@ system_pkg_default_software_install_combo_utility() {
             ImageMagick-perl \
             net-tools
 
-        #Enable VirtualBox copy/cut and paste from the host to the KVM guest
-        system_pkg_default_software_install_single "spice-vdagent"
-
         #native-fier \
         ;;
     "gentoo") display_message_value_status_empty_complex ;;
@@ -391,9 +388,6 @@ system_pkg_default_software_install_combo_utility() {
     "ubuntu")
         system_pkg_default_software_install_single \
             scrot
-
-        #Enable VirtualBox copy/cut and paste from the host to the KVM guest
-        system_pkg_default_software_install_single spice-vdagent
 
         ;;
     *) display_message_value_status_error_complex "???" ;;

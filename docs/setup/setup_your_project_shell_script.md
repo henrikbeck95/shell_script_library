@@ -36,6 +36,7 @@ SHELL_SCRIPT_LIBRARY_LOCAL="$HOME/.local/bin/shell-script-library"
 
 #Check if Shell Script library is installed to import it
 if [ -f $SHELL_SCRIPT_LIBRARY_GLOBAL ] || [ -f $SHELL_SCRIPT_LIBRARY_LOCAL ]; then
+    #shellcheck source=/dev/null
     . "$SHELL_SCRIPT_LIBRARY_GLOBAL" 2>/dev/null ||
         . "$SHELL_SCRIPT_LIBRARY_LOCAL" 2>/dev/null
 else

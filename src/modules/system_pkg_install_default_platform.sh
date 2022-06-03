@@ -96,7 +96,9 @@ system_pkg_default_software_install_platform_bluetooth() {
             bluez \
             bluez-utils
 
-        system_daemon_enable_now bluetooth
+        #pulseaudio-bluetooth
+
+        system_daemon_enable_now "bluetooth.service"
         ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
@@ -107,6 +109,12 @@ system_pkg_default_software_install_platform_bluetooth() {
     "ubuntu") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "???" ;;
     esac
+
+    #vim /etc/bluetooth/main.conf
+    #bluetoothctl
+    #sudo vim /lib/systemd/system/bluetooth.service
+    #system_daemon_reload
+    #system_daemon_restart bluetooth.service
 
     display_message_value_status_success_complex "Bluetooth platform has been installed"
 }
@@ -131,9 +139,9 @@ system_pkg_default_software_install_platform_cockpit() {
             virt-viewer
 
         #Enabling Systemd process
-        system_daemon_enable_now cockpit.socket
-        system_daemon_enable_now cockpit.pmcd
-        system_daemon_enable_now pmlogger
+        system_daemon_enable_now "cockpit.socket"
+        system_daemon_enable_now "cockpit.pmcd"
+        system_daemon_enable_now "pmlogger"
         ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
@@ -201,7 +209,7 @@ system_pkg_default_software_install_platform_cups() {
             cups
         #hplip
 
-        system_daemon_enable_now cups.service
+        system_daemon_enable_now "cups.service"
         ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
@@ -418,6 +426,87 @@ system_pkg_default_software_install_platform_gnome() {
 }
 
 #@annotation_must_be_improved
+#@annotation_must_be_fixed
+#@annotation_must_be_updated
+#MUST BE FIXED
+system_pkg_default_software_install_platform_grub() {
+    display_message_value_status_warning_complex "Installing GRUB platform"
+
+    case $(utils_check_operating_system_name) in
+    "alpine") display_message_value_status_empty_complex ;;
+    "archlinux")
+        system_pkg_default_software_install_single \
+            base-devel \
+            cron \
+            dialog \
+            dosfstools \
+            efibootmgr \
+            grub \
+            grub-btrfs \
+            linux-headers \
+            mtools \
+            network-manager-applet \
+            networkmanager \
+            os-prober \
+            reflector \
+            wireless_tools \
+            wpa_supplicant
+
+        #linux-lts-headers \
+        ;;
+    "debian") display_message_value_status_empty_complex ;;
+    "centos") display_message_value_status_empty_complex ;;
+    "fedora") display_message_value_status_empty_complex ;;
+    "gentoo") display_message_value_status_empty_complex ;;
+    "opensuse") display_message_value_status_empty_complex ;;
+    "slackware") display_message_value_status_empty_complex ;;
+    "ubuntu") display_message_value_status_empty_complex ;;
+    *) display_message_value_status_error_complex "???" ;;
+    esac
+
+    #Enable the NetworkManager
+    system_daemon_enable_now "NetworkManager.service"
+
+    #Enable Reflector
+    system_daemon_enable_later "reflector.timer"
+    #system_daemon_enable_later fstrim.timer #ERROR
+
+    #Configuring GRUB by commenting the line: MODULES=()
+    #string_replace_text_from_text_pattern "/etc/mkinitcpio.conf" "^MODULES=()" "#MODULES=()"
+    #string_replace_text_from_text_pattern "/etc/mkinitcpio.conf" "^MODULES=()" "MODULES=(btrfs)"
+
+    util_edit_file "$FILENAME" #Add text: MODULES=(btrfs)
+    mkinitcpio -p linux
+
+    #Applying GRUB
+    case $IS_BIOS_UEFI in #label_must_be_fixed
+    "legacy")
+        #grub-install --target=x86_64-efi --bootloader-id=GRUB
+        #grub-install --target=x86_64-efi --boot-directory=/boot/efi --bootloader-id=GRUB
+        #efibootmgr -c -d /dev/sda -p 1 -L "ArchLinux" -l \vmlinuz-linux -u "root=/dev/sda2 rw initrd=/initramfs-linux.img"
+        display_message_error "
+			Sorry but I do not how to install GRUB on BIOS legacy machine
+			If you know how, please inform the developer the procedure for implementing it.
+			For now, the commands must be implemented manually
+			Do not worry, this is the last step to be done."
+
+        exit 127
+        ;;
+    "uefi")
+        grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+
+        grub-mkconfig -o /boot/grub/grub.cfg
+        ;;
+    *)
+        display_message_error "The BIOS could not be identified!"
+        exit 0
+        ;;
+    esac
+
+    display_message_value_status_success_complex "GRUB platform has been installed"
+}
+
+#@annotation_must_be_improved
 system_pkg_default_software_install_platform_i3() {
     display_message_value_status_warning_complex "Installing i3 platform"
 
@@ -496,7 +585,7 @@ system_pkg_default_software_install_platform_intel() {
 
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
-    "archlinux") system_pkg_default_software_install_single xf86-video-intel ;;
+    "archlinux") system_pkg_default_software_install_single "xf86-video-intel" ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
     "fedora") display_message_value_status_empty_complex ;;
@@ -529,7 +618,7 @@ system_pkg_default_software_install_platform_lightdm() {
             lightdm-gtk-greeter-settings
 
         #system_daemon_enable_later lightdm.service -f
-        system_daemon_enable_later lightdm.service
+        system_daemon_enable_later "lightdm.service"
         systemctl set-default graphical.target
         ;;
     "debian") display_message_value_status_empty_complex ;;
@@ -556,7 +645,7 @@ system_pkg_default_software_install_platform_ly() {
         cd ./ly/ || exit
         makepkg -si
 
-        system_daemon_enable_later ly.service
+        system_daemon_enable_later "ly.service"
         ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
@@ -569,6 +658,37 @@ system_pkg_default_software_install_platform_ly() {
     esac
 
     display_message_value_status_success_complex "Ly platform has been installed"
+}
+
+#@annotation_must_be_improved
+#@annotation_must_be_edited
+system_pkg_default_software_install_platform_,ariadb() {
+    display_message_value_status_warning_complex "Installing Maria DB graphical card platform"
+
+    case $(utils_check_operating_system_name) in
+    "alpine") display_message_value_status_empty_complex ;;
+    "archlinux")
+        #system_package_manager_aur_software_install
+        system_pkg_default_software_install_single \
+            nmariadb
+
+        chattr +C /var/lib/mysql/
+        chattr +C /var/lib/mysql/
+        mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+        system_daemon_enable_now "mariadb"
+        mysql_secure_installation
+        ;;
+    "debian") display_message_value_status_empty_complex ;;
+    "centos") display_message_value_status_empty_complex ;;
+    "fedora") display_message_value_status_empty_complex ;;
+    "gentoo") display_message_value_status_empty_complex ;;
+    "opensuse") display_message_value_status_empty_complex ;;
+    "slackware") display_message_value_status_empty_complex ;;
+    "ubuntu") display_message_value_status_empty_complex ;;
+    *) display_message_value_status_error_complex "???" ;;
+    esac
+
+    display_message_value_status_success_complex "Maria DB graphical card platform has been installed"
 }
 
 #@annotation_must_be_improved
@@ -594,6 +714,47 @@ system_pkg_default_software_install_platform_nvidia() {
     esac
 
     display_message_value_status_success_complex "Nvidia graphical card platform has been installed"
+}
+
+#@annotation_must_be_tested
+#@annotation_must_be_improved
+#MUST BE IMPLEMENTED SED CUT FUNCTION
+system_pkg_default_software_install_platform_openssh() {
+    display_message_value_status_warning_complex "Installing OpenSSH connection support platform"
+
+    case $(utils_check_operating_system_name) in
+    "alpine") display_message_value_status_empty_complex ;;
+    "archlinux")
+        system_pkg_default_software_install_single "openssh"
+        system_daemon_enable_now sshd.service
+        ;;
+    "debian") display_message_value_status_empty_complex ;;
+    "centos") display_message_value_status_empty_complex ;;
+    "fedora") system_pkg_default_software_install_single "openssh-server" ;;
+    "gentoo") display_message_value_status_empty_complex ;;
+    "opensuse") display_message_value_status_empty_complex ;;
+    "slackware") display_message_value_status_empty_complex ;;
+    "ubuntu") system_pkg_default_software_install_single "openssh-client" ;;
+    *) display_message_value_status_error_complex "???" ;;
+    esac
+
+    utils_edit_file "/etc/ssh/sshd_config" #Uncomment the port 22
+
+    #display_message_value_status_warning_complex "Change Root password"
+    #passwd root
+
+    #display_message_value_status_warning_complex "Get the ip address"
+    #ip addr
+
+    display_message_value_status_warning_complex "Auxiliar machine\n	
+	For rightly configuring the another PC with Linux, follow the steps below:
+	
+	$ sudo apt install openssh-client
+	$ ssh -l <username> <ip_address>
+	or $ ssh root@<ip_address>
+	or $ ssh-keygen -f \"/home/your_user/.ssh/known_hosts\" -R \"192.168.1.221\""
+
+    display_message_value_status_success_complex "OpenSSH connection support platform has been installed"
 }
 
 #@annotation_must_be_created
@@ -666,7 +827,7 @@ system_pkg_default_software_install_platform_podman() {
 
     case $(utils_check_operating_system_name) in
     "alpine")
-        system_pkg_default_software_install_single "podman" "fuse-overlayfs" "shadow" "slirp4netns"
+        system_pkg_default_software_install_single "podman" "docker-compose" "fuse-overlayfs" "shadow" "slirp4netns"
 
         modprobe tun
 
@@ -812,45 +973,48 @@ system_pkg_default_software_install_platform_pulseaudio() {
     display_message_value_status_success_complex "PulseAudio platform has been installed"
 }
 
-#@annotation_must_be_tested
 #@annotation_must_be_improved
-#MUST BE IMPLEMENTED SED CUT FUNCTION
-system_pkg_default_software_install_platform_openssh() {
-    display_message_value_status_warning_complex "Installing OpenSSH connection support platform"
+system_pkg_default_software_install_platform_qxl() {
+    display_message_value_status_warning_complex "Installing QXL graphical card platform"
 
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
     "archlinux")
-        system_pkg_default_software_install_single "openssh"
-        system_daemon_enable_now sshd.service
+        system_pkg_default_software_install_single \
+            "xf86-video-qxl"
         ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
-    "fedora") system_pkg_default_software_install_single "openssh-server" ;;
+    "fedora") display_message_value_status_empty_complex ;;
     "gentoo") display_message_value_status_empty_complex ;;
     "opensuse") display_message_value_status_empty_complex ;;
     "slackware") display_message_value_status_empty_complex ;;
-    "ubuntu") system_pkg_default_software_install_single "openssh-client" ;;
+    "ubuntu") display_message_value_status_empty_complex ;;
     *) display_message_value_status_error_complex "???" ;;
     esac
 
-    utils_edit_file "/etc/ssh/sshd_config" #Uncomment the port 22
+    display_message_value_status_success_complex "QXL graphical card platform has been installed"
+}
 
-    #display_message_value_status_warning_complex "Change Root password"
-    #passwd root
+#@annotation_must_be_edited
+system_pkg_default_software_install_platform_reflector() {
+    #system_pkg_default_software_install_platform_reflector "Brazil"
+    local VALUE_COUNTRY="$1"
 
-    #display_message_value_status_warning_complex "Get the ip address"
-    #ip addr
+    system_pkg_default_software_install_single "reflector"
 
-    display_message_value_status_warning_complex "Auxiliar machine\n	
-	For rightly configuring the another PC with Linux, follow the steps below:
-	
-	$ sudo apt install openssh-client
-	$ ssh -l <username> <ip_address>
-	or $ ssh root@<ip_address>
-	or $ ssh-keygen -f \"/home/your_user/.ssh/known_hosts\" -R \"192.168.1.221\""
+    system_daemon_enable_later "reflector.timer"
 
-    display_message_value_status_success_complex "OpenSSH connection support platform has been installed"
+    timedatectl set-ntp true
+    hwclock --systohc
+
+    reflector -c "$VALUE_COUNTRY" -a 12 --sort rate --save /etc/pacman.d/mirrorlist
+
+    system_pkg_default_repository_syncronize
+
+    firewall-cmd --add-port=1025-65535/tcp --permanent
+    firewall-cmd --add-port=1025-65535/udp --permanent
+    firewall-cmd --reload
 }
 
 #@annotation_must_be_tested
@@ -895,10 +1059,40 @@ system_pkg_default_software_install_platform_snap() {
     display_message_value_status_success_complex "Snap platform has been installed"
 }
 
+system_pkg_default_software_install_platform_spicevdagent() {
+    #How can I copy&paste from the host to a KVM guest?
+    #Enable VirtualBox copy/cut and paste from the host to the KVM guest
+
+    display_message_value_status_warning_complex "Installing Spice VdAgent platform"
+
+    case $(utils_check_operating_system_name) in
+    "alpine") display_message_value_status_empty_complex ;;
+    "archlinux")
+        system_pkg_default_software_install_single "spice-vdagent"
+        ;;
+    "debian") display_message_value_status_empty_complex ;;
+    "centos") display_message_value_status_empty_complex ;;
+    "fedora")
+        system_pkg_default_software_install_single "spice-vdagent"
+        ;;
+    "gentoo") display_message_value_status_empty_complex ;;
+    "opensuse") display_message_value_status_empty_complex ;;
+    "slackware") display_message_value_status_empty_complex ;;
+    "ubuntu")
+        system_pkg_default_software_install_single "spice-vdagent"
+        ;;
+    *) display_message_value_status_error_complex "???" ;;
+    esac
+
+    display_message_value_status_success_complex "Spice VdAgent platform has been installed"
+}
+
 #@annotation_must_be_improved
 #@annotation_must_be_fixed
 system_pkg_default_software_install_platform_virtmanager() {
     display_message_value_status_warning_complex "Installing Virt-Manager platform"
+
+    system_pkg_default_software_install_platform_qxl
 
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
@@ -987,6 +1181,8 @@ system_pkg_default_software_install_platform_virtmanager() {
     *) display_message_value_status_error_complex "???" ;;
     esac
 
+    system_pkg_default_software_install_platform_spicevdagent
+
     display_message_value_status_success_complex "Virt-Manager platform has been installed"
 }
 
@@ -994,9 +1190,15 @@ system_pkg_default_software_install_platform_virtmanager() {
 system_pkg_default_software_install_platform_virtualbox() {
     display_message_value_status_warning_complex "Installing VirtualBox platform"
 
+    system_pkg_default_software_install_platform_qxl
+
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
-    "archlinux") display_message_value_status_empty_complex ;;
+    "archlinux")
+        #system_package_manager_pacman_software_install "virtualbox-guest-utils"
+        display_message_value_status_empty_complex
+        ;;
+
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
     "fedora") display_message_value_status_empty_complex ;;
@@ -1007,7 +1209,37 @@ system_pkg_default_software_install_platform_virtualbox() {
     *) display_message_value_status_error_complex "???" ;;
     esac
 
+    system_pkg_default_software_install_platform_spicevdagent
+
     display_message_value_status_success_complex "VirtualBox platform has been installed"
+}
+
+#@annotation_must_be_created
+system_pkg_default_software_install_platform_vmware() {
+    display_message_value_status_warning_complex "Installing VMWare platform"
+
+    system_pkg_default_software_install_platform_qxl
+
+    case $(utils_check_operating_system_name) in
+    "alpine") display_message_value_status_empty_complex ;;
+    "archlinux")
+        #system_package_manager_pacman_software_install "xf86-video-vmware"
+        display_message_value_status_empty_complex
+        ;;
+
+    "debian") display_message_value_status_empty_complex ;;
+    "centos") display_message_value_status_empty_complex ;;
+    "fedora") display_message_value_status_empty_complex ;;
+    "gentoo") display_message_value_status_empty_complex ;;
+    "opensuse") display_message_value_status_empty_complex ;;
+    "slackware") display_message_value_status_empty_complex ;;
+    "ubuntu") display_message_value_status_empty_complex ;;
+    *) display_message_value_status_error_complex "???" ;;
+    esac
+
+    system_pkg_default_software_install_platform_spicevdagent
+
+    display_message_value_status_success_complex "VMWare platform has been installed"
 }
 
 #@annotation_must_be_created
@@ -1016,7 +1248,7 @@ system_pkg_default_software_install_platform_wayland() {
 
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
-    "archlinux") display_message_value_status_empty_complex ;;
+    "archlinux") system_pkg_default_software_install_single "wayland" ;;
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
     "fedora") display_message_value_status_empty_complex ;;
@@ -1102,7 +1334,8 @@ system_pkg_default_software_install_platform_xorg() {
 
     case $(utils_check_operating_system_name) in
     "alpine") display_message_value_status_empty_complex ;;
-    "archlinux") system_pkg_default_software_install_single xorg ;;
+    "archlinux") system_pkg_default_software_install_single "xorg" ;;
+        #"xorg-server"
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
     "fedora") display_message_value_status_empty_complex ;;

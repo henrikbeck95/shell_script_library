@@ -61,7 +61,9 @@ string_convert_from_upper_to_lower() {
 }
 
 string_count_character() {
-    display_message_value_text_default_simple "${#1}"
+    local VALUE_TEXT=$1
+
+    display_message_value_text_default_simple "${#VALUE_TEXT}"
 }
 
 string_get_content_between_interval() {
@@ -230,6 +232,23 @@ string_replace_text() {
 
     #Replace all the match values in a text file
     sed -i "s/$TEXT_OLD/$TEXT_NEW/g" "$PATH_FILE"
+}
+
+string_set_space_every_number_of_iteration() {
+    #string_set_space_every_number_of_iteration "$VALUE_BINARY" "8"
+    
+    local VALUE_TEXT=$1
+    local VALUE_NUMBER_ITERATION
+    local RESULT
+
+    case $(utils_check_if_variable_exists "$2") in
+    "false") VALUE_NUMBER_ITERATION=2 ;;
+    "true") VALUE_NUMBER_ITERATION=$2 ;;
+    esac
+
+    RESULT=$(display_message_value_text_default_simple "$VALUE_BINARY" | sed "s/.\{$VALUE_NUMBER_ITERATION\}/& /g")
+
+    display_message_value_text_default_simple "$RESULT"
 }
 
 #@annotation_must_be_updated

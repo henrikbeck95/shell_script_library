@@ -86,9 +86,6 @@ display_message_separator_simple() {
 #display_message_tabular_number_number(){}
 
 display_message_tabular_text_complex() {
-	#display_message_tabular_text_complex "Henrik:Beck:henrikbeck95@gmail.com\nSomebody:Surname:some_email_address@something.com"
-	#display_message_tabular_text_complex "$(head -4 /etc/passwd)"
-
 	local DISPLAY_TEXT="$1"
 	#local DISPLAY_TEXT="$@"
 
@@ -96,9 +93,6 @@ display_message_tabular_text_complex() {
 }
 
 display_message_tabular_text_simple() {
-	#display_message_tabular_text_simple "Henrik:Beck:henrikbeck95@gmail.com\nSomebody:Surname:some_email_address@something.com"
-	#display_message_tabular_text_simple "$(head -4 /etc/passwd)"
-
 	local DISPLAY_TEXT="$1"
 	#local DISPLAY_TEXT="$@"
 
