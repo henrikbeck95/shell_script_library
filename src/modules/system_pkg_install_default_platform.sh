@@ -662,7 +662,7 @@ system_pkg_default_software_install_platform_ly() {
 
 #@annotation_must_be_improved
 #@annotation_must_be_edited
-system_pkg_default_software_install_platform_,ariadb() {
+system_pkg_default_software_install_platform_mariadb() {
     display_message_value_status_warning_complex "Installing Maria DB graphical card platform"
 
     case $(utils_check_operating_system_name) in
