@@ -1,4 +1,4 @@
 .ignoring/
-#src/shell-script-library
-#src/shell-script-library-tester
+src/shell-script-library
+src/shell-script-library-tester
 src/testing.sh

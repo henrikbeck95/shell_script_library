@@ -1,8 +1,3 @@
-#!/usr/bin/env bash
-
-#shellcheck source=/dev/null
-. "/usr/local/bin/shell-script-library" || exit
-
 #############################
 #Display message
 #############################

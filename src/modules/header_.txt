@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+
+#███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗    ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
+#██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝    ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+#███████╗███████║█████╗  ██║     ██║         ███████╗██║     ██████╔╝██║██████╔╝   ██║       ██║     ██║██████╔╝██████╔╝███████║██████╔╝ ╚████╔╝ 
+#╚════██║██╔══██║██╔══╝  ██║     ██║         ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║       ██║     ██║██╔══██╗██╔══██╗██╔══██║██╔══██╗  ╚██╔╝  
+#███████║██║  ██║███████╗███████╗███████╗    ███████║╚██████╗██║  ██║██║██║        ██║       ███████╗██║██████╔╝██║  ██║██║  ██║██║  ██║   ██║   
+#╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝       ╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+
+#############################
+#Credits
+#############################
+#
+#Author: Henrik Beck
+#E-mail: henrikbeck95@gmail.com
+#License: GPL3 License
+#Version: 0.0.1
+#
+#############################
+
+#############################
+#Instructions
+#############################
+#
+#Warning!
+#This is an auto generated file. DO NOT EDIT IT FROM HERE.
+#
+#This is a test unit for Shell Script Library
+#
+#Labels
+#NO LABEL                       = There is nothing to do for this function tag
+#@annotation_must_be_chosen		= Must be created a selection menu
+#@annotation_must_be_created	= There is no content inside this function tag
+#@annotation_must_be_deprecated = Must be replaced by another method soon
+#@annotation_must_be_edited		= Create a display message for this function tag
+#@annotation_must_be_fixed		= There is a detected bug for this function tag
+#@annotation_must_be_improved	= Must be organized this function tag
+#@annotation_must_be_override   = This function overrides the original function
+#@annotation_must_be_tested		= Must debug this function tag
+#@annotation_must_be_updated    = Must be updated according to ShellCheck analyzer tool or replacing math calculate structure
+#
+#############################
+
+#shellcheck source=/dev/null
+. "/usr/local/bin/shell-script-library" || exit
