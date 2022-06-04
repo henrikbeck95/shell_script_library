@@ -86,9 +86,6 @@ display_message_separator_simple() {
 #display_message_tabular_number_number(){}
 
 display_message_tabular_text_complex() {
-	#display_message_tabular_text_complex "Henrik:Beck:henrikbeck95@gmail.com\nSomebody:Surname:some_email_address@something.com"
-	#display_message_tabular_text_complex "$(head -4 /etc/passwd)"
-
 	local DISPLAY_TEXT="$1"
 	#local DISPLAY_TEXT="$@"
 
@@ -96,9 +93,6 @@ display_message_tabular_text_complex() {
 }
 
 display_message_tabular_text_simple() {
-	#display_message_tabular_text_simple "Henrik:Beck:henrikbeck95@gmail.com\nSomebody:Surname:some_email_address@something.com"
-	#display_message_tabular_text_simple "$(head -4 /etc/passwd)"
-
 	local DISPLAY_TEXT="$1"
 	#local DISPLAY_TEXT="$@"
 
@@ -208,6 +202,47 @@ display_message_value_status_warning_simple() {
 	display_message_value_text_default_simple "${COLOR_STATUS_WARNING}${DISPLAY_TEXT}${COLOR_END}"
 }
 
+#@annotation_must_be_improved
+display_message_value_text_block_complex() {
+	local TEXT_INPUT="$1"
+	#local TEXT_TAB_SPACE=$(echo -e "\t")
+
+	local TEXT_REMOVING_MARGIN_LEFT=$(sed 's/^ *//' <<<$TEXT_INPUT)
+	#local TEXT_REMOVING_MARGIN_LEFT=$(sed '1d;s/^.*//' <<< $TEXT_INPUT)
+
+	#sed 's/\//\'$'\t/g' <<< '
+	#sed 's/\t/\'\\t'\t/g' <<< '
+
+	#cat <<< "$TEXT_REMOVING_MARGIN_LEFT"
+	#printf '%s\n' "$TEXT_REMOVING_MARGIN_LEFT"
+	echo -e "$TEXT_REMOVING_MARGIN_LEFT"
+
+	#local TEXT_REPLACING_TO_LINE_BREAK=$()
+	#echo -e "$TEXT_REPLACING_TO_LINE_BREAK"
+
+	#local TEXT_REPLACING_TO_TABS=$(sed 's/\\t/    /g' <<< $TEXT_INPUT)
+	#local TEXT_REPLACING_TO_TABS=$(sed 's/\//\'$'\t/g' <<< $TEXT_INPUT)
+	#local TEXT_REPLACING_TO_TABS=$(sed 's/\t/\'\\t'\t/g' <<< $TEXT_INPUT)
+	#echo -e "$TEXT_REPLACING_TO_TABS"
+
+	#printf %s "\
+	#"
+
+	#cat <<< '
+	#'
+
+	#display_message_value_text_block_simple '
+	#'
+}
+
+display_message_value_text_block_simple() {
+	#printblock
+	printf %s "\
+        $*
+    "
+}
+
+#println
 display_message_value_text_default_complex() {
 	local DISPLAY_TEXT="$1"
 

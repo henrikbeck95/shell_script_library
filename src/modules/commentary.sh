@@ -4,6 +4,7 @@
 
 #alias "%%"='eval $(: << "COMMENT" $@ COMMENT)'
 #alias "%"='eval : << "COMMENT"'
-# alias "%"='eval : << %%'
-alias "%"='eval : <<%%'
 #alias "%%"='eval COMMENT'
+#alias "%"='eval : << %%'
+
+alias "%"='eval : <<%%'

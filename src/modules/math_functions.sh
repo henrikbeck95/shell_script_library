@@ -27,6 +27,17 @@ math_radians() {
 }
 
 #############################
+#Math - Hyperbolic functions
+#############################
+
+#math_acosh(){}
+#math_asinh(){}
+#math_atanh(){}
+#math_cosh(){}
+#math_sinh(){}
+#math_tanh(){}
+
+#############################
 #Math - Number-theoretic and representation functions
 #############################
 
@@ -52,7 +63,8 @@ math_ceil() {
 
 #@annotation_must_be_tested
 
-#@annotation_must_be_tested#math_comb(){}
+#@annotation_must_be_tested
+#math_comb(){}
 #math_copysign(){}
 
 #@annotation_must_be_tested
@@ -163,14 +175,18 @@ math_max() {
 }
 
 #@annotation_must_be_tested
+#math_modf(){}
 
-#@annotation_must_be_tested#math_modf(){}
+#@annotation_must_be_tested
+#math_nextafter(){}
 
-#@annotation_must_be_tested#math_nextafter(){}
+#@annotation_must_be_tested
+#math_perm(){}
 
-#@annotation_must_be_tested#math_perm(){}
+#@annotation_must_be_tested
+#math_prod(){}
 
-#@annotation_must_be_tested#math_prod(){}
+#@annotation_must_be_tested
 #math_remainder(){}
 
 #@annotation_must_be_tested
@@ -196,8 +212,9 @@ math_round() {
 }
 
 #@annotation_must_be_tested
+#math_trunc(){}
 
-#@annotation_must_be_tested#math_trunc(){}
+#@annotation_must_be_tested
 #math_ulp(){}
 
 #############################
@@ -319,6 +336,15 @@ math_sqrt() {
 }
 
 #############################
+#Math - Special function
+#############################
+
+#math_erf(){}
+#math_erfc(){}
+#math_gamma(){}
+#math_lgamma(){}
+
+#############################
 #Math - Trigonometric functions
 #############################
 
@@ -340,9 +366,12 @@ math_sqrt() {
 #@annotation_must_be_tested#@annotation_must_be_fixed
 math_sin() {
     local VALUE_NUMBER="$1"
+    local VALUE_RESULT
 
     #awk 'BEGIN{print "sin(-30 degree)="sin(-30*atan2(0,-1)/180)}'
-    math_calculator "sin($VALUE_NUMBER degree)"
+    VALUE_RESULT=$(math_calculator "sin($VALUE_NUMBER degree)")
+
+    display_message_value_number_simple "$VALUE_RESULT"
 }
 
 #@annotation_must_be_tested

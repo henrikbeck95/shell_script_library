@@ -1,4 +1,4 @@
-SOFTWARE_SHEBANG_LIBRARY
+SOFTWARE_SHEBANG_TESTER
 
 #███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗    ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
 #██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝    ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -11,10 +11,10 @@ SOFTWARE_SHEBANG_LIBRARY
 #Credits
 #############################
 #
-#Author: SOFTWARE_LIBRARY_AUTHOR
-#E-mail: SOFTWARE_LIBRARY_EMAIL
-#License: SOFTWARE_LIBRARY_LICENSE
-#Version: SOFTWARE_LIBRARY_VERSION
+#Author: SOFTWARE_TESTER_AUTHOR
+#E-mail: SOFTWARE_TESTER_EMAIL
+#License: SOFTWARE_TESTER_LICENSE
+#Version: SOFTWARE_TESTER_VERSION
 #
 #############################
 
@@ -24,6 +24,8 @@ SOFTWARE_SHEBANG_LIBRARY
 #
 #Warning!
 #This is an auto generated file. DO NOT EDIT IT FROM HERE.
+#
+#This is a test unit for Shell Script Library
 #
 #Labels
 #NO LABEL                       = There is nothing to do for this function tag
@@ -37,21 +39,7 @@ SOFTWARE_SHEBANG_LIBRARY
 #@annotation_must_be_tested		= Must debug this function tag
 #@annotation_must_be_updated    = Must be updated according to ShellCheck analyzer tool or replacing math calculate structure
 #
-#Validate with ShellCheck linter
-#https://www.shellcheck.net/
-#
-#ShellCheck ignore tag
-# shellcheck source=/dev/null
-#
-#Installation setup
-#Move this auto generated file to /usr/local/bin/shell-script-library for installing this library correctly
-#
-#Usage
-#Import this library on your source code by typing
-#$ source /usr/local/bin/shell-script-library
-#
-#Import this file using relative path
-#PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
-#source "$PATH_SCRIPT"/shell-script-library
-#
 #############################
+
+#shellcheck source=/dev/null
+. "/usr/local/bin/shell-script-library" || exit

@@ -2,7 +2,7 @@
 #Utilities
 #############################
 
-utils_browser_open_url(){
+utils_browser_open_url() {
 	display_message_value_status_warning_complex "Opening $* from $BROWSER browser software"
 
 	xdg-open "$@" &
@@ -43,7 +43,7 @@ utils_calculate_area_rectangle() {
 }
 
 #@annotation_must_be_improved
-utils_check_architecture(){
+utils_check_architecture() {
     #case $($ARCHITECTURE) in
     case $(getconf LONG_BIT) in
 		"32") echo "32-bits" ;;
@@ -53,15 +53,20 @@ utils_check_architecture(){
 }
 
 #@annotation_must_be_created
-#utils_check_if_device_is_desktop(){}
+#utils_check_if_device_is_desktop() {}
 
 #@annotation_must_be_created
-#utils_check_if_device_is_mobile(){}
+#utils_check_if_device_is_mobile() {}
 
-#@annotation_must_be_created
-#utils_check_if_device_is_laptop(){}
+utils_check_if_device_is_laptop() {
+	if [ -d "/proc/acpi/button/lid" ]; then
+        display_message_value_text_default_simple "true" #LAPTOP
+	else
+        display_message_value_text_default_simple "false" #DESKTOP
+	fi
+}
 
-utils_check_if_file_exists(){
+utils_check_if_file_exists() {
     local VALUE_PATH_FILE="$1"
 
     if [[ -f $VALUE_PATH_FILE ]]; then
@@ -71,7 +76,7 @@ utils_check_if_file_exists(){
     fi
 }
 
-utils_check_if_folder_exists(){
+utils_check_if_folder_exists() {
     local VALUE_PATH_FOLDER="$1"
 
     if [[ -d $VALUE_PATH_FOLDER ]]; then
@@ -82,7 +87,7 @@ utils_check_if_folder_exists(){
 }
 
 #@annotation_must_be_updated
-utils_check_if_firmware_supports_uefi(){
+utils_check_if_firmware_supports_uefi() {
 	#if [ -z "$(ls -A /sys/firmware/efi/efivars)" ]; then
 	if [ -z "$(ls -A /sys/firmware/efi/efivars 2>&1 /dev/null)" ]; then
 		display_message_value_text_default_simple "false"
@@ -91,7 +96,7 @@ utils_check_if_firmware_supports_uefi(){
 	fi
 }
 
-utils_check_if_function_exists(){
+utils_check_if_function_exists() {
     local FUNCTION_NAME="$1"
     
     #declare -F "$1" > /dev/null;
@@ -106,7 +111,7 @@ utils_check_if_function_exists(){
     fi
 }
 
-utils_check_if_internet_connection_exists(){
+utils_check_if_internet_connection_exists() {
     display_message_value_status_warning_complex "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 
     if [ $? -eq 0 ]; then
@@ -116,7 +121,7 @@ utils_check_if_internet_connection_exists(){
     fi
 }
 
-utils_check_if_path_is_inside_git_project_anywhere(){
+utils_check_if_path_is_inside_git_project_anywhere() {
     local PATH_FOLDER="$1"
     local RESULT
 
@@ -133,7 +138,7 @@ utils_check_if_path_is_inside_git_project_anywhere(){
     cd - || exit
 }
 
-utils_check_if_path_is_inside_git_project_root(){
+utils_check_if_path_is_inside_git_project_root() {
     #utils_check_if_path_is_inside_git_project_root "/etc/"
     #utils_check_if_path_is_inside_git_project_root "$HOME/"
     #utils_check_if_path_is_inside_git_project_root "$HOME/.asdf/"
@@ -161,7 +166,7 @@ utils_check_if_path_is_inside_git_project_root(){
     cd - || exit
 }
 
-utils_check_if_software_is_installed(){
+utils_check_if_software_is_installed() {
     local SOFTWARE_NAME="$1"
 
     if command -v "$SOFTWARE_NAME" >/dev/null; then
@@ -171,7 +176,7 @@ utils_check_if_software_is_installed(){
     fi
 }
 
-utils_check_if_user_exists(){
+utils_check_if_user_exists() {
     local SEARCH_USERNAME="$1"
 
 	if [[ $(grep ^"$SEARCH_USERNAME": /etc/passwd) != "" ]]; then
@@ -181,16 +186,17 @@ utils_check_if_user_exists(){
 	fi
 }
 
-utils_check_if_user_has_root_previledges(){
+utils_check_if_user_has_root_previledges() {
 	if [[ $UID != 0 ]]; then
 		display_message_value_status_error_simple "You must be root for preduring this step."
 		exit 127;
 	fi
 }
 
-utils_check_if_variable_exists(){
+utils_check_if_variable_exists() {
 	local VALUE_VARIABLE="$1"
 
+	#if [[ -v "$VALUE_VARIABLE" ]]; then
 	if [[ -n "$VALUE_VARIABLE" ]]; then
 		display_message_value_text_default_simple "true"
 	else
@@ -198,7 +204,7 @@ utils_check_if_variable_exists(){
 	fi
 }
 
-utils_check_if_variable_is_null(){
+utils_check_if_variable_is_null() {
 	#utils_check_if_variable_is_null ""
 	#utils_check_if_variable_is_null "testing"
     
@@ -212,7 +218,7 @@ utils_check_if_variable_is_null(){
     fi
 }
 
-utils_check_if_variable_is_boolean(){
+utils_check_if_variable_is_boolean() {
 	local VALUE_VARIABLE="$1"
 
     case $VALUE_VARIABLE in
@@ -221,7 +227,7 @@ utils_check_if_variable_is_boolean(){
     esac
 }
 
-utils_check_if_variable_is_char(){
+utils_check_if_variable_is_char() {
 	local VALUE_VARIABLE="$1"
     
     case ${#VALUE_VARIABLE} in
@@ -230,7 +236,7 @@ utils_check_if_variable_is_char(){
     esac
 }
 
-utils_check_if_variable_is_float(){
+utils_check_if_variable_is_float() {
     local VALUE_VARIABLE="$1"
 
     #if [[ "$VALUE_VARIABLE" -eq "$VALUE_VARIABLE" ]] 2> /dev/null; then
@@ -243,7 +249,7 @@ utils_check_if_variable_is_float(){
 	fi
 }
 
-utils_check_if_variable_is_integer(){
+utils_check_if_variable_is_integer() {
     local VALUE_VARIABLE="$1"
 
     #if [[ "$VALUE_VARIABLE" =~ ^[0-9]+$ ]]; then
@@ -256,7 +262,7 @@ utils_check_if_variable_is_integer(){
     fi
 }
 
-utils_check_if_variable_is_number(){
+utils_check_if_variable_is_number() {
     local VALUE_VARIABLE="$1"
 
     case $(utils_check_if_variable_is_integer "$VALUE_VARIABLE") in
@@ -270,7 +276,7 @@ utils_check_if_variable_is_number(){
     esac
 }
 
-utils_check_if_variable_is_string(){
+utils_check_if_variable_is_string() {
 	local VALUE_VARIABLE="$1"
 
 	case $(utils_check_if_variable_is_null "$VALUE_VARIABLE") in
@@ -284,7 +290,7 @@ utils_check_if_variable_is_string(){
     esac
 }
 
-utils_check_if_variable_number_is_even(){
+utils_check_if_variable_number_is_even() {
     local VALUE_NUMBER="$1"
 
 	case $(utils_check_if_variable_is_integer "$VALUE_NUMBER") in
@@ -299,7 +305,7 @@ utils_check_if_variable_number_is_even(){
 	esac
 }
 
-utils_check_if_variable_number_is_odd(){
+utils_check_if_variable_number_is_odd() {
 	local VALUE_NUMBER="$1"
 
 	case $(utils_check_if_variable_is_integer "$VALUE_NUMBER") in
@@ -330,7 +336,7 @@ utils_check_if_variable_number_is_prime() {
 	display_message_value_text_default_simple "true"
 }
 
-utils_check_if_virtualization_is_enabled(){
+utils_check_if_virtualization_is_enabled() {
 	#if [[ $(egrep '^flags.*(vmx|svm)' /proc/cpuinfo) ]]; then
 
 	if [[ $(hostnamectl | grep "Virtualization" | awk '{print $2}') ]]; then
@@ -341,12 +347,12 @@ utils_check_if_virtualization_is_enabled(){
 	fi
 }
 
-utils_check_operating_system_birthday(){
+utils_check_operating_system_birthday() {
 	#Display the info about when the operating was installed on the machine
 	stat -c %w /
 }
 
-utils_check_operating_system_kernel_name(){
+utils_check_operating_system_kernel_name() {
     case $(uname -s) in
         "Darwin") display_message_value_text_default_simple "darwin" ;; #In fact it is XNU
         "Linux") display_message_value_text_default_simple "linux" ;;
@@ -355,7 +361,7 @@ utils_check_operating_system_kernel_name(){
     esac
 }
 
-utils_check_operating_system_kernel_version(){
+utils_check_operating_system_kernel_version() {
     case $(utils_check_operating_system_kernel_name) in
         "darwin") uname -r ;;
         "linux") uname -r ;;
@@ -365,7 +371,7 @@ utils_check_operating_system_kernel_version(){
 }
 
 #@annotation_must_be_improved
-utils_check_operating_system_linux_distro(){
+utils_check_operating_system_linux_distro() {
 	declare -A ARRAY_OPERATING_SYSTEM_FILE
 
     #Verify if system file exists according to the operating system
@@ -390,7 +396,7 @@ utils_check_operating_system_linux_distro(){
 }
 
 #@annotation_must_be_improved
-utils_check_operating_system_name(){
+utils_check_operating_system_name() {
 	if [[ $(utils_check_operating_system_kernel_name) == "darwin" ]]; then
 		display_message_value_text_default_simple "MacOS X"
 	elif [[ $(utils_check_operating_system_kernel_name) == "linux" ]]; then
@@ -403,7 +409,7 @@ utils_check_operating_system_name(){
 }
 
 #@annotation_must_be_improved
-utils_check_operating_system_platform(){
+utils_check_operating_system_platform() {
     local SYSTEM_KERNEL_NAME
     
     SYSTEM_KERNEL_NAME=$(utils_check_operating_system_kernel_name)
@@ -421,7 +427,7 @@ utils_check_operating_system_platform(){
     fi
 }
 
-utils_check_operating_system_memory_dynamic_time(){
+utils_check_operating_system_memory_dynamic_time() {
     #utils_check_operating_system_memory_dynamic_time "2"
     
     local TIME_DELAY_SECONDS="$1"
@@ -430,7 +436,7 @@ utils_check_operating_system_memory_dynamic_time(){
     watch -n "$TIME_DELAY_SECONDS" -d '/bin/free -m'
 }
 
-utils_check_operating_system_memory_static_ram_gigabyte(){
+utils_check_operating_system_memory_static_ram_gigabyte() {
 	local SYSTEM_MEMORY_RAM_GB
 	
 	SYSTEM_MEMORY_RAM_GB="$(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
@@ -440,7 +446,7 @@ utils_check_operating_system_memory_static_ram_gigabyte(){
 
 #@annotation_must_be_tested
 #@annotation_must_be_improved
-utils_check_package_manager(){
+utils_check_package_manager() {
     declare -A ARRAY_OPERATING_SYSTEM_FILE
 
     #Verify if system file exists according to the operating system
@@ -464,7 +470,7 @@ utils_check_package_manager(){
     done
 }
 
-utils_check_processor_family(){
+utils_check_processor_family() {
 	local PROCESSOR
 
     case $(utils_check_if_file_exists "") in
@@ -479,7 +485,7 @@ utils_check_processor_family(){
 
 }
 
-utils_chronometer_countdown(){
+utils_chronometer_countdown() {
 	#utils_chronometer_countdown "00:00:02" #2 seconds
 	#utils_chronometer_countdown "00:01:10" #1 minute and 10 seconds
     
@@ -500,7 +506,7 @@ utils_chronometer_countdown(){
 }
 
 #@annotation_must_be_tested
-utils_clear_file(){
+utils_clear_file() {
 	local PATH_FILE="$1"
 
 	display_message_value_status_warning_complex "Clearing terminal history"
@@ -516,7 +522,7 @@ utils_clear_file(){
 }
 
 #@annotation_must_be_tested
-utils_clear_history(){
+utils_clear_history() {
 	local QUESTION_TERMINAL_HISTORY
 
 	display_message_value_status_warning_complex "Clearing terminal history"
@@ -541,6 +547,45 @@ utils_clear_history(){
 			*) display_message_value_status_error_simple "Please answer file or partition." ;;
 		esac
 	done
+}
+
+utils_convert_ascii_binary_to_text() {
+	#utils_convert_ascii_binary_to_text "0101001101101000011001010110110001101100001000000101001101100011011100100110100101110000011101000010000001001100011010010110001001110010011000010111001001111001"
+
+	#utils_convert_ascii_binary_to_text "01010011 01101000 01100101 01101100 01101100 00100000 01010011 01100011 01110010 01101001 01110000 01110100 00100000 01001100 01101001 01100010 01110010 01100001 01110010 01111001"
+
+    local VALUE_BINARY="$1"
+    local AUX
+
+    AUX=$(string_remove_empty_space_all "$VALUE_BINARY")
+
+    display_message_value_text_default_simple "$AUX" | perl -lpe '$_=pack"B*",$_'
+}
+
+utils_convert_ascii_text_to_binary_complex() {
+    #Convert to binary with spaces between binary blocks
+
+    #utils_convert_ascii_text_to_binary_complex "Shell Script Library"
+
+    local VALUE_TEXT="$1"
+    local VALUE_BINARY
+    local RESULT
+
+    VALUE_BINARY=$(display_message_value_text_default_simple "$VALUE_TEXT" | perl -lpe '$_=unpack"B*"')
+    RESULT=$(string_set_space_every_number_of_iteration "$VALUE_BINARY" "8")
+
+    display_message_value_text_default_simple "$RESULT"
+}
+
+utils_convert_ascii_text_to_binary_simple() {
+    #Convert to binary without spaces between binary blocks
+
+    #utils_convert_ascii_text_to_binary_simple "Shell Script Library"
+
+    local VALUE_TEXT="$1"
+
+    display_message_value_text_default_simple "$VALUE_TEXT" | perl -lpe '$_=unpack"B*"'
+    #display_message_value_text_default_simple "$VALUE_TEXT" | xxd -b # | awk '{print $2}'
 }
 
 utils_convert_numeric_base_calculator() {
@@ -614,6 +659,34 @@ utils_convert_numeric_base_from_decimal_to_octal() {
 	display_message_value_number_simple "$RESULT"
 }
 
+utils_convert_numeric_base_from_binary_to_hexadecimal(){
+    #utils_convert_numeric_base_from_binary_to_hexadecimal "1010101111001101"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="2"
+	local NUMERIC_BASE_OUTPUT="16"
+	local MATH_EXPRESSION="obase=$NUMERIC_BASE_OUTPUT;ibase=$NUMERIC_BASE_INPUT;$VALUE_NUMBER"
+    local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_convert_numeric_base_from_hexadecimal_to_binary(){
+    #utils_convert_numeric_base_from_hexadecimal_to_binary "ABCD"
+
+	local VALUE_NUMBER="$1"
+	local NUMERIC_BASE_INPUT="16"
+	local NUMERIC_BASE_OUTPUT="2"
+	local MATH_EXPRESSION="ibase=$NUMERIC_BASE_INPUT;obase=$NUMERIC_BASE_OUTPUT;$VALUE_NUMBER"
+	local RESULT
+
+	RESULT=$(utils_convert_numeric_base_calculator "$MATH_EXPRESSION")
+
+	display_message_value_number_simple "$RESULT"
+}
+
 utils_convert_numeric_base_from_octal_to_binary() {
 	#utils_convert_numeric_base_from_octal_to_binary "12"
 
@@ -643,7 +716,8 @@ utils_convert_numeric_base_from_octal_to_decimal() {
 }
 
 #@annotation_must_be_tested
-utils_convert_pdf_color(){
+#util_converter_pdf_color_from_black_to_blue
+utils_convert_pdf_color() {
 	local FILE_INPUT="$1"		#./input.pdf
 	local FILE_OUTPUT="$2"		#./output.pdf
 	local COLOR_ORIGIN="$3"		#black
@@ -668,7 +742,7 @@ utils_convert_temperature_fahrenheit_to_celsius() {
 	math_calculate "($TEMPERATURE_FAHRENHEIT - 32) / 1.8" "2"
 }
 
-utils_download_file(){
+utils_download_file() {
 	local PATH_URL="$1"
 	local PATH_DESTINY="$2"
 
@@ -698,7 +772,7 @@ utils_download_file(){
 	esac
 }
 
-utils_download_file_latest_version(){
+utils_download_file_latest_version() {
 	#utils_download_file_latest_version "henrikbeck95" "shell_script_library" "shell-script-library"
 	
 	local REPOSITORY_OWNER="$1"
@@ -712,21 +786,21 @@ utils_download_file_latest_version(){
     utils_download_file "$RESULT"
 }
 
-utils_download_website(){
+utils_download_website() {
     local URL_LINK="$1"
 
     wget -r -erobots=off "$URL_LINK"
     #wget -r -p -U Mozilla --wait=10 --limit-rate=35K $URL_LINK
 }
 
-utils_edit_file(){
+utils_edit_file() {
 	#gedit "$@"
 	#nano "$@"
 	#vi -O "$@"
 	vim -O "$@"
 }
 
-utils_effects_spinner(){
+utils_effects_spinner() {
     local CHARACTERS_AVALIABLE='/-\|'
 
     printf ' '
@@ -737,11 +811,11 @@ utils_effects_spinner(){
     done
 }
 
-utils_export_desktop_environment(){
+utils_export_desktop_environment() {
 	display_message_value_text_default_simple "$XDG_CURRENT_DESKTOP"
 }
 
-utils_export_variables_bios(){
+utils_export_variables_bios() {
 	display_message_value_status_warning_complex "Exporting/loading BIOS variables"
 
 	case $(utils_check_if_firmware_supports_uefi) in
@@ -757,7 +831,7 @@ utils_export_variables_bios(){
 	display_message_value_status_warning_complex "Your device BIOS is $IS_BIOS_UEFI"
 }
 
-utils_export_variables_virtualization(){
+utils_export_variables_virtualization() {
 	local IS_VIRTUALIATION
 	
 	IS_VIRTUALIATION=$(utils_check_if_virtualization_is_enabled)
@@ -862,7 +936,7 @@ utils_extract_file_detect_any() {
     done
 }
 
-utils_extract_file_method_7zip(){
+utils_extract_file_method_7zip() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -874,14 +948,14 @@ utils_extract_file_method_7zip(){
     #done
 }
 
-utils_extract_file_method_bz2(){
+utils_extract_file_method_bz2() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	bunzip2 "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_cab(){
+utils_extract_file_method_cab() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -889,28 +963,28 @@ utils_extract_file_method_cab(){
 	cabextract -d "$FILE_ORIGIN" "$FILE_DESTINY"
 }
 
-utils_extract_file_method_cpio(){
+utils_extract_file_method_cpio() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	cpio -idmvF "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_lz4(){
+utils_extract_file_method_lz4() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	lz4 -d "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_lzma(){
+utils_extract_file_method_lzma() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	unlzma "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_rar(){
+utils_extract_file_method_rar() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -920,7 +994,7 @@ utils_extract_file_method_rar(){
 	#unrar -e ./Aula\ 03\ -\ Program$'\342'$'\225'$'\236'o\ de\ Computadores.rar .
 }
 
-utils_extract_file_method_tar(){
+utils_extract_file_method_tar() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -928,21 +1002,21 @@ utils_extract_file_method_tar(){
 	tar xvf "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_tar_bz2(){
+utils_extract_file_method_tar_bz2() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	tar xvjf "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_tar_lz4(){
+utils_extract_file_method_tar_lz4() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	lz4 -c -d "$FILE_ORIGIN" | tar xvf -
 }
 
-utils_extract_file_method_tar_zst(){
+utils_extract_file_method_tar_zst() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -950,7 +1024,7 @@ utils_extract_file_method_tar_zst(){
 	tar --zstd -xvf "$FILE_ORIGIN" || zstdcat "$FILE_ORIGIN" | tar xvf -
 }
 
-utils_extract_file_method_tar_zma(){
+utils_extract_file_method_tar_zma() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -958,7 +1032,7 @@ utils_extract_file_method_tar_zma(){
 	tar --lzma -xvf "$FILE_ORIGIN" || lzcat "$FILE_ORIGIN" | tar xvf -
 }
 
-utils_extract_file_method_tar_xz(){
+utils_extract_file_method_tar_xz() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -966,21 +1040,21 @@ utils_extract_file_method_tar_xz(){
 	tar --xz -xvf "$FILE_ORIGIN" || xzcat "$FILE_ORIGIN" | tar xvf -
 }
 
-utils_extract_file_method_xz(){
+utils_extract_file_method_xz() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	unxz "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_z(){
+utils_extract_file_method_z() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	uncompress "$FILE_ORIGIN"
 }
 
-utils_extract_file_method_zip(){
+utils_extract_file_method_zip() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
@@ -988,14 +1062,14 @@ utils_extract_file_method_zip(){
 	unzip "$FILE_ORIGIN" -d "$FILE_DESTINY"
 }
 
-utils_extract_file_method_zst(){
+utils_extract_file_method_zst() {
 	local FILE_ORIGIN="$1"
 	local FILE_DESTINY="$2"
 
 	unzstd "$FILE_ORIGIN"
 }
 
-utils_generate_link_file_version_latest_github(){
+utils_generate_link_file_version_latest_github() {
     #Try: curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O
 	#Try: curl -fsSL github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE} -O
 	#Try: curl -fsSL $(utils_generate_link_file_version_latest_github "henrikbeck95" "shell_script_library" "shell-script-library") -O
@@ -1007,7 +1081,7 @@ utils_generate_link_file_version_latest_github(){
 	display_message_value_text_default_simple "https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE}"
 }
 
-utils_generate_number_random_from_interval_set(){
+utils_generate_number_random_from_interval_set() {
     local RANDOM_INTERVAL_BEGIN
     local RANDOM_INTERVAL_FINISH
     local RESULT
@@ -1051,7 +1125,7 @@ utils_get_all_users() {
 	awk -F: '{print $1}' /etc/passwd || cut -d ":" -f 1 /etc/passwd
 }
 
-utils_get_path_git_project_root(){
+utils_get_path_git_project_root() {
     local PATH_FOLDER="$1"
 
 	cd "$PATH_FOLDER" || exit
@@ -1070,33 +1144,35 @@ utils_get_path_git_project_root(){
 	cd - || exit
 }
 
-utils_git_repository_clone(){
+utils_git_repository_clone() {
 	local PATH_REPOSITORY_URL="$1"
-	local PATH_DIRECTORY_LOCAL="$2"
-
-	display_message_value_status_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
+	local PATH_DIRECTORY_LOCAL
 
 	case $# in
 		1) 
+			PATH_DIRECTORY_LOCAL="$HOME/eclipse-workspace"
+			
 			utils_path_directory_create "$HOME/eclipse-workspace"
 			
-			cd "$HOME/eclipse-workspace/" || exit
-			git clone "$PATH_REPOSITORY_URL"
-			cd - || exit
-			;;		
+			#cd "$HOME/eclipse-workspace/" || exit
+			#git clone "$PATH_REPOSITORY_URL"
+			#cd - || exit
+			;;
 		2) 
-			utils_path_directory_create "$PATH_DIRECTORY_LOCAL"
-			
-			git clone "$PATH_REPOSITORY_URL" "$PATH_DIRECTORY_LOCAL"
+			PATH_DIRECTORY_LOCAL="$2"
 			;;
 		*) 
 	esac
+	
+	display_message_value_status_warning_complex "Cloning $PATH_REPOSITORY_URL Git repository"
+
+	git clone "$PATH_REPOSITORY_URL" "$PATH_DIRECTORY_LOCAL"
 
 	display_message_value_status_success_complex "$PATH_REPOSITORY_URL Git repository has been cloned"
 }
 
 #@annotation_must_be_improved
-utils_git_setup_credentials(){
+utils_git_setup_credentials() {
 	local USER_EMAIL="$1"
 	local USER_NAME="$2"
 
@@ -1117,21 +1193,21 @@ utils_git_setup_credentials(){
 	display_message_value_status_success_complex "Git setup credentials has been set to $USER_EMAIL - $USER_NAME"
 }
 
-utils_load_operating_system_properties(){
+utils_load_operating_system_properties() {
         local OPERATING_SYSTEM_FILES="/etc/os-*"
         
         # shellcheck source=/dev/null
         source "${OPERATING_SYSTEM_FILES}"
 }
 
-utils_move_file(){
+utils_move_file() {
 	local PATH_ORIGIN="$1"
 	local PATH_DESTINY="$2"
 
 	mv "$PATH_ORIGIN" "$PATH_DESTINY" #|| mv -avr "$PATH_ORIGIN $PATH_DESTINY"
 }
 
-utils_path_directory_create(){
+utils_path_directory_create() {
 	local PATH_FOLDER="$1"
 
 	display_message_value_status_warning_complex "Creating $PATH_FOLDER folder directory"
@@ -1143,13 +1219,13 @@ utils_path_directory_create(){
 	display_message_value_status_success_complex "$PATH_FOLDER folder directory has been created"
 }
 
-utils_remove_file(){
+utils_remove_file() {
 	local PATH_FILE="$1"
 
 	rm "$PATH_FILE" || rm -f "$PATH_FILE" || rm -fr "$PATH_FILE"
 }
 
-utils_screen_size_count_limit_half_characters_horizontal(){
+utils_screen_size_count_limit_half_characters_horizontal() {
     local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM="$1"
 	local DISPLAY_TEXT_LENGTH="$2"
     local RESULT=$(((SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_MAXIMUM-DISPLAY_TEXT_LENGTH)/2))
@@ -1157,7 +1233,7 @@ utils_screen_size_count_limit_half_characters_horizontal(){
     display_message_value_text_default_simple "$RESULT"
 }
 
-utils_screen_size_count_limit_maximum_characters_horizontal(){
+utils_screen_size_count_limit_maximum_characters_horizontal() {
     local CHARACTERS_UNITS
     
     CHARACTERS_UNITS=$(tput cols)
@@ -1166,10 +1242,10 @@ utils_screen_size_count_limit_maximum_characters_horizontal(){
 }
 
 #@annotation_must_be_created
-#utils_screen_size_count_limit_maximum_characters_vertical(){}
+#utils_screen_size_count_limit_maximum_characters_vertical() {}
 
 #CREATE CASE VARIABLE COLOR DOES NOT EXIST, SET DEFAULT VALUE
-utils_screen_size_fill_limit_half_characters_horizontal(){
+utils_screen_size_fill_limit_half_characters_horizontal() {
 	local CHARACTER_REPETITION="$1"
     local SCREEN_SIZE_CHARACTERS_UNITS_LIMIT_HALF="$2"
     local COLOR_VALUE="$3"
@@ -1184,7 +1260,7 @@ utils_screen_size_fill_limit_half_characters_horizontal(){
     done
 }
 
-utils_simulate_typing(){
+utils_simulate_typing() {
     #utils_simulate_typing "Welcome to Shell Script Library!"
     
     local DISPLAY_TEXT="$1"
@@ -1192,7 +1268,7 @@ utils_simulate_typing(){
     display_message_value_text_default_complex "$DISPLAY_TEXT" | pv -qL 10
 }
 
-utils_symbolic_link_create(){
+utils_symbolic_link_create() {
 	local PATH_ORIGIN="$1"
 	local PATH_DESTINY="$2"
 
@@ -1203,7 +1279,7 @@ utils_symbolic_link_create(){
 	display_message_value_status_success_complex "Symbolic link from $PATH_ORIGIN to $PATH_DESTINY has been created"
 }
 
-utils_update_fonts_cache(){
+utils_update_fonts_cache() {
 	display_message_value_status_warning_complex "Update cache from $HOME/.fonts/, /usr/share/fonts/ and /usr/local/share/fonts/ fonts pathes"
 	
 	fc-cache update || fc-cache -f -v

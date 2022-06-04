@@ -1,153 +1,50 @@
-# Shell Script Library solution
+# Shell Script Library
 
-Shell script functions collection for abstracting development process, and speed up the productivity and clear the source code.
+Shell script functions collection for abstracting development process, speed up the productivity and clear the source code to be more human.
 
 ## Description
 
-Do you have any idea how much time have you ever been wasting trying to solve problems such as replacing text from a specific file?
+Check the dedicated documentations to know more about the project.
 
-Do not waste your time coding that same function to every single script file. Focus your time developing what needs to be done by using the abstractions from this library. Because the source code workflow is more important than solving a lot of "little" problems whose are already solved by us.
+- Description documents
+    1. [About the project](./docs/description/description_about_this.md)
+    1. [Contribute to the project](./docs/description/description_contribute.md)
+    1. [Reasons to use **Shell Script Library**](./docs/description/description_reasons_to_use.md)
+    1. [The solution the project tries to apply for the problems](./docs/description/description_the_solution.md)
+    <!--
+    1. [Requirements](./docs/setup/_setup_requirements.md)
+    -->
+    1. [The project progress](./docs/description/description_task_list.md)
 
-- Advantages
-    1. Easy installation setup.
-    <!--1. All functions in one single file.-->
-    1. Described functions names (you can reduce lines by removing the unneeded commentaries).
-    1. The function return only what it is expected (nothing more, nothing less).
-    1. If you have developed your source code using this library and by some reason you are not satisfied by the result from our functions, just edit the function you need from the `/usr/local/bin/shell-script-library` file and all your function calls will be changed without replacing one single line on your source code. It sounds like magic, doesn't it!?
-    1. If have developed your source code using this library and for some reason the newest update breaks your code, you can specify what library version release is going to be installed.
-    1. Compatibility between `BSD`, `Linux`, `MacOS`, `Unix` and `WSL` operating system. Furthermore it is able to be run on Windows by using `Git Bash` prompt.
+## Usage examples
 
-- Happiness steps
-    1. Install this library.
-    1. Import this library.
-    1. Code less by using this library.
-    1. Smile!
+<!--
+- Some screenshots compacted to a gif picture file.
+    1. []().
+-->
 
-- Conclusion
-    > The commands from this library have not been made to be short. They have been developed to solve these "amount of little" problems and describe their functionalities. Otherwise your source code gets more elegant by removing a lot of commentaries describing what each command does.
+- **Shell Script Library** syntax.
+    1. [Multiline commentary syntax](./docs/usage/usage_commentary.md).
 
 ## Installation setup
 
-### Requirements
+So, in case if you need to pack the **Shell Script Library** into your project.
 
-<!--
-- Essentials
-    1. [x] Shell interpreter (such as Sh, Bash or ZSH - you can use it from Git Bash on Windows).
-    1. [x] AWK.
-    1. [x] Cd.
-    1. [x] Clear.
-    
-    1. [x] GNU CoreUtils.
-        <!--1. [x] Arch-\->
-        1. [x] Cat.
-        1. [x] Chmod.
-        <!--1. [x] ChRoot-\->
-        1. [x] Cp.
-        1. [x] Cut.
-        1. [x] Date.
-        1. [x] DD.
-        1. [x] Echo.
-        1. [x] Head.
-        1. [x] ln.
-        1. [x] ls.
-        1. [x] Mkdir.
-        1. [x] Mv.
-        1. [x] Printf.
-        1. [x] Pwd.
-        1. [x] Rm.
-        1. [x] Sort.
-        1. [x] Tail.
-        <!--1. [x] Tr-\->
-        <!--1. [x] Wc-\->
+- Setup **Shell Script Library**
+    1. [For contributing to this project](./docs/setup/setup_developer.md)
+    1. [For being loaded on your shell environment](./docs/setup/setup_enviroment.md)
+    1. [For yourself](./docs/setup/setup_user.md)
+    1. [For your Shell Script programming language projects](./docs/setup/setup_your_project_shell_script.md)
+    <!--
+    1. [For your Java programming language projects](./docs/setup/_setup_your_project_java.md)
+    1. [For your NodeJS programming language projects](./docs/setup/_setup_your_project_nodejs.md)
+    1. [For your Python programming language projects](./docs/setup/_setup_your_project_python.md)
+    -->
 
-    1. [x] Grep.
-    1. [x] Lsblk.
-    1. [x] Mkfs.
-    1. [x] Mkswap.
-    1. [x] Mount.
-    1. [x] Print.
-    1. [x] Sed.
-    1. [x] Swap.
--->
+## Final words 
 
-<!-- 
-- Extra softwares
-    1. [ ] Acpi.
-    1. [x] CFDisk.
-    1. [ ] cURL or wGET.
-    1. [ ] Docker or Podman.
-    1. [ ] OpenRC or SystemD.
-    1. [ ] Distrobox.
-    1. [ ] //notify-send
-    1. [ ] Gnome settings
-    1. [ ] //BTRFS-progs.
-    1. [ ] //BTRFS-utils.
-    
-    1. [ ] Fc-cache.
-    1. [ ] Git.
-    1. [ ] ImageMagick.
-    1. [ ] Vim.
-    
-    1. [ ] APK, APT, DNF, Emerge, Pacman, Paru, SlackPKG, YUM or Zypper.
-    
-    1. [ ] ASDF.
-    1. [ ] Node.
-    1. [ ] Python - Anaconda.
-    1. [ ] Python - Pip.
-    1. [ ] Flatpak.
-    1. [ ] Snap.
-    1. [ ] Rust.
-    
-    1. [ ] //XDG.
-    1. [ ] //XDG-screensaver.
-    1. [ ] //XDG-open.
-    
-    1. [ ] i3.
-    1. [ ] i3wm.
-    
-    1. [ ] //Gz.
-    1. [ ] Tar.
-    1. [ ] Xz.
-    1. [ ] Zip.
-    
-    1. [ ] BTRFK.
-    1. [ ] Timeshift.
-    1. [ ] Snapper.
--->
-
-### Installing
-
-- Download release latest version
-    > $ `curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O`
-
-    > $ `mv ./shell-script-library /usr/local/bin/shell-script-library`
-
-- Uninstall library
-    > $ `rm /usr/local/bin/shell-script-library`
-
-### Using
-
-```bash
-#!/usr/bin/env sh
-
-source /usr/local/bin/shell-script-library
-
-#Insert your code here...
-```
-
-### Development
-
-1. Clone the repository on latest version
-    > $ `git clone --branch development https://github.com/henrikbeck95/shell_script_library`
-
-1. Give executable permission to the script
-    > $ `chmod +x./shell_script_library/src/compiler.sh -crun`
-    
-1. Compile the modiles and install it on your system for all users
-    > $ `./shell_script_library/src/compiler.sh -crun`
-
-## Contribute
-
-If you are a shell script developer consider to contribute by improving the library methods already set or creating even more solutions.
-
-We have a lot of work to be done. Maybe with your help this distance might be a little shorter.
+- The step by step to the happiness:
+    1. Install the **Shell Script Library**.
+    1. Import the **Shell Script Library**.
+    1. Code less by using the **Shell Script Library**.
+    1. Smile!
