@@ -1,10 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 ##############################
 #Declaring variables
 ##############################
-
-EDITOR="vim"
 
 #Use path /run/host/ #For Flatpak applications
 PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
@@ -156,6 +154,12 @@ shell_script_library_modules_action_merge_tester() {
         cat "$FILENAME_WITH_FULL_PATH" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER"
     fi
 }
+
+#This function is going to be used for splitting the generated file into theirs respectively modules
+#shell_script_library_modules_action_reverse_original(){}
+
+#This function is going to be used for splitting the generated file into theirs respectively modules
+#shell_script_library_modules_action_reverse_tester(){}
 
 shell_script_library_run_original() {
     case $(utils_check_if_file_exists "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL") in

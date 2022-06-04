@@ -14,7 +14,8 @@ PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
 LINK_GITHUB="https://github.com/henrikbeck95/shell_script_library.git"
 PATH_REPOSITORY_CLONE="/tmp/shell_script_library"
 PATH_FILE_LIBRARY_COMPILING="/tmp/shell-script-library"
-PATH_FILE_LIBRARY_COMPILED="/usr/local/bin/shell-script-library"
+#PATH_FILE_LIBRARY_COMPILED="/usr/local/bin/shell-script-library"
+PATH_FILE_LIBRARY_COMPILED="$HOME/.local/bin/shell-script-library"
 PATH_FILE_LIBRARY_GENERATED="$PATH_SCRIPT/shell-script-library"
 PATH_FILE_MODULES_COMPILING="$PATH_REPOSITORY_CLONE/src/modules"
 
@@ -52,6 +53,7 @@ MESSAGE_ERROR="Invalid option for $0!\n$MESSAGE_HELP"
 #Functions - tools
 ##############################
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 util_check_if_file_exists() {
     local VALUE_PATH_FILE="$1"
 
@@ -62,6 +64,7 @@ util_check_if_file_exists() {
     fi
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 util_check_if_folder_exists() {
     local VALUE_PATH_FOLDER="$1"
 
@@ -76,45 +79,35 @@ util_check_if_folder_exists() {
 #Functions - normal
 ##############################
 
+#@annotation_must_be_deprecated "In favor of merger.sh file" "This function is not going to be migrated"
 shell_script_library_modules_remove_files_used_for_compilation() {
     rm -fr "$PATH_REPOSITORY_CLONE"
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_uninstall() {
     rm -f "$PATH_FILE_LIBRARY_COMPILED"
 }
 
+#@annotation_must_be_tested "This function is going to be migrate to merger.sh file soon"
 shell_script_library_modules_clear_from_local() {
     local PATH_SCRIPT
 
-    #PATH_SCRIPT=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
     local PATH_FILE_MODULES_COMPILING="$PATH_SCRIPT/modules"
     local PATH_FILE_LIBRARY_COMPILING="$PATH_SCRIPT/shell-script-library"
     local FILENAME_AUX
-
-    #Clean up the file
-    #cat /dev/null > $PATH_FILE_LIBRARY_COMPILING
-
-    #Compile all modules into one single file
-    #cat $PATH_FILE_MODULES_COMPILING/header.txt > $PATH_FILE_LIBRARY_COMPILING
 
     #filename=$(basename -- "$fullfile")
     #extension="${filename##*.}"
     #filename="${filename%.*}"
 
     for i in "$PATH_FILE_MODULES_COMPILING"/*sh; do
-        # i="${i%.*}"
-        # i="${i##*.}"
-
         #Get filename without full path
         FILENAME_AUX="${i##*/}"
 
         #Check if file name does not start with _ character
         if [[ ! "$FILENAME_AUX" =~ ^_ ]]; then
-            #echo -e "\n" >> $PATH_FILE_LIBRARY_COMPILING
-            #cat $i >> $PATH_FILE_LIBRARY_COMPILING
-
             echo "Clearing the $i file content..."
             #echo $i # >> $PATH_FILE_LIBRARY_COMPILING
             cat /dev/null >"$i"
@@ -122,6 +115,7 @@ shell_script_library_modules_clear_from_local() {
     done
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_compile_from_local() {
     local PATH_SCRIPT
 
@@ -156,7 +150,7 @@ shell_script_library_modules_compile_from_local() {
     done
 }
 
-#MUST BE TESTED
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_compile_from_repository() {
     #Clean up the file
     cat /dev/null >"$PATH_FILE_LIBRARY_COMPILING"
@@ -170,10 +164,12 @@ shell_script_library_modules_compile_from_repository() {
     done
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_compilation_and_running() {
     shell_script_library_modules_compile_from_local
     chmod +x "$PATH_FILE_LIBRARY_GENERATED"
-    sudo cp -f "$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
+    cp -f "$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
+    #sudo cp -f "$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
     #sudo mv $"$PATH_FILE_LIBRARY_GENERATED" "$PATH_FILE_LIBRARY_COMPILED"
 
     #Importing Shell Script Library
@@ -186,6 +182,7 @@ shell_script_library_compilation_and_running() {
     fi
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file" "This function is not going to be migrated"
 shell_script_library_modules_download() {
     case $(util_check_if_folder_exists "$1") in
     "false") : ;;
@@ -195,6 +192,7 @@ shell_script_library_modules_download() {
     git clone $LINK_GITHUB $PATH_REPOSITORY_CLONE
 }
 
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_install() {
     case $(util_check_if_file_exists "$1") in
     "false") : ;;
@@ -208,7 +206,7 @@ shell_script_library_modules_install() {
 #Calling the functions
 ##############################
 
-clear
+#clear
 
 case $AUX1 in
 "" | "-h" | "--help" | "-?") echo -e "$MESSAGE_HELP" ;;
