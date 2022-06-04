@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+SOFTWARE_SHEBANG_TESTER
 
 #███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗    ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
 #██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝    ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -11,10 +11,10 @@
 #Credits
 #############################
 #
-#Author: Henrik Beck
-#E-mail: henrikbeck95@gmail.com
-#License: GPL3 License
-#Version: 0.0.1
+#Author: SOFTWARE_TESTER_AUTHOR
+#E-mail: SOFTWARE_TESTER_EMAIL
+#License: SOFTWARE_TESTER_LICENSE
+#Version: SOFTWARE_TESTER_VERSION
 #
 #############################
 

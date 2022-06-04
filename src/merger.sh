@@ -64,6 +64,19 @@ Only .sh files are processed. Except for header.txt and header_.txt files.
 #Functions - tools
 ##############################
 
+string_replace_text() {
+    local PATH_FILE="$1"
+    local TEXT_OLD="$2"
+    local TEXT_NEW="$3"
+
+    #echo -e "PATH_FILE:\t\t$PATH_FILE"
+    #echo -e "TEXT_OLD:\t\t$TEXT_OLD"
+    #echo -e "TEXT_NEW:\t\t$TEXT_NEW"
+
+    #Replace all the match values in a text file
+    sed -i "s/$TEXT_OLD/$TEXT_NEW/g" "$PATH_FILE"
+}
+
 utils_check_if_file_exists() {
     local VALUE_PATH_FILE="$1"
 
@@ -103,6 +116,7 @@ utils_clear_file() {
 #Functions - normal
 ##############################
 
+#@annotation_must_be_tested
 shell_script_library_modules_action_clear_original() {
     local FILENAME_WITH_FULL_PATH="$1"
     local FILENAME_WITHOUT_FULL_PATH="${FILENAME_WITH_FULL_PATH##*/}"
@@ -114,6 +128,7 @@ shell_script_library_modules_action_clear_original() {
     fi
 }
 
+#@annotation_must_be_tested
 shell_script_library_modules_action_clear_tester() {
     local FILENAME_WITH_FULL_PATH="$1"
     local FILENAME_WITHOUT_FULL_PATH="${FILENAME_WITH_FULL_PATH##*/}"
@@ -138,6 +153,8 @@ shell_script_library_modules_action_merge_original() {
         echo -e "\n" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
         cat "$FILENAME_WITH_FULL_PATH" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
     fi
+
+    shell_script_library_set_values_to_credits_original
 }
 
 shell_script_library_modules_action_merge_tester() {
@@ -153,6 +170,8 @@ shell_script_library_modules_action_merge_tester() {
         echo -e "\n" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER"
         cat "$FILENAME_WITH_FULL_PATH" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER"
     fi
+
+    shell_script_library_set_values_to_credits_tester
 }
 
 #This function is going to be used for splitting the generated file into theirs respectively modules
@@ -181,6 +200,60 @@ shell_script_library_run_tester() {
     esac
 }
 
+shell_script_library_set_values_to_credits_original() {
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "SOFTWARE_LIBRARY_AUTHOR" \
+        "$SOFTWARE_LIBRARY_AUTHOR"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "SOFTWARE_LIBRARY_EMAIL" \
+        "$SOFTWARE_LIBRARY_EMAIL"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "SOFTWARE_LIBRARY_LICENSE" \
+        "$SOFTWARE_LIBRARY_LICENSE"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "SOFTWARE_LIBRARY_VERSION" \
+        "$SOFTWARE_LIBRARY_VERSION"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "SOFTWARE_SHEBANG_LIBRARY" \
+        "$SOFTWARE_SHEBANG_LIBRARY"
+}
+
+shell_script_library_set_values_to_credits_tester() {
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" \
+        "SOFTWARE_TESTER_AUTHOR" \
+        "$SOFTWARE_TESTER_AUTHOR"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" \
+        "SOFTWARE_TESTER_EMAIL" \
+        "$SOFTWARE_TESTER_EMAIL"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" \
+        "SOFTWARE_TESTER_LICENSE" \
+        "$SOFTWARE_TESTER_LICENSE"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" \
+        "SOFTWARE_TESTER_VERSION" \
+        "$SOFTWARE_TESTER_VERSION"
+
+    string_replace_text \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" \
+        "SOFTWARE_SHEBANG_TESTER" \
+        "$SOFTWARE_SHEBANG_TESTER"
+}
+
 ##############################
 #Functions - calling
 ##############################
@@ -194,6 +267,7 @@ shell_script_library_install() {
     cp "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" "$PATH_LIBRARY_STORAGE_FILE_RESULT" && echo -e "${SOFTWARE_LIBRARY_NAME} installation process has been completed!" || echo -e "${SOFTWARE_LIBRARY_NAME}installation process has been failed!"
 }
 
+#@annotation_must_be_tested
 shell_script_library_modules_action_clear_main() {
     local MODULE_ACTION_PLACE="$1"
     local FILENAME_WITH_FULL_PATH
@@ -278,7 +352,7 @@ shell_script_library_version() {
 #Calling the functions
 ##############################
 
-declare -i AUX=0
+AUX=0
 
 while [ -n "$1" ]; do
     #echo -e "The parameter[$AUX] has '$1' value"

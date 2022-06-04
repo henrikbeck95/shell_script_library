@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+SOFTWARE_SHEBANG_LIBRARY
 
 #███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗    ██╗     ██╗██████╗ ██████╗  █████╗ ██████╗ ██╗   ██╗
 #██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝    ██║     ██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -11,10 +11,10 @@
 #Credits
 #############################
 #
-#Author: Henrik Beck
-#E-mail: henrikbeck95@gmail.com
-#License: BSD 3-Clause License
-#Version: 0.0.5
+#Author: SOFTWARE_LIBRARY_AUTHOR
+#E-mail: SOFTWARE_LIBRARY_EMAIL
+#License: SOFTWARE_LIBRARY_LICENSE
+#Version: SOFTWARE_LIBRARY_VERSION
 #
 #############################
 
