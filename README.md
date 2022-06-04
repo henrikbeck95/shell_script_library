@@ -13,8 +13,8 @@ Check the dedicated documentations to know more about the project.
     1. [The solution the project tries to apply for the problems](./docs/description/description_the_solution.md)
     <!--
     1. [Requirements](./docs/setup/_setup_requirements.md)
-    1. [**Shell Script Library** task list](./docs/description/description_task_list.md)
     -->
+    1. [The project progress](./docs/description/description_task_list.md)
 
 ## Usage examples
 

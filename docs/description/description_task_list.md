@@ -5,21 +5,24 @@
 ### Release 0.0.0 - **Current**
 
 - Focus on implementation of amount solution as functions.
-    1. [x] Create the API design.
-    1. [x] Create a transpiler.
+    1. [x] Create a pack of arrays functions.
+    1. [x] Create a pack of colors functions.
+    1. [x] Create a pack of commentaries functions.
+    1. [x] Create a pack of containers functions.
+    1. [x] Create a pack of display functions.
+    1. [x] Create a pack of math functions.
+    1. [x] Create a pack of string functions.
+    1. [x] Create a pack of system functions.
+    1. [x] Create a pack of time functions.
+    1. [x] Create a pack of try/catch functions.
+    1. [x] Create a pack of utils functions.
     1. [x] Create a module merger for managing **Shell Script Library** project easily.
-    1. [x] Create an unit tester script for **Shell Script Library**.
-    1. [ ] Create **Shell Script Library** display credits function.
-    1. [ ] Create **Shell Script Library** display version function.
-    1. [ ] Create **Shell Script Library** update function from itself.
+    1. [x] Create an unit tester script generator for **Shell Script Library**.
+    1. [x] Create **Shell Script Library** display credits function dynamically into the `header.txt` `header_.txt` files.
+    1. [ ] Create **Shell Script Library** an update function from itself.
+    1. [ ] Deprecate `./src/compiler.sh` file.
     1. [ ] Fix possible bugs inside the functions.
     1. [ ] Assert that command dependencies are installed.
-
-    <!--
-    1. [ ] Update the header.txt header_.txt files info dynamically.
-    1. [ ] Auto update Shell Script Library from itself.
-    1. [ ] Manage flatpak without the full command > $ `flatpak run org.mozilla.firefox` if it is already installed.
-    -->
 
     <!--
     system_pkg_default_repository_synchronize "false"
@@ -35,6 +38,8 @@
 - Focus on function returning actions
     1. [ ] Write a dedicated **Shell Script Library** documentation about how each programming language can adopt it (Java, JavaScript and Python).
     1. [ ] Write a dedicated **Shell Script Library** documentation for each command usage.
+    1. [ ] Implement flatpak management without the full command. For example:
+        > No needs to use the full command $ `flatpak run org.mozilla.firefox` if the software is already installed. This would become > $ `flatpak run firefox` or > $ `flatpak stop firefox`. Furthermore this must work without setting individual alias. An auto detect strategy must be created to be dynamically.
     1. [ ] Implement YouTube download function.
     1. [ ] Implement YouTube preview function on terminal emulator.
     1. [ ] Implement YouTube preview function on external player.
@@ -46,7 +51,7 @@
     1. [ ] Create exit codes status for each possible failure.
         > Insert 'return 0' into the functions for each successful exit code.
 
-        > Run the some function content into subshell to validate operation with code exit status.
+        > Run the some function content into sub-shell to validate operation with code exit status.
 
         > command && ... || return 127 #Code exit status
     1. [ ] Write a dedicated **Shell Script Library** documentation for each exit code status.
