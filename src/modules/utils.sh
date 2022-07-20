@@ -112,9 +112,11 @@ utils_check_if_function_exists() {
 }
 
 utils_check_if_internet_connection_exists() {
-    display_message_value_status_warning_complex "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
+    #display_message_value_status_warning_complex "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
 
-    if [ $? -eq 0 ]; then
+	#if [ $(nm-tool|grep State|cut -f2 -d' ') == "connected" ]; then
+    #if [ $? -eq 0 ]; then
+    if [ "$('GET http://google.com HTTP/1.0\n\n' | nc google.com 80 > /dev/null 2>&1)" -eq 0 ]; then
         display_message_value_text_default_simple "true"
     else
         display_message_value_text_default_simple "false"
@@ -187,7 +189,15 @@ utils_check_if_user_exists() {
 }
 
 utils_check_if_user_has_root_previledges() {
-	if [[ $UID != 0 ]]; then
+	if [[ $UID -eq 0 ]]; then
+        display_message_value_text_default_simple "true"
+	else
+        display_message_value_text_default_simple "false"
+	fi
+}
+
+utils_exit_if_user_does_not_have_root_previledges() {
+	if [[ $UID -ne 0 ]]; then
 		display_message_value_status_error_simple "You must be root for preduring this step."
 		exit 127;
 	fi

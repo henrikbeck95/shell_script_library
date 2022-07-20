@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 ##############################
 #Declaring variables
@@ -12,8 +12,10 @@ PATH_LIBRARY_MODULES_FILES_RESULT_TESTER="$PATH_SCRIPT/shell-script-library-test
 PATH_LIBRARY_STORAGE_FILE_RESULT=""
 
 #shellcheck source=/dev/null
+#. "$PATH_SCRIPT/settings.conf" || echo -e "Settings file could not be found. Check it out before procedure!" && exit
 . "$PATH_SCRIPT/settings.conf" || exit
 
+#Check if user has root proviledges
 case "$UID" in
 0) PATH_LIBRARY_STORAGE_FILE_RESULT="$PATH_LIBRARY_STORAGE_FILE_SYSTEM" ;;
 *) PATH_LIBRARY_STORAGE_FILE_RESULT="$PATH_LIBRARY_STORAGE_FILE_USER" ;;
@@ -58,6 +60,9 @@ Only .sh files are processed. Except for header.txt and header_.txt files.
 -r-tester\t--run-tester\t\tRun $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER file.
 -u\t\t--uninstall\t\tUninstall the $SOFTWARE_LIBRARY_NAME by removing the compiled file from ${PATH_LIBRARY_STORAGE_FILE_RESULT}.
 -v\t\t--version\t\tDisplay $SOFTWARE_MERGER_NAME version
+
+[Example]
+    > $ $HOME/workspace/shell_script_library/src/merger.sh --merge-library --install
 "
 
 ##############################
@@ -352,9 +357,21 @@ shell_script_library_version() {
 #Calling the functions
 ##############################
 
-AUX=0
+#Replace Shell Script Library in favor of the newest version
+if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL ]]; then
+    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL old version..."
+    rm $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL
+fi
 
-while [ -n "$1" ]; do
+#Replace Shell Script Library Tester in favor of the newest version
+if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER ]]; then
+    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER old version..."
+    rm $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER
+fi
+
+#Calling the functions according to the informed arguments
+
+while [ $# -ne 0 ]; do
     #echo -e "The parameter[$AUX] has '$1' value"
 
     #Check the set parameters
@@ -387,7 +404,5 @@ while [ -n "$1" ]; do
         ;;
     esac
 
-    #Increment $i value to go to the next available parameter value
-    AUX=$((AUX + 1))
     shift
 done

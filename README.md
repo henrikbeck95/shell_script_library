@@ -7,14 +7,14 @@ Shell script functions collection for abstracting development process, speed up 
 Check the dedicated documentations to know more about the project.
 
 - Description documents
-    1. [About the project](./docs/description/description_about_this.md)
-    1. [Contribute to the project](./docs/description/description_contribute.md)
-    1. [Reasons to use **Shell Script Library**](./docs/description/description_reasons_to_use.md)
-    1. [The solution the project tries to apply for the problems](./docs/description/description_the_solution.md)
+    1. [About the project](./docs/description/description_about_this.md).
+    1. [Contribute to the project](./docs/description/description_contribute.md).
+    1. [Reasons to use **Shell Script Library**](./docs/description/description_reasons_to_use.md).
+    1. [The problems this project tries to solve](./docs/description/description_the_solution.md).
     <!--
-    1. [Requirements](./docs/setup/_setup_requirements.md)
+    1. [Requirements](./docs/setup/_setup_requirements.md).
     -->
-    1. [The project progress](./docs/description/description_task_list.md)
+    1. [The project progress](./docs/description/description_task_list.md).
 
 ## Usage examples
 
@@ -31,14 +31,14 @@ Check the dedicated documentations to know more about the project.
 So, in case if you need to pack the **Shell Script Library** into your project.
 
 - Setup **Shell Script Library**
-    1. [For contributing to this project](./docs/setup/setup_developer.md)
-    1. [For being loaded on your shell environment](./docs/setup/setup_enviroment.md)
-    1. [For yourself](./docs/setup/setup_user.md)
-    1. [For your Shell Script programming language projects](./docs/setup/setup_your_project_shell_script.md)
+    1. [For contributing to this project](./docs/setup/setup_developer.md).
+    1. [For being loaded on your shell environment](./docs/setup/setup_enviroment.md).
+    1. [For yourself](./docs/setup/setup_user.md).
+    1. [For your Shell Script programming language projects](./docs/setup/setup_your_project_shell_script.md).
     <!--
-    1. [For your Java programming language projects](./docs/setup/_setup_your_project_java.md)
-    1. [For your NodeJS programming language projects](./docs/setup/_setup_your_project_nodejs.md)
-    1. [For your Python programming language projects](./docs/setup/_setup_your_project_python.md)
+    1. [For your Java programming language projects](./docs/setup/_setup_your_project_java.md).
+    1. [For your NodeJS programming language projects](./docs/setup/_setup_your_project_nodejs.md).
+    1. [For your Python programming language projects](./docs/setup/_setup_your_project_python.md).
     -->
 
 ## Final words 

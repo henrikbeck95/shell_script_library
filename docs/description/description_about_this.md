@@ -4,7 +4,7 @@
 
 I was developing a project to my Science Computing graduation called [Voice Assistant for Linux](https://github.com/henrikbeck95/voice_assistant_linux) and a personal project called [SilverArch](https://github.com/henrikbeck95/silverarch). Both of them require shell script programming language to be executed.
 
-After a while I have noticed the following stuffs:
+- After a while I have noticed the following stuffs:
     1. The Shell Script programming language is very powerful but it is not so human readable such as others programming languages (Java, JavaScript or Python).
     1. Once Shell Script programming language can integrate any other installed software on your operating system to be used, their command flags can be extremely hard to be understood if you are not familiar with that specific tool.
     1. If you need a shell script algorithm there are a lot of solutions available but if you are not familiar with Unix like operating system, these commands can become a nightmare. Even their source code have been written without any malicious intention, a single command not properly filtered might accidentally override the files on your operating system.
@@ -21,7 +21,7 @@ I have searched for many of libraries from third developers but there was any pr
 - SilverArch
     > In my personal [SilverArch](https://github.com/henrikbeck95/silverarch) project, I was developing my own operating system based on ArchLinux. I had more than 4000 lines inside one single file. It was very helpful to be this way because I could download, install and run all source code with a single command on terminal. Then the script was set to transform the ArchLinux black screen into an final user operating with graphical interface and all the essentials applications installed and configured.
 
-    > After **Shell Script Library** has been implemented to this script, I could reduce to about 1200 number of lines to do all the same work it should be done.
+    > After **Shell Script Library** has been implemented to this script, I could reduce to about 1200 number of lines to do all the same work it should be done. Almost 3000 lines could be safe.
 
 <!--
 - Voice Assistant for Linux

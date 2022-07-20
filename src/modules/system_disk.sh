@@ -9,7 +9,7 @@
 #############################
 
 system_disk_partition_format_fat32() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	local SYSTEM_PARTITION="$1"
 
@@ -20,7 +20,7 @@ system_disk_partition_format_fat32() {
 }
 
 system_disk_partition_format_btrfs() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	local SYSTEM_PARTITION="$1"
 
@@ -33,7 +33,7 @@ system_disk_partition_format_btrfs() {
 }
 
 system_disk_partition_format_ext4() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	local SYSTEM_PARTITION="$1"
 
@@ -49,7 +49,7 @@ system_disk_partition_list_all() {
 
 #@annotation_must_be_fixed
 system_disk_partition_mount_btrfs() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	local PARTITION_DISK_BOOT="$1"
 	local PARTITION_DISK_ROOT="$2"
@@ -110,7 +110,7 @@ system_disk_partition_mount_btrfs() {
 }
 
 system_disk_partition_management() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Make the partitions"
 
@@ -133,7 +133,7 @@ system_disk_partition_management() {
 }
 
 system_disk_swap_ask() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Create the SWAP"
 
@@ -154,7 +154,7 @@ system_disk_swap_ask() {
 #@annotation_must_be_fixed
 #Create a Swap file implementation to BTRFS
 system_disk_swap_file() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Creating the SWAP file"
 
@@ -201,7 +201,7 @@ system_disk_swap_file() {
 }
 
 system_disk_swap_partition() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Creating the SWAP partition"
 

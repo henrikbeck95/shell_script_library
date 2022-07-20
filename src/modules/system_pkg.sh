@@ -5,7 +5,7 @@
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_repository_add() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Adding package manager $* repository"
 
@@ -28,7 +28,7 @@ system_pkg_default_repository_add() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_repository_remove() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Removing package manager $* repository"
 
@@ -51,7 +51,7 @@ system_pkg_default_repository_remove() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_repository_syncronize() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     #local DEBUG="$1"
 
@@ -108,7 +108,7 @@ system_pkg_default_repository_syncronize() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_cache_clean() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Cleaning package manager $* cache"
 
@@ -146,7 +146,7 @@ system_pkg_default_cache_clean() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_cache_make() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Making package manager $* cache"
 
@@ -176,7 +176,7 @@ system_pkg_default_cache_make() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_software_install_group() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Installing package manager (group) $* software(s)"
 
@@ -224,7 +224,7 @@ system_pkg_default_software_install_group() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_software_install_single() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Installing package manager $* software"
 
@@ -301,7 +301,7 @@ system_pkg_default_software_list() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_software_uninstall_group() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Uninstalling package manager $* software"
 
@@ -349,7 +349,7 @@ system_pkg_default_software_uninstall_group() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_default_software_uninstall_single() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Uninstalling package manager $* software"
 

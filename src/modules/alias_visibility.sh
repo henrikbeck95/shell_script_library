@@ -2,6 +2,9 @@
 #Alias visibility
 ##############################
 
+#@annotation_must_be_tested
+alias 'please'='sudo'
+
 alias 'cd'='>/dev/null cd'
 
 #alias 'function'=''

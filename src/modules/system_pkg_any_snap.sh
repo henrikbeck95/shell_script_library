@@ -23,7 +23,7 @@ system_pkg_any_snap_repository_remove() {
 system_pkg_any_snap_repository_syncronize() {
 	display_message_value_status_warning_complex "Syncronizing Snap $* repository"
 
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	case $DEBUG in
 	"false") snap update ;;
@@ -36,7 +36,7 @@ system_pkg_any_snap_repository_syncronize() {
 system_pkg_any_snap_software_install() {
 	display_message_value_status_warning_complex "Installing Snap $* software"
 
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	case $DEBUG in
 	"false") snap install "$@" ;;
@@ -55,7 +55,7 @@ system_pkg_any_snap_software_list() {
 system_pkg_any_snap_software_uninstall() {
 	display_message_value_status_warning_complex "Uninstalling Snap $* software"
 
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	case $DEBUG in
 	"false") snap remove "$@" ;;

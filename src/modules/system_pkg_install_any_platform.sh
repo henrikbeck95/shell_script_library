@@ -178,7 +178,7 @@ system_pkg_any_software_install_platform_oh_my_posh() {
 #@annotation_must_be_tested
 #@annotation_must_be_improved
 system_pkg_any_software_install_platform_paru() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Installing package manager setup"
 
@@ -279,7 +279,7 @@ system_pkg_any_software_install_platform_yarn() {
 #@annotation_must_be_improved
 #@annotation_must_be_tested
 system_pkg_any_software_install_platform_ytfzf() {
-    utils_check_if_user_has_root_previledges
+    utils_exit_if_user_does_not_have_root_previledges
 
     display_message_value_status_warning_complex "Installing YtFZF software setup"
 

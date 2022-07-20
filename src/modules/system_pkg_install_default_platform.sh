@@ -177,7 +177,7 @@ system_pkg_default_software_install_platform_codecs() {
     "debian") display_message_value_status_empty_complex ;;
     "centos") display_message_value_status_empty_complex ;;
     "fedora")
-        utils_check_if_user_has_root_previledges
+        utils_exit_if_user_does_not_have_root_previledges
 
         #Firefox
         dnf config-manager --set-enabled fedora-cisco-openh264
@@ -506,6 +506,14 @@ system_pkg_default_software_install_platform_grub() {
     display_message_value_status_success_complex "GRUB platform has been installed"
 }
 
+#AwesomeWM
+#sudo pacman -S awesome
+
+#TaskWarrior
+#sudo pacman -S task
+
+#COMPTON vs PICOM
+
 #@annotation_must_be_improved
 system_pkg_default_software_install_platform_i3() {
     display_message_value_status_warning_complex "Installing i3 platform"
@@ -517,12 +525,28 @@ system_pkg_default_software_install_platform_i3() {
     "archlinux")
         system_pkg_default_software_install_single \
             i3 \
+            i3blocks \
+            i3-gaps \
+            i3status \
+            brightnessctl \
             dmenu \
+            dusty \
             feh \
             lxappearance \
             nitrogen \
             polybar \
             rofi
+
+            #brightnessctl set +20%
+            #brightnessctl set 20%-
+            #brightnessctl set 10%
+            #brightnessctl set 15%
+            #brightnessctl set 25%
+            #brightnessctl set 35%
+            #brightnessctl set 45%
+            #brightnessctl set 65%
+            #brightnessctl set 85%
+            #brightnessctl set 100%
 
         #cava - AUR
         ;;
@@ -1032,7 +1056,7 @@ system_pkg_default_software_install_platform_snap() {
         system_daemon_enable_now "snapd.socket"
 
         #Create a symbolic link to root directory
-        utils_check_if_user_has_root_previledges
+        utils_exit_if_user_does_not_have_root_previledges
         utils_symbolic_link_create "/var/lib/snapd/snap" "/snap"
         #sudo rm -f /snap
 
@@ -1045,7 +1069,7 @@ system_pkg_default_software_install_platform_snap() {
         system_pkg_default_software_install_single "snapd"
 
         #Create a symbolic link to root directory
-        utils_check_if_user_has_root_previledges
+        utils_exit_if_user_does_not_have_root_previledges
         utils_symbolic_link_create "/var/lib/snapd/snap" "/snap"
         #sudo rm -f /snap
         ;;

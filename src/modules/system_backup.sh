@@ -4,7 +4,7 @@
 
 #@annotation_must_be_created
 system_backup_snaptshot_create() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	local MESSAGE_DESCRIPTION="$1"
 
@@ -28,7 +28,7 @@ system_backup_snaptshot_create() {
 
 #@annotation_must_be_created
 system_backup_snaptshot_delete() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Creating $BACKUP_TOOL $1 backup"
 
@@ -50,7 +50,7 @@ system_backup_snaptshot_delete() {
 
 #@annotation_must_be_created
 system_backup_message_help() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	case $BACKUP_TOOL in
 	"btrfk") display_message_value_status_empty_simple ;;
@@ -62,7 +62,7 @@ system_backup_message_help() {
 
 #@annotation_must_be_created
 system_backup_snapshot_list() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	case $BACKUP_TOOL in
 	"btrfk") display_message_value_status_empty_simple ;;
@@ -75,7 +75,7 @@ system_backup_snapshot_list() {
 
 #@annotation_must_be_created
 system_backup_snapshot_restore() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Restoring $BACKUP_TOOL $1 backup"
 

@@ -15,7 +15,7 @@ system_daemon_check_init_system() {
 }
 
 system_daemon_disable_later() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Disabling $* process on start up (after rebooting)"
 
@@ -27,7 +27,7 @@ system_daemon_disable_later() {
 }
 
 system_daemon_disable_now() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Disabling $* process on start up (right now)"
 
@@ -39,7 +39,7 @@ system_daemon_disable_now() {
 }
 
 system_daemon_enable_later() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Enabling $* process on start up (after rebooting)"
 
@@ -51,7 +51,7 @@ system_daemon_enable_later() {
 }
 
 system_daemon_enable_now() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Enabling $* process on start up (right now)"
 
@@ -63,7 +63,7 @@ system_daemon_enable_now() {
 }
 
 system_daemon_reload() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Restart system init process"
 
@@ -75,7 +75,7 @@ system_daemon_reload() {
 }
 
 system_daemon_restart() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Restarting $* process"
 
@@ -87,7 +87,7 @@ system_daemon_restart() {
 }
 
 system_daemon_start() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Starting $* process now"
 
@@ -99,7 +99,7 @@ system_daemon_start() {
 }
 
 system_daemon_status() {
-	#utils_check_if_user_has_root_previledges
+	#utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Getting $* process status"
 
@@ -113,7 +113,7 @@ system_daemon_status() {
 }
 
 system_daemon_stop() {
-	utils_check_if_user_has_root_previledges
+	utils_exit_if_user_does_not_have_root_previledges
 
 	display_message_value_text_default_complex "Stopping $* process now"
 

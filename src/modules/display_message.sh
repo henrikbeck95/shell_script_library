@@ -2,6 +2,12 @@
 #Display message
 #############################
 
+#Clock
+#while : ; do printf "\r$(date)" && sleep 1 ; done
+
+#Print log
+#printf + date + content
+
 display_message_content_line_clear() {
 	#echo -n "\r"
 	printf "\r"
