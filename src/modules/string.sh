@@ -156,6 +156,24 @@ string_get_content_signal_after_string() {
     display_message_value_text_default_simple "$VALUE_RESULT"
 }
 
+string_remove_content_character_first() {
+    #string_get_content_character_first "Henrik Beck"
+
+    local VALUE_VARIABLE="$1"
+    local RESULT="${VALUE_VARIABLE:1}"
+
+    display_message_value_text_default_simple "$RESULT"
+}
+
+string_remove_content_character_last() {
+    #string_get_content_character_last "Henrik Beck"
+
+    local VALUE_VARIABLE="$1"
+    local RESULT="${VALUE_VARIABLE::-1}"
+
+    display_message_value_text_default_simple "$RESULT"
+}
+
 string_remove_empty_space_all() {
     #local VALUE_VARIABLE="Hello      world."
     local VALUE_VARIABLE="$*"

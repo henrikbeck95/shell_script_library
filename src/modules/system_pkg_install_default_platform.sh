@@ -878,7 +878,7 @@ system_pkg_default_software_install_platform_podman() {
 
         #cgroups
 
-        system_daemon_enable_now podman.socket
+        system_daemon_enable_now "podman.socket"
 
         ##Check the value of the Podman previledges
         # case $(sysctl kernel.unprivileged_userns_clone) in
@@ -1180,7 +1180,7 @@ system_pkg_default_software_install_platform_virtmanager() {
         system_pkg_default_software_install_group "virtualization"
 
         #Enable Systemd service
-        system_daemon_enable_now libvirtd
+        system_daemon_enable_now "libvirtd"
 
         #To verify that the KVM kernel modules are properly loaded:
         lsmod | grep kvm

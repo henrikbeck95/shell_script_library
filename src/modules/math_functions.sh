@@ -376,3 +376,17 @@ math_sin() {
 
 #@annotation_must_be_tested
 #math_tan(){}
+
+#############################
+#Math - Others functions
+#############################
+
+math_percentage(){
+	local NUMBER_A="$1"
+	local NUMBER_B="$2"
+	local RESULT
+
+	RESULT=$(math_calculator "($NUMBER_A / $NUMBER_B) * 100")
+
+	display_message_value_number_simple "$RESULT"
+}

@@ -364,8 +364,8 @@ system_pkg_default_software_uninstall_single() {
         case $DEBUG in
         #"false") yay -R "$@" ;;
         #"true") yay -R "$@" --noconfirm ;;
-        "false") paru -R "$@" ;;
-        "true") paru -R "$@" --noconfirm ;;
+        "false") paru -Rns "$@" ;;
+        "true") paru -Rns "$@" --noconfirm ;;
         esac
         ;;
     "apt")
@@ -383,8 +383,8 @@ system_pkg_default_software_uninstall_single() {
     "emerge") display_message_value_status_empty_complex ;;
     "pacman")
         case $DEBUG in
-        "false") pacman -R "$@" ;;
-        "true") pacman -R --noconfirm "$@" ;;
+        "false") pacman -Rns "$@" ;;
+        "true") pacman -Rns --noconfirm "$@" ;;
             #"true") pacman -R --noconfirm --needed "$@" ;;
         esac
         ;;
@@ -400,4 +400,51 @@ system_pkg_default_software_uninstall_single() {
     esac
 
     display_message_value_status_success_complex "Package manager $* software(s) has/have been uninstalled"
+}
+
+#@annotation_must_be_tested
+#@annotation_must_be_improved
+#@annotation_must_be_fixed
+system_pkg_default_distro_upgrade(){
+    utils_exit_if_user_does_not_have_root_previledges
+
+    display_message_value_status_warning_complex "Upgrading distro version"
+
+    case $(utils_check_package_manager) in
+    "apk") display_message_value_status_empty_complex ;;
+    "apt") display_message_value_status_empty_complex ;;
+    "aur")
+        case "$DEBUG" in
+        #"false") yay -Syyuu ;;
+        #"true") yay -Syyuu --noconfirm ;;
+        "false") paru -Syyuu ;;
+        "true") paru -Syyuu --noconfirm ;;
+        esac
+        ;;
+    "dnf")
+        #Replace repository database
+        sudo dnf upgrade
+        system_pkg_default_repository_syncronize
+        sudo dnf --refresh upgrade
+        system_pkg_default_software_install_single dnf-plugin-system-upgrade --best
+        
+        #Upgrade distro version - Fedora
+        #sudo dnf system-upgrade download --refresh --releasever=35
+        #sudo dnf system-upgrade download --refresh --releasever=$(rpm -E %fedora) #MUST ADD +1
+        sudo dnf system-upgrade download --refresh --releasever=$(($(rpm -E %fedora)+1)) #MUST ADD +1
+        ;;
+    "emerge") display_message_value_status_empty_complex ;;
+    "pacman")
+        case "$DEBUG" in
+        "false") pacman -Syyuu ;;
+        "true") pacman -Syyuu --noconfirm ;;
+        esac
+        ;;
+    "slackpkg") display_message_value_status_empty_complex ;;
+    "yum") display_message_value_status_empty_complex ;;
+    "zypper") display_message_value_status_empty_complex ;;
+    *) display_message_value_status_error_complex "Package manager has not been found." ;;
+    esac
+
+    display_message_value_status_success_complex "Distro version has been upgraded"
 }

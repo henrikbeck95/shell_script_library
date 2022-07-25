@@ -16,11 +16,10 @@ system_appearance_desktop_environment_gnome() {
 
 	gsettings set org.gnome.desktop.a11y always-show-universal-access-status true
 	gsettings set org.gnome.desktop.background show-desktop-icons true
-	gsettings set org.gnome.desktop.background show-desktop-icons true
 	gsettings set org.gnome.desktop.interface clock-show-date true
 	gsettings set org.gnome.desktop.interface show-battery-percentage true
 	gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
-	gsettings set org.gnome.desktop.wm.preferences button-layout ':close'
+	#gsettings set org.gnome.desktop.wm.preferences button-layout ':close'
 	gsettings set org.gnome.gedit.preferences.editor auto-indent true
 	gsettings set org.gnome.gedit.preferences.editor bracket-matching true
 	gsettings set org.gnome.gedit.preferences.editor display-line-numbers true

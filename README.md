@@ -1,4 +1,4 @@
-# Shell Script Library
+# Shell Script Library - ShSL
 
 Shell script functions collection for abstracting development process, speed up the productivity and clear the source code to be more human.
 
@@ -25,6 +25,11 @@ Check the dedicated documentations to know more about the project.
 
 - **Shell Script Library** syntax.
     1. [Multiline commentary syntax](./docs/usage/usage_commentary.md).
+
+    <!--
+    1. Call **Shell Script Library** pre-defined commands from command line interface (CLI).
+        > `shsl function_name "paramenter_01" "paramenter_02"`
+    -->
 
 ## Installation setup
 

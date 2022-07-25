@@ -52,6 +52,149 @@ utils_check_architecture() {
 	esac
 }
 
+#@annotation_must_be_tested
+utils_check_current_timezone_from_geolocation(){
+	local RESULT
+	
+	#case $(utils_check_if_internet_connection_exists) in
+	#	"false") RESULT="false" ;;
+	#	"true")
+			#RESULT=$(curl https://ipapi.co/timezone)
+			RESULT=$(curl --silent --fail https://ipapi.co/timezone)
+			#RESULT=$(curl http://ip-api.com/line?fields=timezone)
+	#		;;
+	#esac
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+##################################
+
+utils_check_file_size_bits(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_byte "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE * 8")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+utils_check_file_size_byte(){
+	local PATH_FILE="$1"
+	local RESULT
+
+	RESULT=$(stat -c %s "$PATH_FILE")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_kilobits(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_bits "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_kilobyte(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_byte "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_megabits(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_kilobits "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_megabyte(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_kilobyte "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_gigabits(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_megabits "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_gigabyte(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_megabyte "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_terabits(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_gigabits "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
+#@annotation_must_be_tested
+utils_check_file_size_terabyte(){
+	local PATH_FILE="$1"
+	local FILE_SIZE_BYTE
+	local RESULT
+
+	FILE_SIZE_BYTE=$(utils_check_file_size_gigabyte "$PATH_FILE")
+
+	RESULT=$(math_calculator "$FILE_SIZE_BYTE / 1024")
+
+	display_message_value_number_simple "$RESULT"
+}
+
 #@annotation_must_be_created
 #utils_check_if_device_is_desktop() {}
 
@@ -76,6 +219,100 @@ utils_check_if_file_exists() {
     fi
 }
 
+#MUST BE FIXED
+utils_check_if_file_format_is_binary(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#MUST BE FIXED
+utils_check_if_file_format_is_database(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#MUST BE FIXED
+utils_check_if_file_format_is_document(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+utils_check_if_file_format_is_music(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#MUST BE FIXED
+utils_check_if_file_format_is_picture(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#MUST BE FIXED
+utils_check_if_file_format_is_software(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#MUST BE FIXED
+utils_check_if_file_format_is_video(){
+	local FILE_NAME_FULL="$1"
+
+	case "$FILE_NAME_FULL" in
+		*".aac" | *".aif" | *".aiff" | *".flac" | *".mkv" | *".mp3" | *".mp4" | *".loss" | *".wav" | *".wma") echo "true" ;;
+		*) echo "false" ;;
+	esac
+}
+
+#@annotation_must_be_improved
+utils_check_if_file_is_null(){
+	local PATH_FILE="$1"
+	local RESULT
+
+	if [[ $(utils_check_file_size_bits "$PATH_FILE") -le 0 ]]; then
+		RESULT="true"
+	else
+		RESULT="false"
+	fi
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+#@annotation_must_be_updated
+utils_check_if_firmware_supports_uefi() {
+	#if [ -z "$(ls -A /sys/firmware/efi/efivars)" ]; then
+	#if [ -z "$(ls -A /sys/firmware/efi/efivars 2>&1 /dev/null)" ]; then
+	if [[ ! -d "/sys/firmware/efi/" ]]; then
+		display_message_value_text_default_simple "false"
+	else
+		display_message_value_text_default_simple "true"
+	fi
+}
+
 utils_check_if_folder_exists() {
     local VALUE_PATH_FOLDER="$1"
 
@@ -84,16 +321,6 @@ utils_check_if_folder_exists() {
     else
         display_message_value_text_default_simple "false"
     fi
-}
-
-#@annotation_must_be_updated
-utils_check_if_firmware_supports_uefi() {
-	#if [ -z "$(ls -A /sys/firmware/efi/efivars)" ]; then
-	if [ -z "$(ls -A /sys/firmware/efi/efivars 2>&1 /dev/null)" ]; then
-		display_message_value_text_default_simple "false"
-	else
-		display_message_value_text_default_simple "true"
-	fi
 }
 
 utils_check_if_function_exists() {
@@ -193,13 +420,6 @@ utils_check_if_user_has_root_previledges() {
         display_message_value_text_default_simple "true"
 	else
         display_message_value_text_default_simple "false"
-	fi
-}
-
-utils_exit_if_user_does_not_have_root_previledges() {
-	if [[ $UID -ne 0 ]]; then
-		display_message_value_status_error_simple "You must be root for preduring this step."
-		exit 127;
 	fi
 }
 
@@ -519,7 +739,7 @@ utils_chronometer_countdown() {
 utils_clear_file() {
 	local PATH_FILE="$1"
 
-	display_message_value_status_warning_complex "Clearing terminal history"
+	display_message_value_status_warning_complex "Clearing $PATH_FILE file content"
 
 	case $(utils_check_if_file_exists "$PATH_FILE") in
 		"false") 
@@ -527,6 +747,7 @@ utils_clear_file() {
 			;;
 		"true")
 			cat /dev/null > "$PATH_FILE"
+			#cat /dev/null 2>&1 $FILE_NAME_FULL
 			;;
 	esac
 }
@@ -752,6 +973,84 @@ utils_convert_temperature_fahrenheit_to_celsius() {
 	math_calculate "($TEMPERATURE_FAHRENHEIT - 32) / 1.8" "2"
 }
 
+#@annotation_must_be_improved
+utils_cryptography_sha256_sum_compare(){
+	local ARRAY_FILES_ALL=($@)
+	local ARRAY_CRYPTOGRAPHY_SUM=()
+	local COUNT_LOOP=0
+	local RESULT
+
+	for i in "${ARRAY_FILES_ALL[@]}"; do
+		#Calculate the cryptography sum values
+		ARRAY_CRYPTOGRAPHY_SUM+=( $(utils_cryptography_sha256_sum_generate "$i") )
+
+		if [[ "$COUNT_LOOP" -gt 0 ]]; then
+			#Check if cryptography sum values are equals
+			if [[ "${ARRAY_CRYPTOGRAPHY_SUM[$COUNT_LOOP]}" != "${ARRAY_CRYPTOGRAPHY_SUM[$COUNT_LOOP - 1]}" ]]; then
+				RESULT="false"
+				break
+			else
+				RESULT="true"
+				continue
+			fi
+		fi
+
+		COUNT_LOOP=$((COUNT_LOOP + 1))
+	done
+	
+	printf "%s\n" "$RESULT"
+}
+
+utils_cryptography_sha256_sum_generate(){
+	local PATH_FILE="$1"
+	local AUX_RESULT
+	local RESULT
+
+	AUX_RESULT=$(sha256sum "$PATH_FILE")
+	RESULT=$(printf "$AUX_RESULT" | awk '{ print $1 }')
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+#@annotation_must_be_improved
+utils_cryptography_sha512_sum_compare(){
+	local ARRAY_FILES_ALL=($@)
+	local ARRAY_CRYPTOGRAPHY_SUM=()
+	local COUNT_LOOP=0
+	local RESULT
+
+	for i in "${ARRAY_FILES_ALL[@]}"; do
+		#Calculate the cryptography sum values
+		ARRAY_CRYPTOGRAPHY_SUM+=( $(utils_cryptography_sha512_sum_generate "$i") )
+
+		if [[ "$COUNT_LOOP" -gt 0 ]]; then
+			#Check if cryptography sum values are equals
+			if [[ "${ARRAY_CRYPTOGRAPHY_SUM[$COUNT_LOOP]}" != "${ARRAY_CRYPTOGRAPHY_SUM[$COUNT_LOOP - 1]}" ]]; then
+				RESULT="false"
+				break
+			else
+				RESULT="true"
+				continue
+			fi
+		fi
+
+		COUNT_LOOP=$((COUNT_LOOP + 1))
+	done
+	
+	printf "%s\n" "$RESULT"
+}
+
+utils_cryptography_sha512_sum_generate(){
+	local PATH_FILE="$1"
+	local AUX_RESULT
+	local RESULT
+
+	AUX_RESULT=$(sha512sum "$PATH_FILE")
+	RESULT=$(printf "$AUX_RESULT" | awk '{ print $1 }')
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
 utils_download_file() {
 	local PATH_URL="$1"
 	local PATH_DESTINY="$2"
@@ -819,6 +1118,13 @@ utils_effects_spinner() {
         printf '\b%.1s' "$CHARACTERS_AVALIABLE"
         CHARACTERS_AVALIABLE=${CHARACTERS_AVALIABLE#?}${CHARACTERS_AVALIABLE%???}
     done
+}
+
+utils_exit_if_user_does_not_have_root_previledges() {
+	if [[ $UID -ne 0 ]]; then
+		display_message_value_status_error_simple "You must be root for preduring this step."
+		exit 127;
+	fi
 }
 
 utils_export_desktop_environment() {
@@ -1079,6 +1385,229 @@ utils_extract_file_method_zst() {
 	unzstd "$FILE_ORIGIN"
 }
 
+utils_file_from_path_get_directory_parent(){
+	#utils_file_from_path_get_directory_parent "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local FILE_NAME_AUX
+	local RESULT=""
+
+	FILE_NAME_AUX=$(utils_file_from_path_get_directory_current "$FILE_NAME_FULL")
+
+	RESULT=$(dirname "$FILE_NAME_AUX")
+
+	echo "$RESULT"
+}
+
+utils_file_from_path_get_directory_current(){
+	#utils_file_from_path_get_directory_current "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local RESULT=""
+
+	#RESULT="${FILE_NAME_FULL%/*}"
+	RESULT=$(dirname "$FILE_NAME_FULL")
+
+	echo "$RESULT"
+}
+
+utils_file_from_path_get_directory_name_current(){
+	#utils_file_from_path_get_directory_name_current "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local FILE_NAME_AUX
+	local RESULT=""
+
+	FILE_NAME_AUX=$(utils_file_from_path_get_directory_current "$FILE_NAME_FULL")
+
+	RESULT=$(dirname $FILE_NAME_FULL | sed 's,^\(.*/\)\?\([^/]*\),\2,')
+
+	echo "$RESULT"
+}
+
+utils_file_from_path_get_extension(){
+	#utils_file_from_path_get_extension "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local FILE_NAME_AUX
+	local RESULT=""
+
+	FILE_NAME_AUX=$(utils_file_from_path_get_filename_with_extension "$FILE_NAME_FULL")
+
+	RESULT="${FILE_NAME_AUX##*.}"
+
+	echo "$RESULT"
+}
+
+utils_file_from_path_get_filename_with_extension(){
+	#utils_file_from_path_get_filename_with_extension "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local RESULT=""
+
+	#RESULT="${FILE_NAME_FULL##*/}"
+	RESULT=$(basename "$FILE_NAME_FULL")
+
+	echo "$RESULT"
+}
+
+utils_file_from_path_get_filename_without_extension(){
+	#utils_file_from_path_get_filename_without_extension "$PATH_DIRECTORY_ORIGIN"
+
+	local FILE_NAME_FULL="$1"
+	local FILE_NAME_AUX
+	local RESULT=""
+
+	FILE_NAME_AUX=$(utils_file_from_path_get_filename_with_extension "$FILE_NAME_FULL")
+
+	RESULT="${FILE_NAME_AUX%.*}"
+
+	echo "$RESULT"
+}
+
+#utils_file_music_metadata_tag_value_create_all(){}
+
+#@annotation_must_be_improved
+utils_file_music_metadata_tag_value_create_single(){
+	local PATH_FILE_ORIGIN="$1"
+	local PATH_FILE_DESTINY="$2"
+	local TAG_NAME="$3"
+	local TAG_VALUE=" "
+
+	#Validate parameters values
+	#???
+
+	#Check if parameter already exist
+	#???
+
+	#
+	utils_file_music_metadata_tag_value_insert_single \
+		"$PATH_FILE_ORIGIN" \
+		"$PATH_FILE_DESTINY" \
+		"$TAG_NAME" \
+		"$TAG_VALUE"
+}
+
+utils_file_music_metadata_tag_value_read_all(){
+    local PATH_FILE="$1"
+	local TAG_NAME="$2"
+    local RESULT
+
+	RESULT=$(ffprobe "$PATH_FILE" 2>&1 | grep -A90 'Metadata:')
+
+    printf "%s" "$RESULT"
+}
+
+#@annotation_must_be_improved
+utils_file_music_metadata_tag_value_read_single(){
+	#utils_file_music_metadata_tag_read_value_single "$PATH_FILE_MUSIC_ORIGIN" "artist"
+	#utils_file_music_metadata_tag_read_value_single "$PATH_FILE_MUSIC_ORIGIN" "title,album,artist"
+
+    local PATH_FILE="$1"
+	local TAG_NAME="$2"
+    local RESULT
+
+	#echo -e "$PATH_FILE"
+
+	case "$TAG_NAME" in
+		"album" | "artist" | "band" | "comment" | "genre" | "title" | "track" | "year") 
+			RESULT=$(ffprobe \
+				-loglevel error \
+				-show_entries format_tags="$TAG_NAME" \
+				-of default=noprint_wrappers=1:nokey=1 "$PATH_FILE")
+    		
+			printf "%s" "$RESULT"
+			;;
+		*) display_message_value_status_error_simple "" ;;
+	esac
+}
+
+#utils_file_music_metadata_tag_value_update_all(){}
+
+#@annotation_must_be_improved
+utils_file_music_metadata_tag_value_update_single(){
+	local PATH_FILE_ORIGIN="$1"
+	local PATH_FILE_DESTINY="$2"
+	local TAG_NAME="$3"
+	local TAG_VALUE="$4"
+
+	#Validate parameters values
+	#???
+
+	#Check if parameter already exist
+	#???
+
+	#
+	utils_file_music_metadata_tag_value_insert_single \
+		"$PATH_FILE_ORIGIN" \
+		"$PATH_FILE_DESTINY" \
+		"$TAG_NAME" \
+		"$TAG_VALUE"
+}
+
+utils_file_music_metadata_tag_value_delete_all(){
+	local PATH_FILE_ORIGIN="$1"
+	local PATH_FILE_DESTINY="$2"
+	local RESULT
+
+	RESULT=$(ffmpeg \
+		-i "$PATH_FILE_ORIGIN" \
+		-map 0:a \
+		-codec:a copy \
+		-map_metadata -1 "$PATH_FILE_DESTINY")
+
+	printf "%s" "$RESULT"	
+}
+
+#@annotation_must_be_improved
+utils_file_music_metadata_tag_value_delete_single(){
+	local PATH_FILE_ORIGIN="$1"
+	local PATH_FILE_DESTINY="$2"
+	local TAG_NAME="$3"
+
+	case "$TAG_NAME" in
+		"album" | "artist" | "band" | "comment" | "genre" | "title" | "track" | "year") 
+			ffmpeg \
+				-i "$PATH_FILE_ORIGIN" \
+				-map 0 \
+				-y \
+				-codec copy \
+				-write_id3v2 1 \
+				-metadata "${TAG_NAME}=" "$PATH_FILE_DESTINY"
+			
+			printf "Save removing tags from %s to %s file..." "$PATH_FILE_ORIGIN" "$PATH_FILE_DESTINY"
+			;;
+		*) display_message_value_status_error_simple "" ;;
+	esac
+}
+
+#utils_file_music_metadata_tag_value_insert_all(){}
+
+#@annotation_must_be_improved
+utils_file_music_metadata_tag_value_insert_single(){
+	local PATH_FILE_ORIGIN="$1"
+	local PATH_FILE_DESTINY="$2"
+	local TAG_NAME="$3"
+	local TAG_VALUE="$4"
+
+	#case "$TAG_NAME" in
+		#"album" | "artist" | "band" | "comment" | "genre" | "title" | "track" | "year") 
+			ffmpeg \
+				-i "$PATH_FILE_ORIGIN" \
+				-map 0 \
+				-y \
+				-codec copy \
+				-write_id3v2 1 \
+				-metadata "${TAG_NAME}=${TAG_VALUE}" "$PATH_FILE_DESTINY"
+			
+			#ffmpeg -i [file path] -metadata lyrics="lyrics I want" -codec copy [same file path as before]
+			
+			printf "Save removing tags from %s to %s file..." "$PATH_FILE_ORIGIN" "$PATH_FILE_DESTINY"
+			#;;
+		#*) display_message_value_status_error_simple "" ;;
+	#esac
+}
+
 utils_generate_link_file_version_latest_github() {
     #Try: curl -fsSL github.com/henrikbeck95/shell_script_library/releases/latest/download/shell-script-library -O
 	#Try: curl -fsSL github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/latest/download/${REPOSITORY_FILE} -O
@@ -1220,19 +1749,121 @@ utils_move_file() {
 utils_path_directory_create() {
 	local PATH_FOLDER="$1"
 
-	display_message_value_status_warning_complex "Creating $PATH_FOLDER folder directory"
-	
 	if [[ ! -d "$PATH_FOLDER" ]]; then
+		display_message_value_status_warning_complex "Creating $PATH_FOLDER folder directory"
+	
 		mkdir -p "$PATH_FOLDER"
-	fi
 
-	display_message_value_status_success_complex "$PATH_FOLDER folder directory has been created"
+		display_message_value_status_success_complex "$PATH_FOLDER folder directory has been created"
+	fi
 }
 
 utils_remove_file() {
 	local PATH_FILE="$1"
 
 	rm "$PATH_FILE" || rm -f "$PATH_FILE" || rm -fr "$PATH_FILE"
+}
+
+utils_request_filter(){
+	local REQUEST_JSON="$1"
+	local RESULT=$(echo "$REQUEST_JSON" | jq '."translatedText"')
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+#utils_request_method_get(){}
+
+utils_request_method_post(){
+	local REQUEST_BODY="$1"
+	local REQUEST_HEADER="$2"
+	local REQUEST_URL="$3"
+	local RESULT
+
+	RESULT=$(curl --silent -i -H"$REQUEST_HEADER" -d"$REQUEST_BODY" "$REQUEST_URL" | tail -1)
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+utils_request_translation(){
+	#Argos Translate
+	#https://github.com/argosopentech/argos-translate
+	#LibreTranslate API
+
+	local TRANSLATE_LANGUAGE_FROM="$1"	#"en"
+	local TRANSLATE_LANGUAGE_TO="$2"	#"es"
+	local TRANSLATE_TEXT_ORIGINAL="$3"	#"Java and Shell Script are my favorite programming languages"
+
+	local REQUEST_BODY
+	local REQUEST_HEADER
+	local REQUEST_URL
+
+	local RESULT
+
+	REQUEST_URL="https://translate.argosopentech.com/translate"
+	REQUEST_HEADER="Content-Type: application/json"
+	REQUEST_BODY="{\"q\": \"$TRANSLATE_TEXT_ORIGINAL\", \"source\": \"$TRANSLATE_LANGUAGE_FROM\", \"target\": \"$TRANSLATE_LANGUAGE_TO\"}"
+
+	RESULT=$(utils_request_method_post "$REQUEST_BODY" "$REQUEST_HEADER" "$REQUEST_URL")
+
+	display_message_value_text_default_simple "$RESULT"
+}
+
+#MUST BE IMPROVED - Change utils_check_if_file_format_is_music dynamically
+utils_scan_files_inside_directory_recursively(){
+	local PATH_DIRECTORY="$1"
+	local ARRAY_RESULT=()
+
+	#For all files in the informed path directory
+	for i in "$PATH_DIRECTORY"/*; do
+		if [ -f "$i" ]; then
+            case $(utils_check_if_file_format_is_music "$i") in
+				"false") : ;;
+				"true") ARRAY_RESULT+=("$i") ;;
+			esac
+        elif [ -d "$i" ]; then
+			#Call utils_scan_files_inside_directory_recursively inside it (recursion)
+            utils_scan_files_inside_directory_recursively "$i"
+        fi
+	done
+
+	printf '%s\n' "${ARRAY_RESULT[@]}"
+}
+
+#MUST BE IMPROVED - Change utils_check_if_file_format_is_music dynamically
+utils_scan_files_inside_directory_unique(){
+	local PATH_DIRECTORY="$1"
+	local ARRAY_RESULT=()
+
+	for i in "$PATH_DIRECTORY"/*; do
+		case $(utils_check_if_file_format_is_music "$i") in
+			"false") : ;;
+			"true") ARRAY_RESULT+=("$i") ;;
+		esac
+	done
+
+	printf '%s\n' "${ARRAY_RESULT[@]}"
+}
+
+utils_translate_message(){
+	local TRANSLATE_LANGUAGE_FROM="$1"	#"en"
+	local TRANSLATE_LANGUAGE_TO="$2"	#"es"
+	local TRANSLATE_TEXT_ORIGINAL="$3"	#"Java and Shell Script are my favorite programming languages"
+
+	local REQUEST_RETURN
+	local TRANSLATE_RETURN_FULL
+	local TRANSLATE_RETURN_WITHOUT_CHARACTER_FIRST
+	local TRANSLATE_RETURN_WITHOUT_CHARACTER_LAST
+	local RESULT
+
+	REQUEST_RETURN=$(utils_request_translation "$TRANSLATE_LANGUAGE_FROM" "$TRANSLATE_LANGUAGE_TO" "$TRANSLATE_TEXT_ORIGINAL")
+
+	TRANSLATE_RETURN_FULL=$(utils_request_filter "$REQUEST_RETURN")
+	TRANSLATE_RETURN_WITHOUT_CHARACTER_FIRST=$(string_remove_content_character_first "$TRANSLATE_RETURN_FULL")
+	TRANSLATE_RETURN_WITHOUT_CHARACTER_LAST=$(string_remove_content_character_last "$TRANSLATE_RETURN_WITHOUT_CHARACTER_FIRST")
+
+	RESULT="$TRANSLATE_RETURN_WITHOUT_CHARACTER_LAST"
+
+	display_message_value_text_default_simple "$RESULT"
 }
 
 utils_screen_size_count_limit_half_characters_horizontal() {

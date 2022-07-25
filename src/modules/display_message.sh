@@ -13,6 +13,14 @@ display_message_content_line_clear() {
 	printf "\r"
 }
 
+display_message_content_line_replace() {
+	local DISPLAY_TEXT="$1"
+
+	#echo -n "\r$DISPLAY_TEXT"
+	#printf "\r$DISPLAY_TEXT"
+	printf "\r%s" "$DISPLAY_TEXT"
+}
+
 display_message_position_align_center_complex() {
 	local DISPLAY_TEXT_MESSAGE="$1"
 	local CHARACTER_REPETITION="#"

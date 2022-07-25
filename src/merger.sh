@@ -7,7 +7,7 @@
 #Use path /run/host/ #For Flatpak applications
 PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
 PATH_LIBRARY_MODULES_FILES_COMPILING="$PATH_SCRIPT/modules"
-PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL="$PATH_SCRIPT/shell-script-library"
+PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY="$PATH_SCRIPT/shell-script-library"
 PATH_LIBRARY_MODULES_FILES_RESULT_TESTER="$PATH_SCRIPT/shell-script-library-tester"
 PATH_LIBRARY_STORAGE_FILE_RESULT=""
 
@@ -51,12 +51,13 @@ Only .sh files are processed. Except for header.txt and header_.txt files.
 [Parameters]
 -h\t\t--help\t-?\t\tDisplay this message help
 -e\t\t--edit\t\t\tEdit this script file with $EDITOR software.
--c-library\t--clear-library\t\tClear all the library modules files content from ${PATH_LIBRARY_MODULES_FILES_COMPILING}/.
--c-tester\t--clear-tester\t\tClear all the tester modules files content from ${PATH_LIBRARY_MODULES_FILES_COMPILING}/.
+    (Not implemented) -c-library\t--clear-library\t\tClear all the library modules files content from ${PATH_LIBRARY_MODULES_FILES_COMPILING}/.
+    (Not implemented) -c-tester\t--clear-tester\t\tClear all the tester modules files content from ${PATH_LIBRARY_MODULES_FILES_COMPILING}/.
+-d\t\t--download\t\tClone Shell Script Library repository to $REPOSITORY_CLONE_PATH or update if it is already cloned.
 -i\t\t--install\t\tInstall the $SOFTWARE_LIBRARY_NAME by moving the compiled file to ${PATH_LIBRARY_STORAGE_FILE_RESULT}.
--m-library\t--merge-library\t\tCompile all the library modules files content into ${PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL}.
+-m-library\t--merge-library\t\tCompile all the library modules files content into ${PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY}.
 -m-library\t--merge-library\t\tCompile all the tester modules files content into ${PATH_LIBRARY_MODULES_FILES_RESULT_TESTER}.
--r-library\t--run-library\t\tRun/import $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL file.
+-r-library\t--run-library\t\tRun/import $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY file.
 -r-tester\t--run-tester\t\tRun $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER file.
 -u\t\t--uninstall\t\tUninstall the $SOFTWARE_LIBRARY_NAME by removing the compiled file from ${PATH_LIBRARY_STORAGE_FILE_RESULT}.
 -v\t\t--version\t\tDisplay $SOFTWARE_MERGER_NAME version
@@ -66,7 +67,7 @@ Only .sh files are processed. Except for header.txt and header_.txt files.
 "
 
 ##############################
-#Functions - tools
+#Functions - tools (also available from modules)
 ##############################
 
 string_replace_text() {
@@ -121,8 +122,25 @@ utils_clear_file() {
 #Functions - normal
 ##############################
 
+shell_script_library_repository_clone(){
+    case $(utils_check_if_folder_exists "$REPOSITORY_CLONE_PATH") in
+    "false")
+        echo -e "Cloning the $REPOSITORY_CLONE_URL to $REPOSITORY_CLONE_PATH..."
+        git clone "$REPOSITORY_CLONE_URL" "$REPOSITORY_CLONE_PATH" && \
+            echo -e "Shell Script Library is avaliable at $REPOSITORY_CLONE_PATH/ directory"
+        ;;
+    "true")
+        echo -e "Updating Shell Script Library repository from $REPOSITORY_CLONE_PATH ..."
+
+        cd "$REPOSITORY_CLONE_PATH"
+        git pull
+        cd -
+        ;;
+    esac
+}
+
 #@annotation_must_be_tested
-shell_script_library_modules_action_clear_original() {
+shell_script_library_modules_action_clear_library() {
     local FILENAME_WITH_FULL_PATH="$1"
     local FILENAME_WITHOUT_FULL_PATH="${FILENAME_WITH_FULL_PATH##*/}"
 
@@ -145,7 +163,7 @@ shell_script_library_modules_action_clear_tester() {
     fi
 }
 
-shell_script_library_modules_action_merge_original() {
+shell_script_library_modules_action_merge_library() {
     local FILENAME_WITH_FULL_PATH="$1"
     local FILENAME_WITHOUT_FULL_PATH="${FILENAME_WITH_FULL_PATH##*/}"
 
@@ -154,12 +172,12 @@ shell_script_library_modules_action_merge_original() {
 
     #Check if file name does not start with _ character and does not ends with _.sh value
     if [[ ! "$FILENAME_WITHOUT_FULL_PATH" =~ $REGEX_EXPRESSION_A ]] && [[ ! "$FILENAME_WITHOUT_FULL_PATH" =~ $REGEX_EXPRESSION_B ]]; then
-        #echo "Compiling the $FILENAME_WITHOUT_FULL_PATH module file content into $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL..."
-        echo -e "\n" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
-        cat "$FILENAME_WITH_FULL_PATH" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
+        #echo "Compiling the $FILENAME_WITHOUT_FULL_PATH module file content into $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY..."
+        echo -e "\n" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
+        cat "$FILENAME_WITH_FULL_PATH" >>"$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
     fi
 
-    shell_script_library_set_values_to_credits_original
+    shell_script_library_set_values_to_credits_library
 }
 
 shell_script_library_modules_action_merge_tester() {
@@ -179,18 +197,18 @@ shell_script_library_modules_action_merge_tester() {
     shell_script_library_set_values_to_credits_tester
 }
 
-#This function is going to be used for splitting the generated file into theirs respectively modules
-#shell_script_library_modules_action_reverse_original(){}
+#This function is going to be used for splitting the generated file into theirs respectively modules (reverse engineer method)
+#shell_script_library_modules_action_reverse_library(){}
 
-#This function is going to be used for splitting the generated file into theirs respectively modules
+#This function is going to be used for splitting the generated file into theirs respectively modules (reverse engineer method)
 #shell_script_library_modules_action_reverse_tester(){}
 
-shell_script_library_run_original() {
-    case $(utils_check_if_file_exists "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL") in
-    "false") echo "Error! $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL file does not exists" ;;
+shell_script_library_run_library() {
+    case $(utils_check_if_file_exists "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY") in
+    "false") echo "Error! $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY file does not exists" ;;
     "true")
-        chmod +x "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
+        chmod +x "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
         ;;
     esac
 }
@@ -205,29 +223,29 @@ shell_script_library_run_tester() {
     esac
 }
 
-shell_script_library_set_values_to_credits_original() {
+shell_script_library_set_values_to_credits_library() {
     string_replace_text \
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" \
         "SOFTWARE_LIBRARY_AUTHOR" \
         "$SOFTWARE_LIBRARY_AUTHOR"
 
     string_replace_text \
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" \
         "SOFTWARE_LIBRARY_EMAIL" \
         "$SOFTWARE_LIBRARY_EMAIL"
 
     string_replace_text \
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" \
         "SOFTWARE_LIBRARY_LICENSE" \
         "$SOFTWARE_LIBRARY_LICENSE"
 
     string_replace_text \
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" \
         "SOFTWARE_LIBRARY_VERSION" \
         "$SOFTWARE_LIBRARY_VERSION"
 
     string_replace_text \
-        "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" \
+        "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" \
         "SOFTWARE_SHEBANG_LIBRARY" \
         "$SOFTWARE_SHEBANG_LIBRARY"
 }
@@ -264,12 +282,14 @@ shell_script_library_set_values_to_credits_tester() {
 ##############################
 
 shell_script_library_install() {
-    case $(utils_check_if_file_exists "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL") in
+    case $(utils_check_if_file_exists "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY") in
     "false") : ;;
     "true") echo -e "Reinstalling the ${SOFTWARE_LIBRARY_NAME}!" && shell_script_library_uninstall ;;
     esac
 
-    cp "$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL" "$PATH_LIBRARY_STORAGE_FILE_RESULT" && echo -e "${SOFTWARE_LIBRARY_NAME} installation process has been completed!" || echo -e "${SOFTWARE_LIBRARY_NAME}installation process has been failed!"
+    cp "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" "$PATH_LIBRARY_STORAGE_FILE_RESULT" && \
+        echo -e "${SOFTWARE_LIBRARY_NAME} installation process has been completed!" || \
+        echo -e "${SOFTWARE_LIBRARY_NAME}installation process has been failed!"
 }
 
 #@annotation_must_be_tested
@@ -282,9 +302,11 @@ shell_script_library_modules_action_clear_main() {
         {
             for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
                 FILENAME_WITH_FULL_PATH="${i}"
-                shell_script_library_modules_action_clear_original "$FILENAME_WITH_FULL_PATH"
+                shell_script_library_modules_action_clear_library "$FILENAME_WITH_FULL_PATH"
             done
-        } && echo -e "Clearing library modules files process has been completed!" || echo -e "Clearing library modules files process has been failed!"
+        } && \
+            echo -e "Clearing library modules files process has been completed!" || \
+                echo -e "Clearing library modules files process has been failed!"
         ;;
     "tester")
         {
@@ -292,7 +314,9 @@ shell_script_library_modules_action_clear_main() {
                 FILENAME_WITH_FULL_PATH="${i}"
                 shell_script_library_modules_action_clear_tester "$FILENAME_WITH_FULL_PATH"
             done
-        } && echo -e "Clearing tester modules files process has been completed!" || echo -e "Clearing tester modules files process has been failed!"
+        } && \
+            echo -e "Clearing tester modules files process has been completed!" || \
+                echo -e "Clearing tester modules files process has been failed!"
         ;;
     esac
 }
@@ -305,16 +329,18 @@ shell_script_library_modules_action_merge_main() {
     "library")
         {
             #Clean up the older file version
-            utils_clear_file >"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
+            utils_clear_file >"$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
 
             #Compile all modules into one single file
-            cat "$PATH_LIBRARY_MODULES_FILES_COMPILING"/header.txt >"$PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL"
+            cat "$PATH_LIBRARY_MODULES_FILES_COMPILING"/header.txt >"$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY"
 
             for i in "$PATH_LIBRARY_MODULES_FILES_COMPILING"/*.sh; do
                 FILENAME_WITH_FULL_PATH="${i}"
-                shell_script_library_modules_action_merge_original "$FILENAME_WITH_FULL_PATH"
+                shell_script_library_modules_action_merge_library "$FILENAME_WITH_FULL_PATH"
             done
-        } && echo -e "Merging library modules files process has been completed!" || echo -e "Merging library modules files process has been failed!"
+        } && \
+            echo -e "Merging library modules files process has been completed!" || \
+                echo -e "Merging library modules files process has been failed!"
         ;;
     "tester")
         {
@@ -328,7 +354,9 @@ shell_script_library_modules_action_merge_main() {
                 FILENAME_WITH_FULL_PATH="${i}"
                 shell_script_library_modules_action_merge_tester "$FILENAME_WITH_FULL_PATH"
             done
-        } && echo -e "Merging tester modules files process has been completed!" || echo -e "Merging tester modules files process has been failed!"
+        } && \
+            echo -e "Merging tester modules files process has been completed!" || \
+                echo -e "Merging tester modules files process has been failed!"
         ;;
     esac
 }
@@ -337,15 +365,19 @@ shell_script_library_run_main() {
     local MODULE_ACTION_PLACE="$1"
 
     case "$MODULE_ACTION_PLACE" in
-    "library") shell_script_library_run_original ;;
+    "library") shell_script_library_run_library ;;
     "tester") shell_script_library_run_tester ;;
     esac
 }
 
 shell_script_library_uninstall() {
     case $(utils_check_if_file_exists "$PATH_LIBRARY_STORAGE_FILE_RESULT") in
-    "false") : && echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been not necessary. File not found!" ;;
-    "true") rm "$PATH_LIBRARY_STORAGE_FILE_RESULT" && echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been completed!" || echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been failed!" ;;
+    "false") echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been not necessary. File has not been found!" ;;
+    "true")
+        rm "$PATH_LIBRARY_STORAGE_FILE_RESULT" && \
+            echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been completed!" || \
+                echo -e "${SOFTWARE_LIBRARY_NAME} uninstalling process has been failed!"
+        ;;
     esac
 }
 
@@ -354,13 +386,13 @@ shell_script_library_version() {
 }
 
 ##############################
-#Calling the functions
+#Replace old Shell Script Library version to the newest one
 ##############################
 
 #Replace Shell Script Library in favor of the newest version
-if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL ]]; then
-    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL old version..."
-    rm $PATH_LIBRARY_MODULES_FILES_RESULT_ORIGINAL
+if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY ]]; then
+    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY old version..."
+    rm $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY
 fi
 
 #Replace Shell Script Library Tester in favor of the newest version
@@ -369,9 +401,15 @@ if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER ]]; then
     rm $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER
 fi
 
-#Calling the functions according to the informed arguments
+##############################
+#Calling the functions
+##############################
 
+#clear
+
+#Calling the functions according to the informed arguments
 while [ $# -ne 0 ]; do
+    #Debug mode for checking the current '$1' variable value
     #echo -e "The parameter[$AUX] has '$1' value"
 
     #Check the set parameters
@@ -384,8 +422,9 @@ while [ $# -ne 0 ]; do
         "$EDITOR" "$0"
         break
         ;;
-        #"-c-library" | "--clear-library") shell_script_library_modules_action_clear_main "library" ;;
-        #"-c-tester" | "--clear-tester") shell_script_library_modules_action_clear_main "tester" ;;
+    #"-c-library" | "--clear-library") shell_script_library_modules_action_clear_main "library" ;;
+    #"-c-tester" | "--clear-tester") shell_script_library_modules_action_clear_main "tester" ;;
+    "-d" | "--download") shell_script_library_repository_clone ;;
     "-i" | "--install") shell_script_library_install ;;
     "-m-library" | "--merge-library") shell_script_library_modules_action_merge_main "library" ;;
     "-m-tester" | "--merge-tester") shell_script_library_modules_action_merge_main "tester" ;;

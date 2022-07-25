@@ -1,6 +1,14 @@
 #!/usr/bin/env sh
 
 ##############################
+#Warnings!
+##############################
+#
+#This is a deprecated script file in favor of merger.sh file
+#
+##############################
+
+##############################
 #Declaring variables
 ##############################
 
@@ -31,7 +39,7 @@ License: GPL3
 Version: v1.0.2
 
 [Description]
-This is a dedicated compiler tool for ${SOFTWARE_NAME} project which can be used as a default installer.
+This is a DEPRECATED and dedicated compiler tool for ${SOFTWARE_NAME} project which could be used as a default installer.
 It merges all the source code modules into one single file. It is able to install/uninstall this file and clean up the unused files.
 
 [Parameters]
@@ -79,9 +87,19 @@ util_check_if_folder_exists() {
 #Functions - normal
 ##############################
 
-#@annotation_must_be_deprecated "In favor of merger.sh file" "This function is not going to be migrated"
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_remove_files_used_for_compilation() {
     rm -fr "$PATH_REPOSITORY_CLONE"
+}
+
+#@annotation_must_be_deprecated "In favor of merger.sh file"
+shell_script_library_modules_download() {
+    case $(util_check_if_folder_exists "$1") in
+    "false") : ;;
+    "true") shell_script_library_modules_remove_files_used_for_compilation ;;
+    esac
+
+    git clone $LINK_GITHUB $PATH_REPOSITORY_CLONE
 }
 
 #@annotation_must_be_deprecated "In favor of merger.sh file"
@@ -89,7 +107,7 @@ shell_script_library_modules_uninstall() {
     rm -f "$PATH_FILE_LIBRARY_COMPILED"
 }
 
-#@annotation_must_be_tested "This function is going to be migrate to merger.sh file soon"
+#@annotation_must_be_deprecated "In favor of merger.sh file"
 shell_script_library_modules_clear_from_local() {
     local PATH_SCRIPT
 
@@ -180,16 +198,6 @@ shell_script_library_compilation_and_running() {
     else
         echo -e "Shell Script Library has not been found."
     fi
-}
-
-#@annotation_must_be_deprecated "In favor of merger.sh file" "This function is not going to be migrated"
-shell_script_library_modules_download() {
-    case $(util_check_if_folder_exists "$1") in
-    "false") : ;;
-    "true") shell_script_library_modules_remove_files_used_for_compilation ;;
-    esac
-
-    git clone $LINK_GITHUB $PATH_REPOSITORY_CLONE
 }
 
 #@annotation_must_be_deprecated "In favor of merger.sh file"

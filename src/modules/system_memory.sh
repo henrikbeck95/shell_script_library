@@ -39,14 +39,18 @@ system_memory_clear_swap(){
 
 system_memory_generate_file_log_before(){
     local DATE_CURRENT=$(date)
-    local FILE_MEMORY_LOG="/tmp/my_memory.log"
+    local PATH_MEMORY_LOG="/var/log/shell_script_library"
+    local FILE_MEMORY_LOG="$PATH_MEMORY_LOG/memory.log"
+
+    utils_path_directory_create "$PATH_MEMORY_LOG/"
 
     display_message_value_status_success_complex "$DATE_CURRENT" >> "$FILE_MEMORY_LOG"
 	free -h >> "$FILE_MEMORY_LOG"
 }
 
 system_memory_generate_file_log_after(){
-    local FILE_MEMORY_LOG="/tmp/my_memory.log"
+    local PATH_MEMORY_LOG="/var/log/shell_script_library"
+    local FILE_MEMORY_LOG="$PATH_MEMORY_LOG/memory.log"
 
     free -h >> "$FILE_MEMORY_LOG"
 }
