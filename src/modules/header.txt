@@ -46,12 +46,13 @@ SOFTWARE_SHEBANG_LIBRARY
 #Installation setup
 #Move this auto generated file to /usr/local/bin/shell-script-library for installing this library correctly
 #
-#Usage
-#Import this library on your source code by typing
-#$ source /usr/local/bin/shell-script-library
+#Import this library on your source code by typing:
+#Load Shell Script Library resources
+##. /usr/local/bin/shell-script-library || exit 1    #System mode
+#. $HOME/.local/bin/shell-script-library || exit 1   #User mode
 #
-#Import this file using relative path
+#Import this file using a relative path
 #PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"
-#source "$PATH_SCRIPT"/shell-script-library
+#. "$PATH_SCRIPT"/shell-script-library || exit 1
 #
 #############################

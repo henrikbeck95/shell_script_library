@@ -1,6 +1,33 @@
 #!/usr/bin/env bash
 
 ##############################
+#Task list
+##############################
+#
+#- [ ] Edit modules files
+#   - [ ] Insert shebang header on all modules files for avoiding linter problems detection.
+#   - [ ] Remove the individual shebang header from all individual modules. Use only the header.txt one.
+#   - [ ] 
+#- [ ] Minify shell script file.
+#   - [x] Minify the final shell script version softly.
+#   - [x] Minify the final shell script version hardly.
+#   - [ ] Check if informed path is a valid shell script file.
+#   - [ ] Define '$PATH_FILE_OUTPUT' file from arguments besides copying the same '$PATH_FILE_INPUT' name.
+#   - [ ] Reuse file extension but set '.min' value before '.sh'. So, '.min.sh' file will be set.
+#   - [ ] Split AWK into separated variables.
+#   - [ ] DO NOT remove lines whose starts with '#@'
+#   - [ ] Remove Commentaries from middle or end of line.
+#   - [ ] Compress all the file content into only one line.
+#   - [ ] 
+#- [ ] Create the reverse engineer mode
+#   - [ ] For library.
+#   - [ ] For tester.
+#- [ ] 
+#   - [ ] 
+#
+##############################
+
+##############################
 #Declaring variables
 ##############################
 
@@ -121,6 +148,64 @@ utils_clear_file() {
 ##############################
 #Functions - normal
 ##############################
+
+#@annotation_must_be_fixed
+#@annotation_must_be_improved
+#@annotation_must_be_tested
+#shell_script_library_minify_hard(){
+#    local PATH_FILE_INPUT="$1"
+#    local PATH_FILE_MINIFY_SOFT="${PATH_FILE_INPUT}.min.soft"
+#    #local PATH_FILE_OUTPUT="${PATH_FILE_INPUT}.min.hard"
+#    local PATH_FILE_OUTPUT="/tmp/lalala.min.hard"
+#    local CODE_STATUS_EXIT
+#
+#    #PATH_FILE_MINIFY_SOFT= 
+#    shell_script_library_minify_soft "$PATH_FILE_INPUT"
+#}
+
+#@annotation_must_be_improved
+shell_script_library_minify_soft(){
+    local PATH_FILE_INPUT="$1"
+    local PATH_FILE_OUTPUT="${PATH_FILE_INPUT}.min"
+    local CODE_STATUS_EXIT
+
+    #Check if variable exists
+    if [[ -z "$PATH_FILE_INPUT" ]]; then
+        echo "FAILURE! Nullable argument value set to 'PATH_FILE_INPUT' variable."
+        exit 1
+    fi
+
+    case $(utils_check_if_file_exists "$PATH_FILE_INPUT") in
+    "false") 
+        echo "FAILURE! '$PATH_FILE_INPUT' file does not exists"
+        exit 1
+        ;;
+    "true") 
+        #Removing all empty lines and removing all lines whose starts with spaces or commented signed with '#'
+        ####Remove all empty lines
+        ####Remove lines that begin with spaces and a comment sign #
+        ####Remove all comment lines (meaning, lines that begin with a "#")
+        awk '
+            (/.*/ || /#!/) && (!/^#$/) &&
+            (!/^#[[:blank:]]/) && (!/^#[a-z]/) && 
+            (!/^#[A-Z]/) && (!/^##/) &&
+            (!/^\t#/) && (!/^[[:space:]]*$/) &&
+            ( /^#.*!/ || !/^[[:space:]]*#/)
+        ' "${PATH_FILE_INPUT}" | sed 's_^[[:space:]]*__g' > "$PATH_FILE_OUTPUT" 2>/dev/null
+        #' ${PATH_FILE_INPUT} > "$PATH_FILE_OUTPUT" 2>/dev/null #Comment out the above line and uncomment this line if your HEREDOCS are affected
+
+        CODE_STATUS_EXIT=$?
+        
+        if [[ "$CODE_STATUS_EXIT" -eq 0 ]] && [[ -s "$PATH_FILE_OUTPUT" ]] ; then
+            echo "SUCCESS! '$PATH_FILE_INPUT' file has been minified to '$PATH_FILE_OUTPUT' file."
+            exit 0
+        else
+            echo "FAILURE! Unable to minify '$PATH_FILE_INPUT' to '$PATH_FILE_OUTPUT' file."
+            exit 1
+        fi
+        ;;
+    esac
+}
 
 shell_script_library_repository_clone(){
     case $(utils_check_if_folder_exists "$REPOSITORY_CLONE_PATH") in
@@ -288,8 +373,8 @@ shell_script_library_install() {
     esac
 
     cp "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" "$PATH_LIBRARY_STORAGE_FILE_RESULT" && \
-        echo -e "${SOFTWARE_LIBRARY_NAME} installation process has been completed!" || \
-        echo -e "${SOFTWARE_LIBRARY_NAME}installation process has been failed!"
+        echo -e "$SOFTWARE_LIBRARY_NAME installation process has been completed!" || \
+        echo -e "$SOFTWARE_LIBRARY_NAME installation process has been failed!"
 }
 
 #@annotation_must_be_tested
@@ -339,7 +424,7 @@ shell_script_library_modules_action_merge_main() {
                 shell_script_library_modules_action_merge_library "$FILENAME_WITH_FULL_PATH"
             done
         } && \
-            echo -e "Merging library modules files process has been completed!" || \
+            echo -e "Merging library modules files process has been completed!" || 
                 echo -e "Merging library modules files process has been failed!"
         ;;
     "tester")
@@ -386,34 +471,24 @@ shell_script_library_version() {
 }
 
 ##############################
-#Replace old Shell Script Library version to the newest one
-##############################
-
-#Replace Shell Script Library in favor of the newest version
-if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY ]]; then
-    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY old version..."
-    rm $PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY
-fi
-
-#Replace Shell Script Library Tester in favor of the newest version
-if [[ -f $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER ]]; then
-    echo "Removing $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER old version..."
-    rm $PATH_LIBRARY_MODULES_FILES_RESULT_TESTER
-fi
-
-##############################
 #Calling the functions
 ##############################
 
 #clear
 
+#Display help message if any argument has been informed
+if [[ "$#" -eq 0 ]]; then
+    echo -e "$MESSAGE_HELP"
+    exit 0
+fi
+
 #Calling the functions according to the informed arguments
-while [ $# -ne 0 ]; do
+while [ "$#" -ne 0 ]; do
     #Debug mode for checking the current '$1' variable value
-    #echo -e "The parameter[$AUX] has '$1' value"
+    echo -e "Current parameter[S1] has '$1' value"
 
     #Check the set parameters
-    case $1 in
+    case "$1" in
     "-h" | "--help" | "-?")
         echo -e "$MESSAGE_HELP"
         break
@@ -426,6 +501,13 @@ while [ $# -ne 0 ]; do
     #"-c-tester" | "--clear-tester") shell_script_library_modules_action_clear_main "tester" ;;
     "-d" | "--download") shell_script_library_repository_clone ;;
     "-i" | "--install") shell_script_library_install ;;
+    
+    "-mh-library" | "--minify-hard-library") shell_script_library_minify_soft "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" ;;
+    #"-mh-tester" | "--minify-hard-library") shell_script_library_minify_soft "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" ;;
+    
+    "-ms-library" | "--minify-library") shell_script_library_minify_soft "$PATH_LIBRARY_MODULES_FILES_RESULT_LIBRARY" ;;
+    #"-ms-tester" | "--minify-library") shell_script_library_minify_soft "$PATH_LIBRARY_MODULES_FILES_RESULT_TESTER" ;;
+
     "-m-library" | "--merge-library") shell_script_library_modules_action_merge_main "library" ;;
     "-m-tester" | "--merge-tester") shell_script_library_modules_action_merge_main "tester" ;;
     "-r-library" | "--run-library") shell_script_library_run_main "library" ;;
@@ -433,12 +515,7 @@ while [ $# -ne 0 ]; do
     "-u" | "--uninstall") shell_script_library_uninstall ;;
     "-v" | "--version") shell_script_library_version ;;
     *)
-        if [[ $AUX -eq 0 ]]; then
-            echo -e "Invalid option for $0!\n$MESSAGE_HELP"
-        else
-            echo -e "Invalid option for '$1' parameter."
-        fi
-
+        echo -e "Invalid option for '$1 parameter'!\n$MESSAGE_HELP"
         break
         ;;
     esac

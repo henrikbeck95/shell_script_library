@@ -159,7 +159,8 @@ display_message_value_status_empty_simple() {
 #display_message_value_status_error_center(){}
 
 display_message_value_status_error_complex() {
-	local DISPLAY_TEXT="¯\_(ツ)_/¯ ERROR! ${1}"
+	#local DISPLAY_TEXT="¯\_(ツ)_/¯ ERROR! $1"
+	local DISPLAY_TEXT="¯\_(ツ)_/¯ FAILURE! $1"
 	local CHARACTERS_UNITS
 	local CHARACTER_REPETITION
 
@@ -170,7 +171,8 @@ display_message_value_status_error_complex() {
 }
 
 display_message_value_status_error_simple() {
-	local DISPLAY_TEXT="¯\_(ツ)_/¯ ERROR! $1"
+	#local DISPLAY_TEXT="¯\_(ツ)_/¯ ERROR! $1"
+	local DISPLAY_TEXT="¯\_(ツ)_/¯ FAILURE! $1"
 
 	#display_message_value_text_default_simple "${DISPLAY_TEXT}"
 	display_message_value_text_default_simple "${COLOR_STATUS_ERROR}${DISPLAY_TEXT}${COLOR_END}"
