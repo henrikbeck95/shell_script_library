@@ -1,0 +1,13 @@
+#BACKUP_TOOL="btrfk"
+BACKUP_TOOL="snapper"
+#BACKUP_TOOL="timeshift"
+
+#CONTAINER_MANAGER="docker"
+CONTAINER_MANAGER="podman"
+
+#EDITOR="nano"
+#EDITOR="vi"
+EDITOR="vim"
+
+#PYTHON_PKG="anaconda"
+PYTHON_PKG="pip"
