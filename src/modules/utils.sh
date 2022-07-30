@@ -973,6 +973,35 @@ utils_convert_temperature_fahrenheit_to_celsius() {
 	math_calculate "($TEMPERATURE_FAHRENHEIT - 32) / 1.8" "2"
 }
 
+utils_count_amount_of_column_from_string(){
+    local CONTENT_STRING="$1"
+    local RESULT
+
+    RESULT=$(echo "$CONTENT_STRING" | awk -F':' '{print NF}')
+
+    echo "$RESULT"
+}
+
+utils_count_amount_of_lines_from_file(){
+    local FILE_PATH="$1"
+    local RESULT
+
+    RESULT=$(wc -l "$FILE_PATH" | awk '{print $1}')
+
+    echo "$RESULT"
+}
+
+utils_count_amount_of_lines_whose_does_not_start_with_square_brackets_and_number(){
+    local TEXT_CONTENT="$1"
+    local RESULT
+
+    #Quantidade de linhas do arquivo que não iniciam com [numero
+    RESULT=$(echo "$TEXT_CONTENT" | grep -v '^\[[0-9]' | wc -l)
+    #RESULT=$(echo "$TEXT_CONTENT" | grep -c '^\[[0-9]')
+
+    echo "$RESULT"
+}
+
 #@annotation_must_be_improved
 utils_cryptography_sha256_sum_compare(){
 	local ARRAY_FILES_ALL=($@)
@@ -1808,7 +1837,7 @@ utils_request_translation(){
 	display_message_value_text_default_simple "$RESULT"
 }
 
-#MUST BE IMPROVED - Change utils_check_if_file_format_is_music dynamically
+#@annotation_must_be_improved - Change utils_check_if_file_format_is_music dynamically
 utils_scan_files_inside_directory_recursively(){
 	local PATH_DIRECTORY="$1"
 	local ARRAY_RESULT=()
@@ -1829,7 +1858,7 @@ utils_scan_files_inside_directory_recursively(){
 	printf '%s\n' "${ARRAY_RESULT[@]}"
 }
 
-#MUST BE IMPROVED - Change utils_check_if_file_format_is_music dynamically
+#@annotation_must_be_improved - Change utils_check_if_file_format_is_music dynamically
 utils_scan_files_inside_directory_unique(){
 	local PATH_DIRECTORY="$1"
 	local ARRAY_RESULT=()

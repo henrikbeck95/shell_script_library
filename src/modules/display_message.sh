@@ -21,6 +21,23 @@ display_message_content_line_replace() {
 	printf "\r%s" "$DISPLAY_TEXT"
 }
 
+#MUST BE IMPROVED
+display_message_debug_system_audio(){
+    local DBUS_DOMAIN="$1"
+    local DBUS_PATH="$2"
+    local DBUS_PLAYER="$3"
+    local DBUS_CMD="$4"
+
+	echo -e "
+	#############################
+	#DBus domain:\t\t$DBUS_DOMAIN
+	#DBus path:\t\t$DBUS_PATH
+	#DBus player:\t\t$DBUS_PLAYER
+	#DBus command:\t\t$DBUS_CMD
+	#############################
+	"
+}
+
 display_message_position_align_center_complex() {
 	local DISPLAY_TEXT_MESSAGE="$1"
 	local CHARACTER_REPETITION="#"

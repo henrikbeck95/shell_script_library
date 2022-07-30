@@ -120,3 +120,14 @@ array_check_if_element_exists() {
     "true") display_message_value_text_default_simple "true" ;;
     esac
 }
+
+array_check_if_is_empty(){
+    local ARRAY_LIST=("$@")
+
+    #if [[ -n "$ARRAY_LIST" ]]; then
+    if [[ "${#ARRAY_LIST[@]}" -eq 0 ]]; then
+        display_message_value_text_default_simple "true"
+    else
+        display_message_value_text_default_simple "false"
+    fi
+}

@@ -156,6 +156,19 @@ string_get_content_signal_after_string() {
     display_message_value_text_default_simple "$VALUE_RESULT"
 }
 
+string_remove_content_character_all_matches(){
+    #string_remove_content_character_all_matches "[03:06.59]" "[]"
+    #string_remove_content_character_all_matches "[00:03:06.59]" "[]"
+
+    local CONTENT_STRING_ORIGIN="$1"
+    local CONTENT_STRING_TO_BE_REMOVED="$2"
+    local RESULT
+
+    RESULT=$(echo "$CONTENT_STRING_ORIGIN" | tr -d "$CONTENT_STRING_TO_BE_REMOVED")
+    
+    echo "$RESULT"
+}
+
 string_remove_content_character_first() {
     #string_get_content_character_first "Henrik Beck"
 
@@ -174,11 +187,32 @@ string_remove_content_character_last() {
     display_message_value_text_default_simple "$RESULT"
 }
 
+#@annotation_must_be_improved
+string_remove_content_lines_from_output(){
+    local FILE_CONTENT="$1"
+    local FILE_LINES_TO_BE_CUTTED="$2"
+    local RESULT
+
+    #Remove the first 'n' lines from output (the header ones)
+    RESULT=$(echo "$FILE_CONTENT" | sed 1,${FILE_LINES_TO_BE_CUTTED}d)
+
+    echo "$RESULT"
+}
+
 string_remove_empty_space_all() {
     #local VALUE_VARIABLE="Hello      world."
     local VALUE_VARIABLE="$*"
 
     display_message_value_text_default_simple "${VALUE_VARIABLE//[[:space:]]/}"
+}
+
+string_remove_text_from_output() {
+    local TEXT_OLD="$1"
+    local TEXT_REMOVED="$2"
+
+    #Remove all the match values from a sonsole
+    #echo "$TEXT_OLD" | sed "s/$TEXT_REMOVED//g"
+    display_message_value_text_default_simple "$TEXT_OLD" | sed "s/$TEXT_REMOVED//g"
 }
 
 string_repeat_character() {
@@ -188,6 +222,16 @@ string_repeat_character() {
     for ((i = 0; i < VALUE_SIZE; i++)); do
         display_message_value_text_default_simple "$VALUE_CHARACTER"
     done
+}
+
+#@annotation_must_be_improved
+string_replace_character_from_colon_to_space(){
+    local VALUE_STRING="$1"
+    local RESULT
+
+    RESULT=$(echo $VALUE_STRING | sed 's/:\|-/ /g;')
+
+    echo "$RESULT"
 }
 
 string_replace_pattern_from_old_to_new_simple() {
@@ -221,7 +265,7 @@ string_replace_output() {
     local TEXT_OLD="$1"
     local TEXT_NEW="$2"
 
-    #Replace all the match values from a sonsole
+    #Replace all the match values from console
     sed -s "s/$TEXT_OLD/$TEXT_NEW/g"
 }
 

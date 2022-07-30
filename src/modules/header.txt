@@ -48,8 +48,9 @@ SOFTWARE_SHEBANG_LIBRARY
 #
 #Import this library on your source code by typing:
 #Load Shell Script Library resources
+##shellcheck disable=SC1091
 ##. /usr/local/bin/shell-script-library || exit 1    #System mode
-#. $HOME/.local/bin/shell-script-library || exit 1   #User mode
+#. "$HOME"/.local/bin/shell-script-library || exit 1   #User mode
 #
 #Import this file using a relative path
 #PATH_SCRIPT="$(dirname "$(readlink -f "$0")")"

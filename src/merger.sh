@@ -485,7 +485,7 @@ fi
 #Calling the functions according to the informed arguments
 while [ "$#" -ne 0 ]; do
     #Debug mode for checking the current '$1' variable value
-    echo -e "Current parameter[S1] has '$1' value"
+    #echo -e "Current parameter[S1] has '$1' value"
 
     #Check the set parameters
     case "$1" in

@@ -29,4 +29,6 @@ math_calculator() {
 	#awk "BEGIN{printf \"%g\n\", $MATH_EXPRESSION}"
 	#awk "BEGIN{printf \"%.${FLOAT_POINT_VALUE}e\n\", $MATH_EXPRESSION}"
 	awk "BEGIN{printf \"%.${FLOAT_POINT_VALUE}g\n\", $MATH_EXPRESSION}"
+
+	#bc<<<"$MATH_EXPRESSION"
 }
